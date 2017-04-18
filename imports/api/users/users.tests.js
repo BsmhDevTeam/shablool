@@ -1,4 +1,5 @@
 // Tests for the behavior of the links collection
+// Tests for the behavior of the links collection
 //
 // https://guide.meteor.com/testing.html
 
