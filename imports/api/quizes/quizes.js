@@ -8,7 +8,16 @@ const Quize = Class.create({
   name: 'Quize',
   collection: Quizes,
   fields: {
-    name: String,
+    name: {
+      type:String,
+      validators: [{
+        type: 'minLength',
+        param: 3
+      }, {
+        type: 'maxLength',
+        param: 40
+      }]
+    }
     tags: [String],
     user: String,
     questions: [Question],

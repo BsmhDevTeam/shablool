@@ -10,7 +10,13 @@ const Group = Class.create({
     userId: Number,
     gameId: Number,
     points: Number,
-	createdAt: Date,
-    lastUpdate: Date
+	createdAt: {
+      value: Date,
+      default: Date.Now()
+    },
+    lastUpdate: {
+      value: Date,
+      default: Date.Now()
+    }
   },
 });

@@ -7,9 +7,24 @@ const User = Class.create({
   name: 'User',
   collection: Users,
   fields: {
-    name: String,
+    name: {
+      type:String,
+      validators: [{
+        type: 'minLength',
+        param: 3
+      }, {
+        type: 'maxLength',
+        param: 40
+      }]
+    }
     soldierId: String,
-	createdAt: Date,
-    lastUpdate: Date
+	createdAt: {
+      value: Date,
+      default: Date.Now()
+    },
+    lastUpdate: {
+      value: Date,
+      default: Date.Now()
+    }
   },
 });

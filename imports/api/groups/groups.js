@@ -8,9 +8,24 @@ const Group = Class.create({
   name: 'Group',
   collection: Groups,
   fields: {
-    name: String,
+    name: {
+      type:String,
+      validators: [{
+        type: 'minLength',
+        param: 3
+      }, {
+        type: 'maxLength',
+        param: 40
+      }]
+    }
     users: Users,
-    createdAt: Date,
-    lastUpdate: Date
+    createdAt: {
+      value: Date,
+      default: Date.Now()
+    },
+    lastUpdate: {
+      value: Date,
+      default: Date.Now()
+    }
   },
 });

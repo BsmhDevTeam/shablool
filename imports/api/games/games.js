@@ -11,7 +11,14 @@ const Question = Class.create({
     quizId: Number,
     users: Users,
     state: Boolean,
-    createdAt: Date,
-    lastUpdate: Date
+    time: Number,
+    createdAt: {
+      value: Date,
+      default: Date.Now()
+    },
+    lastUpdate: {
+      value: Date,
+      default: Date.Now()
+    }
   },
 });
