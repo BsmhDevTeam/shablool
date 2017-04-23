@@ -277,8 +277,10 @@
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/events/cancelable.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/cast.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/definition.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/js/bootstrap.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/default.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/modules/0.7.7/web.browser/install-packages.js" />
+        <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/css/bootstrap.css" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/get.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/modules/0.7.7/web.browser/process.js" />
         <item url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/merge.js" />
@@ -877,8 +879,10 @@
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/events/cancelable.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/cast.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/definition.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/js/bootstrap.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/default.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/modules/0.7.7/web.browser/install-packages.js" />
+      <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/twbs_bootstrap/3.3.6/web.browser/dist/css/bootstrap.css" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/get.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/modules/0.7.7/web.browser/process.js" />
       <root url="file://$USER_HOME$/AppData/Local/.meteor/packages/jagi_astronomy/2.4.3/web.browser/test/modules/fields/merge.js" />

@@ -8,9 +8,19 @@ export const Question = Class.create({
   name: 'Question',
   collection: Questions,
   fields: {
-    text: String,
+    text: {
+	   	type: String,
+	   	validators: [{
+	       type: 'minLength',
+	       param: 3
+	      }, {
+	        type: 'maxLength',
+	        param: 300
+	    }]
+  	}
     answers: [Answer],
     order: Number,
+    time: Number, 
     createdAt: {
     	value: Date,
     	default: Date.Now()

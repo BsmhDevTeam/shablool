@@ -7,7 +7,16 @@ export const Answer = Class.create({
   name: 'Answer',
   collection: Answers,
   fields: {
-    text: String,
+    text: {
+      type:String,
+      validators: [{
+        type: 'minLength',
+        param: 3
+      }, {
+        type: 'maxLength',
+        param: 300
+      }]
+    }
     points: {
       value: Number,
       default: 0
