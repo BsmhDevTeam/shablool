@@ -17,7 +17,7 @@ export const Question = Class.create({
 	        type: 'maxLength',
 	        param: 300
 	    }]
-  	}
+  	},
     answers: [Answer],
     order: Number,
     time: Number, 

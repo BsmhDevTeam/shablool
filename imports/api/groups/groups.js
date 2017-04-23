@@ -17,7 +17,7 @@ const Group = Class.create({
         type: 'maxLength',
         param: 40
       }]
-    }
+    },
     users: Users,
     createdAt: {
       value: Date,
