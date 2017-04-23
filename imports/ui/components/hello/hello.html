@@ -1,13 +1,30 @@
 <template name="hello">
 	<form>
-  		<div class="form-group">
-  			<div class="col -8">
-				<label class="col-8" for="exampleInputEmail1">שאלה</label>
+  		<div class="container form-group">
+  			<div class="row">
+  				<button>+</button>
+				<label class="col" for="text">שאלה</label>
   			</div>
   			<div class="row">
-	    		<input class="col-8 form-control ques-text" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="הכנס את השאלה">
-	  			<input class="col form-control ques-points" id="demo3" type="text" value="" name="demo3">
+	    		<input class="col-5 form-control ques-text" placeholder="הכנס את השאלה">
   			</div>
+  			<div class="row">
+	    		<input class="col-5 form-control ques-text" placeholder="הכנס תשובה">
+	  			<label class="col" for="points">ניקוד</label><input id="points" type="number" value="0"/>
+	    	</div>
+	    	<div class="row">
+	    		<input class="col-5 form-control ques-text" placeholder="הכנס תשובה">
+	    		<label class="col" for="points">ניקוד</label><input id="points" type="number" value="0"/>
+	    	</div>
+	    	<div class="row">
+	    		<input class="col-5 form-control ques-text" placeholder="הכנס תשובה">
+	    		<label class="col" for="points">ניקוד</label><input id="points" type="number" value="0"/>
+	    	</div>
+	    	<div class="row">
+	    		<input class="col-5 form-control ques-text" placeholder="הכנס תשובה">
+	    		<label class="col" for="points">ניקוד</label><input id="points" type="number" value="0"/>
+
+	    	</div>
   		</div>
   	</form>
 </template>
