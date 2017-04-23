@@ -8,7 +8,7 @@ import '../../ui/layouts/manage/manage.js';
 // Import pages
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/not-found/not-found.js';
-import '../../ui/pages/createQuiz/createQuiz.js';
+import '../../ui/pages/create-quiz/create-quiz.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -21,7 +21,7 @@ FlowRouter.route('/', {
 FlowRouter.route('/createQuiz', {
   name: 'App.createQuiz',
   action() {
-    BlazeLayout.render('manage_layout', { main: 'App_createQuiz' });
+    BlazeLayout.render('manage_layout', { main: 'create_quiz' });
   },
 });
 

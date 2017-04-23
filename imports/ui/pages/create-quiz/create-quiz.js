@@ -1,7 +1,7 @@
-import './createQuiz.html';
+import './create-quiz.html';
 import '../../components/question-form/question-form.js';
 
-Template.App_createQuiz.events({
+Template.create_quiz.events({
   'click .save-quiz'(event, instance) {
     event.preventDefault();
     forms = instance.$('.question-form');
