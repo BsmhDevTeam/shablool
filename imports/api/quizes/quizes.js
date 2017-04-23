@@ -17,14 +17,14 @@ const Quize = Class.create({
         type: 'maxLength',
         param: 40
       }]
-    }
+    },
     tags: [String],
     user: String,
     questions: [Question],
     private: {
     	value: Boolean,
     	default: false
-    }
+    },
     createdAt: {
     	value: Date,
     	default: Date.Now()

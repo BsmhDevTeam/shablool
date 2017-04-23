@@ -16,11 +16,11 @@ export const Answer = Class.create({
         type: 'maxLength',
         param: 300
       }]
-    }
+    },
     points: {
       value: Number,
       default: 0
-    }
+    },
     createdAt: {
       value: Date,
       default: Date.Now()
