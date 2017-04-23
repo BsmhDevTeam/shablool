@@ -14,7 +14,7 @@ import '../../ui/pages/createQuiz/createQuiz.js';
 FlowRouter.route('/', {
   name: 'App.home',
   action() {
-    BlazeLayout.render('App_game', { main: 'App_home' });
+    BlazeLayout.render('game_layout', { main: 'App_home' });
   },
 });
 
