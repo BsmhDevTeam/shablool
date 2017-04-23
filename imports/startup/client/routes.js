@@ -1,8 +1,15 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
+<<<<<<< HEAD
 // Import needed templates
 import '../../ui/layouts/game/game.js';
+=======
+// Import layouts
+import '../../ui/layouts/body/body.js';
+
+// Import pages
+>>>>>>> 9514a3c14e5304956a1a5195b0a13d7011a1babb
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/createQuiz/createQuiz.js';
