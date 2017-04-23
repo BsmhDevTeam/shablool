@@ -1,18 +1,16 @@
-import { Links } from '/imports/api/links/links.js';
-import { Meteor } from 'meteor/meteor';
-import './info.html';
+//import './info.html';
 
-Template.info.onCreated(function () {
+/*Template.info.onCreated(function () {
   Meteor.subscribe('links.all');
-});
+});*/
 
-Template.info.helpers({
+/*Template.info.helpers({
   links() {
     return Links.find({});
   },
-});
+});*/
 
-Template.info.events({
+/*Template.info.events({
   'submit .info-link-add'(event) {
     event.preventDefault();
 
@@ -29,4 +27,4 @@ Template.info.events({
       }
     });
   },
-});
+});*/
