@@ -1,8 +1,8 @@
 <template name="create_quiz">
-	<h1>צור שאלון</h1>
-	{{#each questionId in questions}}
-		{{> question_form removeQuestion=(removeQuestion questionId)}}
-	{{/each}}
-    <button type="button" class="add-question btn btn-primary">+</button>
-	<button type="button" class="save-quiz btn btn-primary">Submit</button>
+	<div id="create-quiz">
+		<h1>צור שאלון</h1>
+		{{#each questionId in questions}} {{> question_form removeQuestion=(removeQuestion questionId)}} {{/each}}
+		<button type="button" class="add-question btn btn-primary">+</button>
+		<button type="button" class="save-quiz btn btn-primary">Submit</button>
+	</div>
 </template>
