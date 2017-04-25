@@ -1,8 +1,29 @@
 <template name="create_quiz">
 	<div id="create-quiz">
-		<h1>צור שאלון</h1>
-		{{#each questionId in questions}} {{> question_form removeQuestion=(removeQuestion questionId)}} {{/each}}
-		<button type="button" class="add-question btn btn-primary">+</button>
-		<button type="button" class="save-quiz btn btn-primary">Submit</button>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="page-header">
+					<h1>צור שאלון</h1>
+				</div>
+			</div>
+		</div>
+		{{#each questionId in questions}}
+		<div class="row">
+			<div class="col-sm-12">
+				{{> question_form removeQuestion=(removeQuestion questionId)}}
+			</div>
+		</div>
+		{{/each}}
+		<div class="row">
+			<div class="col-sm-12">
+				<button class="add-question btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-sm-12">
+				<button type="button" class="save-quiz btn btn-success btn-lg col-sm-2 pull-left"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+			</div>
+		</div>
 	</div>
 </template>
