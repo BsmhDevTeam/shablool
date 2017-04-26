@@ -22,7 +22,19 @@
 		<hr />
 		<div class="row">
 			<div class="col-sm-9">
-				
+				<div class="row">
+					<div class="col-lg-4">
+						<form class="tags-form">
+							<label for="tag" class="control-label">הוספת תגיות</label>
+							<input name="tag" class="form-control input-lg" type="text">
+						</form>
+					</div>
+					<div class="col-lg-8">
+						{{#each tag in tags}}
+							{{> tag_template tag=tag removeTag=(removeTag tag.id)}}
+						{{/each}}
+					</div>
+				</div>
 			</div>
 			<div class="col-sm-3">
 				<div class="form-group-lg">

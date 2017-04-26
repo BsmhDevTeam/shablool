@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import { Question } from '../api/questions/questions.js';
+import { Question } from '../questions/questions';
 
 export const Quizes = new Mongo.Collection('quizes');
 
@@ -22,16 +22,20 @@ const Quize = Class.create({
     user: String,
     questions: [Question],
     private: {
-    	value: Boolean,
+    	type: Boolean,
     	default: false
     },
     createdAt: {
-    	value: Date,
-    	default: Date.Now
+    	type: Date,
+    	default() {
+				return new Date();
+			},
     },
     lastUpdate: {
-    	value: Date,
-    	default: Date.Now
+    	type: Date,
+    	default() {
+				return new Date();
+			},
     }
   },
 });
