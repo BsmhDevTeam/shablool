@@ -27,11 +27,11 @@ const Quize = Class.create({
     },
     createdAt: {
     	value: Date,
-    	default: Date.Now()
+    	default: Date.Now
     },
     lastUpdate: {
     	value: Date,
-    	default: Date.Now()
+    	default: Date.Now
     }
   },
 });

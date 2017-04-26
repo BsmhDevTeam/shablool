@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="page-header">
-					<h1>צור שאלון</h1>
+					<input type="text" class="form-control input-title" placeholder="כותרת שאלון">
 				</div>
 			</div>
 		</div>
@@ -17,6 +17,22 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<button class="add-question btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-sm-9">
+				
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group-lg">
+					<label for="isPrivate" class="control-label">מי יכול למצוא את השאלון</label>
+					<select name="isPrivate" class="is-private form-control">
+						<option value="1">כולם</option>
+						<option value="2">רק קבוצות שאני שייך אליהם</option>
+						<option value="3">רק אני</option>
+					</select>
+				</div>
 			</div>
 		</div>
 		<hr />
