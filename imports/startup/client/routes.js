@@ -9,6 +9,7 @@ import '../../ui/layouts/manage/manage.js';
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/not-found/not-found.js';
 import '../../ui/pages/create-quiz/create-quiz.js';
+import '../../ui/pages/right-answer/right-answer.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -22,6 +23,13 @@ FlowRouter.route('/createQuiz', {
   name: 'App.createQuiz',
   action() {
     BlazeLayout.render('manage_layout', { main: 'create_quiz' });
+  },
+});
+
+FlowRouter.route('/rightAnswer', {
+  name: 'App.rightAnswer',
+  action() {
+    BlazeLayout.render('manage_layout', { main: 'right_answer' });
   },
 });
 
