@@ -1,2 +1,3 @@
 import './instructions.html';
-import '../../components/navbar/navbar.js';
+
+import '../../components/game-navbar/game-navbar';

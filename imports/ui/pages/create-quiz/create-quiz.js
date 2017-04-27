@@ -1,9 +1,8 @@
-import uuidV4 from 'uuid/v4';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
+import uuidV4 from 'uuid/v4';
 
 import './create-quiz.html';
-
 
 import '../../components/question-form/question-form.js';
 import '../../components/tag-template/tag-template.js';
@@ -110,7 +109,7 @@ Template.createQuiz.events({
     templateInstance.state.set('tags', [...tags, tag]);
 
     // clear input field
-    event.target.tag.value('');
+    event.target.tag.value = '';
   },
 });
 

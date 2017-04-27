@@ -1,7 +1,8 @@
-import './question-form.html'
+import { Template } from 'meteor/templating';
+import './question-form.html';
 
-Template.create_quiz.events({
-    'click .remove-question' (event, instance) {
-        this.removeQuestion();
-    },
+Template.questionForm.events({
+  'click .remove-question'() {
+    this.removeQuestion();
+  },
 });
