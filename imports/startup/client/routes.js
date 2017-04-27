@@ -8,6 +8,8 @@ import '../../ui/layouts/manage/manage.js';
 // Import pages
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/not-found/not-found.js';
+import '../../ui/pages/instructions/instructions.js';
+import '../../ui/pages/gameLobby/gameLobby.js';
 import '../../ui/pages/create-quiz/create-quiz.js';
 
 // Set up all routes in the app
@@ -30,3 +32,17 @@ FlowRouter.notFound = {
     BlazeLayout.render('game_layout', { main: 'App_notFound' });
   },
 };
+
+FlowRouter.route('/gameLobby', {
+  name: 'App.gameLobby',
+  action() {
+    BlazeLayout.render('game_layout', { main: 'App_gameLobby' });
+  },
+});
+
+FlowRouter.route('/instructions', {
+  name: 'App.instructions',
+  action() {
+    BlazeLayout.render('game_layout', { main: 'App_instructions' });
+  },
+});
