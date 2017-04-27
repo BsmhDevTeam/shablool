@@ -1,16 +1,21 @@
-<template name="App_home">
-    <div class="container">
-        <div class="row">
-            <div id="logo-area">
-                <h1>צהו"ל!</h1>
+<template name="home">
+    <div id="home">
+        <div class="container">
+            <div class="row">
+                <div id="logo-area">
+                    <h1>צהו"ל!</h1>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-4 col-xl-offset-4 col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12">
+            <div class="col-xl-2 col-xl-offset-5 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                 <div>
                     {{> main_form}}
                 </div>
             </div>
         </div>
+        <p id="center-home-massage">
+            <a href="#">נהל או צור משחק חדש</a>
+        </p>
     </div>
 </template>

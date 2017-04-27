@@ -1,5 +1,57 @@
-<template name="create_quiz">
-	<h1>צור שאלון</h1>
-	{{> question_form}}
-	<button type="button" class="save-quiz btn btn-lg btn-primary">Submit</button>
+<template name="createQuiz">
+	<div id="create-quiz">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="page-header">
+					<input type="text" class="input-title form-control" placeholder="כותרת שאלון">
+				</div>
+			</div>
+		</div>
+		{{#each questionId in questions}}
+		<div class="row">
+			<div class="col-sm-12">
+				{{> question_form removeQuestion=(removeQuestion questionId)}}
+			</div>
+		</div>
+		{{/each}}
+		<div class="row">
+			<div class="col-sm-12">
+				<button class="add-question btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-sm-9">
+				<div class="row">
+					<div class="col-lg-4">
+						<form class="tags-form">
+							<label for="tag" class="control-label">הוספת תגיות</label>
+							<input name="tag" class="form-control input-lg" type="text">
+						</form>
+					</div>
+					<div class="col-lg-8">
+						{{#each tag in tags}}
+							{{> tag_template tag=tag removeTag=(removeTag tag.id)}}
+						{{/each}}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="form-group-lg">
+					<label for="isPrivate" class="control-label">מי יכול למצוא את השאלון</label>
+					<select name="isPrivate" class="is-private form-control">
+						<option value="1">כולם</option>
+						<option value="2">רק קבוצות שאני שייך אליהם</option>
+						<option value="3">רק אני</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="row">
+			<div class="col-sm-12">
+				<button type="button" class="save-quiz btn btn-success btn-lg col-sm-2 pull-left"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+			</div>
+		</div>
+	</div>
 </template>

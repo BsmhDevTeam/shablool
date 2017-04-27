@@ -8,26 +8,30 @@ export const Answer = Class.create({
   collection: Answers,
   fields: {
     text: {
-      type:String,
+      type: String,
       validators: [{
         type: 'minLength',
-        param: 3
+        param: 1,
       }, {
         type: 'maxLength',
-        param: 300
+        param: 300,
       }]
     },
     points: {
-      value: Number,
-      default: 0
+      type: Number,
+      default: 0,
     },
     createdAt: {
-      value: Date,
-      default: Date.Now()
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
     lastUpdate: {
-      value: Date,
-      default: Date.Now()
+      type: Date,
+      default() {
+        return new Date();
+      },
     }
   },
 });

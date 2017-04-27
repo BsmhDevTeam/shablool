@@ -1,33 +1,42 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import { Answer } from '../answers/answers.js'
+import { Answer } from '../answers/answers.js';
 
 const Questions = new Mongo.Collection('questions');
 
-export const Question = Class.create({
+export default Class.create({
   name: 'Question',
   collection: Questions,
   fields: {
     text: {
-	   	type: String,
-	   	validators: [{
-	       type: 'minLength',
-	       param: 3
-	      }, {
-	        type: 'maxLength',
-	        param: 300
-	    }]
-  	},
+      type: String,
+      validators: [
+        {
+          type: 'minLength',
+          param: 3,
+          message: 'שאל שאלה נורמלית!',
+        },
+        {
+          type: 'maxLength',
+          param: 300,
+          message: 'טוב נו מה אתה מגזים?! קצר קצת',
+        },
+      ],
+    },
     answers: [Answer],
     order: Number,
-    time: Number, 
+    time: Number,
     createdAt: {
-    	value: Date,
-    	default: Date.Now()
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
     lastUpdate: {
-    	value: Date,
-    	default: Date.Now()
-    }
+      type: Date,
+      default() {
+        return new Date();
+      },
+    },
   },
 });
