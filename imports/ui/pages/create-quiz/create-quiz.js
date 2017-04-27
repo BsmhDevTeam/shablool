@@ -11,7 +11,7 @@ import '../../components/tag-template/tag-template.js';
 import { Tag } from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
-Template.create_quiz.onCreated(function() {
+Template.createQuiz.onCreated(function() {
   this.state = new ReactiveDict();
   this.state.setDefault({
     questions: [uuidV4()],
@@ -19,7 +19,7 @@ Template.create_quiz.onCreated(function() {
   });
 });
 
-Template.create_quiz.helpers({
+Template.createQuiz.helpers({
   questions() {
     const instance = Template.instance();
     return instance.state.get('questions');
@@ -40,17 +40,17 @@ Template.create_quiz.helpers({
   },
 });
 
-Template.create_quiz.events({
-  'click .add-question'(event, instance) {
-    const questions = instance.state.get('questions');
-    instance.state.set('questions', [...questions, uuidV4()]);
+Template.createQuiz.events({
+  'click .add-question'(event, templateInstance) {
+    const questions = templateInstance.state.get('questions');
+    templateInstance.state.set('questions', [...questions, uuidV4()]);
   },
-  'click .save-quiz'(event, instance) {
+  'click .save-quiz'(event, templateInstance) {
     // get quiz title
-    const title = instance.$('.input-title').value;
+    const title = templateInstance.$('.input-title').value;
 
     // get quiestions
-    const forms = instance.$('.question-form');
+    const forms = templateInstance.$('.question-form');
     const questions = forms.map((i, form) => {
       const answers = [
         {
@@ -90,7 +90,7 @@ Template.create_quiz.events({
     });
 
     // get tags
-    const tags = instance.state.get('tags');
+    const tags = templateInstance.state.get('tags');
     const tagsId = tags.map((t) => {
       // check if tag exists
       const newTag = { name: t.name };
@@ -98,7 +98,7 @@ Template.create_quiz.events({
       return existTag ? existTag._id : new Tag(newTag).create();
     });
   },
-  'submit .tags-form'(event, instance) {
+  'submit .tags-form'(event, templateInstance) {
     event.preventDefault();
     const tagName = event.target.tag.value;
     const tag = {
@@ -106,11 +106,11 @@ Template.create_quiz.events({
       name: stantartizeTagName(tagName),
     };
 
-    const tags = instance.state.get('tags');
-    instance.state.set('tags', [...tags, tag]);
+    const tags = templateInstance.state.get('tags');
+    templateInstance.state.set('tags', [...tags, tag]);
 
     // clear input field
-    event.target.tag.value = '';
+    event.target.tag.value('');
   },
 });
 

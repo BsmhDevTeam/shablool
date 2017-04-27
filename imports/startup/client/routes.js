@@ -18,10 +18,10 @@ FlowRouter.route('/', {
   },
 });
 
-FlowRouter.route('/createQuiz', {
-  name: 'App.createQuiz',
+FlowRouter.route('/CreateQuiz', {
+  name: 'Manage.CreateQuiz',
   action() {
-    BlazeLayout.render('manage_layout', { main: 'create_quiz' });
+    BlazeLayout.render('manage_layout', { main: 'createQuiz' });
   },
 });
 
