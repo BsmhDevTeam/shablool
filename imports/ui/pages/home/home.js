@@ -1,3 +1,3 @@
 import './home.html';
 
-import '../../components/mainForm/mainForm.js';
+import '../../components/main-form/main-form.js';

@@ -8,22 +8,22 @@ import '../../ui/layouts/manage/manage.js';
 // Import pages
 import '../../ui/pages/home/home.js';
 import '../../ui/pages/not-found/not-found.js';
-import '../../ui/pages/createQuiz/createQuiz.js';
 import '../../ui/pages/instructions/instructions.js';
 import '../../ui/pages/gameLobby/gameLobby.js';
+import '../../ui/pages/create-quiz/create-quiz.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
   name: 'App.home',
   action() {
-    BlazeLayout.render('App_game', { main: 'App_home' });
+    BlazeLayout.render('game_layout', { main: 'home' });
   },
 });
 
 FlowRouter.route('/createQuiz', {
   name: 'App.createQuiz',
   action() {
-    BlazeLayout.render('manage_layout', { main: 'App_createQuiz' });
+    BlazeLayout.render('manage_layout', { main: 'create_quiz' });
   },
 });
 
@@ -36,13 +36,13 @@ FlowRouter.notFound = {
 FlowRouter.route('/gameLobby', {
   name: 'App.gameLobby',
   action() {
-    BlazeLayout.render('App_game', { main: 'App_gameLobby' });
+    BlazeLayout.render('game_layout', { main: 'App_gameLobby' });
   },
 });
 
 FlowRouter.route('/instructions', {
   name: 'App.instructions',
   action() {
-    BlazeLayout.render('App_game', { main: 'App_instructions' });
+    BlazeLayout.render('game_layout', { main: 'App_instructions' });
   },
 });
