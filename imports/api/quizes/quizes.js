@@ -1,41 +1,50 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import { Question } from '../questions/questions';
+import Question from '../questions/questions';
 
-export const Quizes = new Mongo.Collection('quizes');
+const Quizes = new Mongo.Collection('quizes');
 
-const Quize = Class.create({
+export default Class.create({
   name: 'Quize',
   collection: Quizes,
   fields: {
-    name: {
-      type:String,
-      validators: [{
-        type: 'minLength',
-        param: 3
-      }, {
-        type: 'maxLength',
-        param: 40
-      }]
+    title: {
+      type: String,
+      validators: [
+        {
+          type: 'minLength',
+          param: 3,
+        },
+        {
+          type: 'maxLength',
+          param: 40,
+        },
+      ],
     },
-    tags: [String],
-    user: String,
     questions: [Question],
+    tags: {
+      type: [String],
+      default() {
+        return [];
+      },
+    },
+    user: String, // read about authentication techniques
     private: {
-    	type: Boolean,
-    	default: false
+      // read about authorization techniques
+      type: Boolean,
+      default: false,
     },
     createdAt: {
-    	type: Date,
-    	default() {
-				return new Date();
-			},
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
     lastUpdate: {
-    	type: Date,
-    	default() {
-				return new Date();
-			},
-    }
+      type: Date,
+      default() {
+        return new Date();
+      },
+    },
   },
 });
