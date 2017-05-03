@@ -10,6 +10,18 @@ import '../../components/tag-template/tag-template.js';
 import { Tag } from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
+
+
+// Utilities
+const stantartizeTagName = s =>
+  [s]
+    .map(str => str.trim())
+    .map(str => str.toLocaleLowerCase())
+    .map(str => str.replace(/\s+/g, '-'))
+    .pop();
+
+
+// On Create
 Template.createQuiz.onCreated(function() {
   this.state = new ReactiveDict();
   this.state.setDefault({
@@ -18,6 +30,8 @@ Template.createQuiz.onCreated(function() {
   });
 });
 
+
+// Template Helpers
 Template.createQuiz.helpers({
   questions() {
     const instance = Template.instance();
@@ -39,6 +53,8 @@ Template.createQuiz.helpers({
   },
 });
 
+
+// Events
 Template.createQuiz.events({
   'click .add-question'(event, templateInstance) {
     const questions = templateInstance.state.get('questions');
@@ -54,7 +70,7 @@ Template.createQuiz.events({
       const answers = [
         {
           text: form.answer1.value,
-          points: form.points1.value,
+          points: parseInt(form.points1.value, 10),
         },
         {
           text: form.answer2.value,
@@ -73,7 +89,7 @@ Template.createQuiz.events({
         text: form.question.value,
         answers,
         order: i,
-        time: 30,
+        time: parseInt(form.time.value, 10),
       };
     });
 
@@ -94,12 +110,13 @@ Template.createQuiz.events({
       // check if tag exists
       const newTag = { name: t.name };
       const existTag = Tag.findOne(newTag); // TODO: better duplication checks
-      return existTag ? existTag._id : new Tag(newTag).create();
+      return existTag ? existTag._id : new Tag(newTag).save();
     });
   },
   'submit .tags-form'(event, templateInstance) {
     event.preventDefault();
-    const tagName = event.target.tag.value;
+    const input = event.target;
+    const tagName = input.tag.value;
     const tag = {
       id: uuidV4(),
       name: stantartizeTagName(tagName),
@@ -109,13 +126,6 @@ Template.createQuiz.events({
     templateInstance.state.set('tags', [...tags, tag]);
 
     // clear input field
-    event.target.tag.value = '';
+    input.tag.value = '';
   },
 });
-
-const stantartizeTagName = s =>
-  [s]
-    .map(str => str.trim())
-    .map(str => str.toLocaleLowerCase())
-    .map(str => str.replace(/\s+/g, '-'))
-    .pop();
