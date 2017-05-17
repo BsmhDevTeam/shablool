@@ -1,0 +1,15 @@
+<template name="searchResults">
+    {{> manageNavbar}}
+
+    <ul>
+        {{#EasySearch.Each index=quizesIndex }}
+            <li>{{> quizCard id=id title=title user=user tags=tags}}</li>
+        {{/EasySearch.Each}}
+    </ul>
+
+    {{> EasySearch.LoadMore index=quizesIndex}}
+
+  {{#EasySearch.IfNoResults index=quizesIndex}}
+    <div class="no-results">No results found!</div>
+  {{/EasySearch.IfNoResults}}
+</template>

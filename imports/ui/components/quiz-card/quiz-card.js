@@ -1,0 +1,1 @@
+import './quiz-card.html';
