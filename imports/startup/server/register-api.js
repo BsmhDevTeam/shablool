@@ -1,2 +1,1 @@
-import '../../api/quizes/server/publication.js'
-
+import '../../api/quizes/server/publication.js';

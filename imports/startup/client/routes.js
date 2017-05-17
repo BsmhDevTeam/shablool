@@ -13,7 +13,7 @@ import '../../ui/pages/game-lobby/game-lobby';
 import '../../ui/pages/create-quiz/create-quiz';
 import '../../ui/pages/menagement-page/menagement-page.js';
 import '../../ui/pages/edit-quiz/edit-quiz.js';
-// import '../../ui/pages/search-results/search-results';
+import '../../ui/pages/search-results/search-results';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
