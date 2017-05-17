@@ -11,7 +11,7 @@ import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
 import '../../ui/pages/create-quiz/create-quiz';
-// import '../../ui/pages/search-results/search-results';
+import '../../ui/pages/search-results/search-results';
 
 // Set up all routes in the app
 FlowRouter.route('/', {

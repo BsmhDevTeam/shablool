@@ -2,7 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
 import Question from '../questions/questions';
 
-const Quizes = new Mongo.Collection('quizes');
+export const Quizes = new Mongo.Collection('quizes');
 
 export default Class.create({
   name: 'Quize',
