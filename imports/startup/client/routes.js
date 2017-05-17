@@ -2,8 +2,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import layouts
-import '../../ui/layouts/game/game.js';
-import '../../ui/layouts/manage/manage.js';
+import '../../ui/layouts/game/game';
+import '../../ui/layouts/manage/manage';
 
 // Import pages
 import '../../ui/pages/home/home';
@@ -11,6 +11,7 @@ import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
 import '../../ui/pages/create-quiz/create-quiz';
+// import '../../ui/pages/search-results/search-results';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -34,6 +35,12 @@ FlowRouter.route('/Instructions', {
   },
 });
 
+FlowRouter.notFound = {
+  action() {
+    BlazeLayout.render('gameLayout', { main: 'notFound' });
+  },
+};
+
 FlowRouter.route('/CreateQuiz', {
   name: 'Manage.CreateQuiz',
   action() {
@@ -41,8 +48,9 @@ FlowRouter.route('/CreateQuiz', {
   },
 });
 
-FlowRouter.notFound = {
+FlowRouter.route('/SearchResults', {
+  name: 'Manage.SearchResults',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'notFound' });
+    BlazeLayout.render('manageLayout', { main: 'searchResults' });
   },
-};
+});

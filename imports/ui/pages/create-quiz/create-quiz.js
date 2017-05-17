@@ -10,16 +10,13 @@ import '../../components/tag-template/tag-template.js';
 import { Tag } from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
-
-
 // Utilities
-const stantartizeTagName = s =>
+const normalizeTagName = s =>
   [s]
     .map(str => str.trim())
     .map(str => str.toLocaleLowerCase())
     .map(str => str.replace(/\s+/g, '-'))
     .pop();
-
 
 // On Create
 Template.createQuiz.onCreated(function() {
@@ -29,7 +26,6 @@ Template.createQuiz.onCreated(function() {
     tags: [],
   });
 });
-
 
 // Template Helpers
 Template.createQuiz.helpers({
@@ -53,16 +49,16 @@ Template.createQuiz.helpers({
   },
 });
 
-
 // Events
 Template.createQuiz.events({
   'click .add-question'(event, templateInstance) {
     const questions = templateInstance.state.get('questions');
     templateInstance.state.set('questions', [...questions, uuidV4()]);
   },
+
   'click .save-quiz'(event, templateInstance) {
     // get quiz title
-    const title = templateInstance.$('.input-title').value;
+    const title = templateInstance.$('.input-title');
 
     // get quiestions
     const forms = templateInstance.$('.question-form');
@@ -93,10 +89,11 @@ Template.createQuiz.events({
       };
     });
 
+
+    console.log(title);
     // create quiz
     const quiz = new Quiz({
-      title,
-      questions,
+      title: title,
     });
 
     // validate quiz
@@ -113,13 +110,14 @@ Template.createQuiz.events({
       return existTag ? existTag._id : new Tag(newTag).save();
     });
   },
+
   'submit .tags-form'(event, templateInstance) {
     event.preventDefault();
     const input = event.target;
     const tagName = input.tag.value;
     const tag = {
       id: uuidV4(),
-      name: stantartizeTagName(tagName),
+      name: normalizeTagName(tagName),
     };
 
     const tags = templateInstance.state.get('tags');

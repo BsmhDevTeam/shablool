@@ -30,7 +30,7 @@ export default Class.create({
     },
     user: String, // read about authentication techniques
     private: {
-      // read about authorization techniques
+      // read about authorization models
       type: Boolean,
       default: false,
     },
