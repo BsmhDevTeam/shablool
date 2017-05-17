@@ -1,2 +1,2 @@
-// Register your apis here
+import '../../api/quizes/server/publication.js'
 

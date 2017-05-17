@@ -1,7 +1,9 @@
-import './tag-template.html'
+import { Template } from 'meteor/templating';
 
-Template.tag_template.events({
-    'click .remove-tag' (event, instance) {
-        this.removeTag();
-    },
+import './tag-template.html';
+
+Template.tagTemplate.events({
+  'click .remove-tag'() {
+    this.removeTag();
+  },
 });

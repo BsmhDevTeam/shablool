@@ -1,11 +1,11 @@
-<template name="question_form">
+<template name="questionForm">
     <form class="question-form form-horizontal">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="input-group">
-                            <input type="text" class="form-control input-lg" name="question" placeholder="שאל/י שאלה">
+                            <input type="text" value="{{question.text}}" class="form-control input-lg" name="question" placeholder="שאל/י שאלה">
                             <span class="input-group-btn">
                                 <button class="remove-question btn btn-danger btn-lg" type="button">
                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>

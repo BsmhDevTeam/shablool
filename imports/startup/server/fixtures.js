@@ -1,34 +1,57 @@
 // // Fill the DB with example data on startup
 
-// import { Meteor } from 'meteor/meteor';
-// import { Links } from '../../api/links/links.js';
+import { Meteor } from 'meteor/meteor';
+import Quiz from '../../api/quizes/quizes.js';
+import Tag from '../../api/tags/tags.js';
 
-// Meteor.startup(() => {
-//   // if the Links collection is empty
-//   if (Links.find().count() === 0) {
-//     const data = [
-//       {
-//         title: 'Do the Tutorial',
-//         url: 'https://www.meteor.com/try',
-//         createdAt: new Date(),
-//       },
-//       {
-//         title: 'Follow the Guide',
-//         url: 'http://guide.meteor.com',
-//         createdAt: new Date(),
-//       },
-//       {
-//         title: 'Read the Docs',
-//         url: 'https://docs.meteor.com',
-//         createdAt: new Date(),
-//       },
-//       {
-//         title: 'Discussions',
-//         url: 'https://forums.meteor.com',
-//         createdAt: new Date(),
-//       },
-//     ];
+Meteor.startup(() => {
+  let tagsId = [];
 
-//     data.forEach(link => Links.insert(link));
-//   }
-// });
+  if (Tag.find().count() === 0) {
+    const tags = [{
+      name: 'loops',
+    },
+    {
+      name: 'while',
+    },
+    {
+      name: 'for',
+    },
+    ];
+
+    tagsId = tags.map(tag => Tag.insert(tag));
+  }
+
+  if (Quiz.find().count() === 0) {
+    const quizes = [{
+      title: 'Loops',
+      questions: [{
+        text: 'מתי נשתמש בלולאות?',
+        answers: [{
+          text: 'אף פעם',
+          points: 0,
+        },
+        {
+          text: 'תמיד',
+          points: 0,
+        },
+        {
+          text: 'קוד חוזר',
+          points: 2,
+        }],
+        order: 1,
+        time: 30,
+        createdAt: new Date(),
+        lastUpdate: new Date(),
+      },
+      ],
+      tags: tagsId,
+      user: '8142023',
+      private: false,
+      createdAt: new Date(),
+      lastUpdate: new Date(),
+    }];
+
+    quizes.map(quiz => Quiz.insert(quiz));
+  }
+});

@@ -6,51 +6,59 @@ import '../../ui/layouts/game/game.js';
 import '../../ui/layouts/manage/manage.js';
 
 // Import pages
-import '../../ui/pages/home/home.js';
-import '../../ui/pages/not-found/not-found.js';
-import '../../ui/pages/instructions/instructions.js';
-import '../../ui/pages/gameLobby/gameLobby.js';
-import '../../ui/pages/create-quiz/create-quiz.js';
-import '../../ui/pages/right-answer/right-answer.js';
+import '../../ui/pages/home/home';
+import '../../ui/pages/not-found/not-found';
+import '../../ui/pages/instructions/instructions';
+import '../../ui/pages/game-lobby/game-lobby';
+import '../../ui/pages/create-quiz/create-quiz';
+import '../../ui/pages/menagement-page/menagement-page.js';
+import '../../ui/pages/edit-quiz/edit-quiz.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
-  name: 'App.home',
+  name: 'Game.home',
   action() {
-    BlazeLayout.render('game_layout', { main: 'home' });
+    BlazeLayout.render('gameLayout', { main: 'home' });
+  },
+});
+
+FlowRouter.route('/GameLobby', {
+  name: 'Game.GameLobby',
+  action() {
+    BlazeLayout.render('gameLayout', { main: 'gameLobby' });
+  },
+});
+
+FlowRouter.route('/Instructions', {
+  name: 'Game.instructions',
+  action() {
+    BlazeLayout.render('gameLayout', { main: 'instructions' });
   },
 });
 
 FlowRouter.route('/CreateQuiz', {
   name: 'Manage.CreateQuiz',
   action() {
-    BlazeLayout.render('manage_layout', { main: 'createQuiz' });
+    BlazeLayout.render('manageLayout', { main: 'createQuiz' });
   },
 });
 
-FlowRouter.route('/rightAnswer', {
-  name: 'App.rightAnswer',
+FlowRouter.route('/Menage', {
+  name: 'Menage.Home',
   action() {
-    BlazeLayout.render('manage_layout', { main: 'right_answer' });
+    BlazeLayout.render('manageLayout', { main: 'menagementPage' });
   },
 });
 
 FlowRouter.notFound = {
   action() {
-    BlazeLayout.render('game_layout', { main: 'App_notFound' });
+    BlazeLayout.render('gameLayout', { main: 'notFound' });
   },
 };
 
-FlowRouter.route('/gameLobby', {
-  name: 'App.gameLobby',
-  action() {
-    BlazeLayout.render('game_layout', { main: 'App_gameLobby' });
-  },
-});
-
-FlowRouter.route('/instructions', {
-  name: 'App.instructions',
-  action() {
-    BlazeLayout.render('game_layout', { main: 'App_instructions' });
-  },
+FlowRouter.route('/EditQuiz/:_id', {
+  name: 'Menage.EditQuiz',
+  action(params, queryParams) {
+    BlazeLayout.render('manageLayout', { main: 'editQuiz' });
+  }
 });

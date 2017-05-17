@@ -10,7 +10,7 @@
 		{{#each questionId in questions}}
 		<div class="row">
 			<div class="col-sm-12">
-				{{> question_form removeQuestion=(removeQuestion questionId)}}
+				{{> questionForm removeQuestion=(removeQuestion questionId)}}
 			</div>
 		</div>
 		{{/each}}
@@ -31,7 +31,7 @@
 					</div>
 					<div class="col-lg-8">
 						{{#each tag in tags}}
-							{{> tag_template tag=tag removeTag=(removeTag tag.id)}}
+							{{> tagTemplate tag=tag removeTag=(removeTag tag.id)}}
 						{{/each}}
 					</div>
 				</div>

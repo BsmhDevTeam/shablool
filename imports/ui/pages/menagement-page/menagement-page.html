@@ -1,0 +1,59 @@
+<template name="menagementPage">
+	<div id="quizes">
+		<div>
+	    	<div class="card">
+		    	<div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="...">
+			        <div class="btn-group" role="group">
+			            <button type="button" id="stars" class="btn btn-primary" href="#tab1" data-toggle="tab"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+			                <div class="hidden-xs">השאלונים שלי</div>
+			            </button>
+			        </div>
+			        <div class="btn-group" role="group">
+			            <button type="button" id="favorites" class="btn btn-default" href="#tab2" data-toggle="tab"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+			            	<div class="hidden-xs">התוצאות שלי</div>
+			            </button>
+			        </div>
+			        <div class="btn-group" role="group">
+			            <button type="button" id="following" class="btn btn-default" href="#tab3" data-toggle="tab"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			                <div class="hidden-xs">ניהול קבוצות</div>
+			            </button>
+			        </div>
+		    	</div>
+	    	</div>
+	        <div class="well">
+	      		<div class="tab-content">
+	        		<div class="tab-pane fade in active" id="tab1">
+	        			<h3>השאלונים שלי</h3>
+	          			<table class="table table-filter">
+							<tbody>
+								{{#each quiz in getQuizes}}
+									<tr data-status="pagado">
+										<td>										
+											<p class="summary">{{quiz.title}}</p>
+										</td>
+										<td>
+											<a href="javascript:;" class="star">
+												<i class="glyphicon glyphicon-play"></i>
+											</a>
+										</td>
+										<td>
+											<a href={{pathFor 'Menage.EditQuiz' _id=quiz._id}} class="star">
+												<i class="	glyphicon glyphicon-pencil"></i>
+											</a>
+										</td>
+									</tr>
+								{{/each}}	
+							</tbody>
+						</table>
+	        		</div>
+	        		<div class="tab-pane fade in" id="tab2">
+	          			<h3>כאן יהיו תוצאות המשחקים</h3>
+	        		</div>
+	        		<div class="tab-pane fade in" id="tab3">
+	          			<h3>כאן ניצור קבוצות</h3>
+	        		</div>
+	      		</div>
+	    	</div>
+	    </div>
+	</div>
+</template>

@@ -27,3 +27,4 @@ johanbrook:publication-collector  # Test a Meteor publication by collecting its 
 jagi:astronomy
 twbs:bootstrap
 reactive-dict
+arillo:flow-router-helpers
