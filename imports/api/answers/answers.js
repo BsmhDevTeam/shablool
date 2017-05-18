@@ -3,7 +3,7 @@ import { Class } from 'meteor/jagi:astronomy';
 
 const Answers = new Mongo.Collection('answers');
 
-export const Answer = Class.create({
+export default Class.create({
   name: 'Answer',
   collection: Answers,
   fields: {
@@ -15,7 +15,7 @@ export const Answer = Class.create({
       }, {
         type: 'maxLength',
         param: 300,
-      }]
+      }],
     },
     points: {
       type: Number,
@@ -32,6 +32,6 @@ export const Answer = Class.create({
       default() {
         return new Date();
       },
-    }
+    },
   },
 });

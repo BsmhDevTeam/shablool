@@ -1,17 +1,19 @@
-import './edit-quiz.html';
-
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict';
 import uuidV4 from 'uuid/v4';
 
+import './edit-quiz.html';
 import '../../components/question-form/question-form.js';
 import '../../components/tag-template/tag-template.js';
 
-import { Tag } from '../../../api/tags/tags';
+import Tag from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
-Template.editQuiz.onCreated( function() {
-  Template.instance().subscribe('quiz-by-id', FlowRouter.getParam("_id"));
+Template.editQuiz.onCreated(function() {
+  Template.instance().subscribe('quiz-by-id', FlowRouter.getParam('_id'));
+  const quiz = Quiz.findOne();
+  Template.instance().subscribe('quiz-by-id', quiz.tags);
   this.state = new ReactiveDict();
   this.state.setDefault({
     questions: [uuidV4()],
@@ -22,7 +24,7 @@ Template.editQuiz.onCreated( function() {
 Template.editQuiz.helpers({
   getQuiz() {
     return Quiz.findOne();
- },
+  },
 
   removeQuestion(id) {
     const state = Template.instance().state;
@@ -38,7 +40,7 @@ Template.editQuiz.helpers({
     return () => () =>
       state.set('tags', state.get('tags').filter(tag => tag.id !== id));
   },
-  
+ 
 });
 
 Template.createQuiz.events({

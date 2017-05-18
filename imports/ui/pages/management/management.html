@@ -1,4 +1,4 @@
-<template name="menagementPage">
+<template name="management">
 	<div id="quizes">
 		<div>
 	    	<div class="card">
@@ -24,27 +24,33 @@
 	      		<div class="tab-content">
 	        		<div class="tab-pane fade in active" id="tab1">
 	        			<h3>השאלונים שלי</h3>
-	          			<table class="table table-filter">
-							<tbody>
-								{{#each quiz in getQuizes}}
-									<tr data-status="pagado">
-										<td>										
-											<p class="summary">{{quiz.title}}</p>
-										</td>
-										<td>
-											<a href="javascript:;" class="star">
-												<i class="glyphicon glyphicon-play"></i>
-											</a>
-										</td>
-										<td>
-											<a href={{pathFor 'Menage.EditQuiz' _id=quiz._id}} class="star">
-												<i class="	glyphicon glyphicon-pencil"></i>
-											</a>
-										</td>
-									</tr>
-								{{/each}}	
-							</tbody>
-						</table>
+                <a href="/CreateQuiz" class="add-question btn btn-primary btn-lg btn-block">שאלון חדש</a>
+          			<table class="table table-filter">
+    							<tbody>
+    								{{#each quiz in getQuizes}}
+    									<tr>
+    										<td>
+    											<p class="summary">{{quiz.title}}</p>
+    										</td>
+    										<td>
+    											<a href="javascript:;" class="star">
+    												<i class="glyphicon glyphicon-play"></i>
+    											</a>
+    										</td>
+    										<td>
+    											<a href={{pathFor 'Menage.EditQuiz' _id=quiz._id}} class="star">
+    												<i class="glyphicon glyphicon-pencil"></i>
+    											</a>
+    										</td>
+    										<td>
+    											<a href="#" class="delete">
+    												<i class="glyphicon glyphicon-remove"></i>
+    											</a>
+    										</td>
+    									</tr>
+    								{{/each}}
+    							</tbody>
+    						</table>
 	        		</div>
 	        		<div class="tab-pane fade in" id="tab2">
 	          			<h3>כאן יהיו תוצאות המשחקים</h3>
