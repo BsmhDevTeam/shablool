@@ -1,4 +1,4 @@
-<template name="menagementPage">
+<template name="managementPage">
 	<div id="quizes">
 		<div>
 	    	<div class="card">
@@ -28,7 +28,7 @@
 							<tbody>
 								{{#each quiz in getQuizes}}
 									<tr data-status="pagado">
-										<td>										
+										<td>
 											<p class="summary">{{quiz.title}}</p>
 										</td>
 										<td>
@@ -42,7 +42,7 @@
 											</a>
 										</td>
 									</tr>
-								{{/each}}	
+								{{/each}}
 							</tbody>
 						</table>
 	        		</div>

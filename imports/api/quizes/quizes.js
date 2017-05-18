@@ -5,7 +5,7 @@ import Question from '../questions/questions';
 export const Quizes = new Mongo.Collection('quizes');
 
 export default Class.create({
-  name: 'Quize',
+  name: 'Quiz',
   collection: Quizes,
   fields: {
     title: {

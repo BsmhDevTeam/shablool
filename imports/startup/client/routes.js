@@ -11,7 +11,7 @@ import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
 import '../../ui/pages/create-quiz/create-quiz';
-import '../../ui/pages/menagement-page/menagement-page.js';
+import '../../ui/pages/management-page/management-page.js';
 import '../../ui/pages/edit-quiz/edit-quiz.js';
 import '../../ui/pages/search-results/search-results';
 
@@ -44,10 +44,10 @@ FlowRouter.route('/CreateQuiz', {
   },
 });
 
-FlowRouter.route('/Menage', {
-  name: 'Menage.Home',
+FlowRouter.route('/Manage', {
+  name: 'Manage.Home',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'menagementPage' });
+    BlazeLayout.render('manageLayout', { main: 'managementPage' });
   },
 });
 
