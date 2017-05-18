@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import { Answer } from '../answers/answers.js';
+import Answer from '../answers/answers.js';
 
 const Questions = new Mongo.Collection('questions');
 

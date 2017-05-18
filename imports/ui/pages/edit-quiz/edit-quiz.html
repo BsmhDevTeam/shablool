@@ -30,8 +30,8 @@
 						</form>
 					</div>
 					<div class="col-lg-8">
-						{{#each tag in getQuiz.tags}}
-							{{> tagTemplate tag=tag removeTag=(removeTag tag._id)}}
+						{{#each tag in tags}}
+							{{> tagTemplate tag=tag removeTag=(removeTag tag)}}
 						{{/each}}
 					</div>
 				</div>
