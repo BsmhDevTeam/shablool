@@ -1,11 +1,12 @@
 import { Template } from 'meteor/templating';
-import { EasySearch } from 'meteor/easy:search';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import './manage-navbar.html';
 
-import { Quizes } from '../../../api/quizes/quizes.js';
-import { QuizesIndex } from '../../../api/quizes/quizes-index.js';
-
-Template.manageNavbar.helpers({
-  quizesIndex: () => QuizesIndex,
+Template.manageNavbar.events({
+  'submit .js-search' (event) {
+    event.preventDefault();
+    const query = event.target.query.value;
+    FlowRouter.go('search', { query: query });
+  }
 });

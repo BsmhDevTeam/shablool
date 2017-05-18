@@ -14,12 +14,12 @@
                  <ul class="nav navbar-nav">
                      <li class="manage-nav-li"><a href="/profile">פרופיל</a></li>
                  </ul>
-                 <form class="navbar-form navbar-left">
-                     <div class="form-group">
-                        {{> EasySearch.Input index=quizesIndex }}
-                     </div>
-                     <button type="submit" class="btn btn-default"><span class="glyphicon-glyphicon-search"></span></button>
-                 </form>       
+                 <form class="js-search navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Search" name="query" type="text">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>     
             </div>
         </div>
     </nav>

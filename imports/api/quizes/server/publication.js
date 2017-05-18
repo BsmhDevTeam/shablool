@@ -1,4 +1,4 @@
-import Quize from "../quizes.js"
+import Quize from "../quizes.js";
  
 if (Meteor.isServer) {
 	Meteor.publish('quiz-title', function() {
@@ -11,3 +11,15 @@ if (Meteor.isServer) {
 	});	
 }
 
+Meteor.publish('quizes.search', function(query) {
+    return Quize.find({
+        $or: [
+            {
+                'title': {
+                    '$regex': query,
+                    $options: 'i'
+                }
+            }
+        ]
+    });
+});
