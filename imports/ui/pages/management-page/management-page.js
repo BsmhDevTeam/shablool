@@ -11,4 +11,15 @@ Template.managementPage.helpers({
   getQuizes() {
     return Quiz.find();
   },
+
+  deleteQuiz(quiz) {
+    quiz.delete();
+  },
+
+});
+
+Template.managementPage.events({
+  'click .delete' (event) {
+    Quiz.findOne().delete();
+  },
 });

@@ -2,6 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import Quize from '../quizes.js';
 
 if (Meteor.isServer) {
+  Meteor.publish('quiz-all', function() {
+    return Quize.find();
+  });
+
   Meteor.publish('quiz-title', function() {
     return Quize.find({}, { fields: { title: true } });
   });

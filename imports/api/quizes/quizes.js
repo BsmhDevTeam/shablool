@@ -47,4 +47,10 @@ export default Class.create({
       },
     },
   },
+
+  meteorMethods: {
+    delete() {
+      return this.remove();
+    },
+  },
 });
