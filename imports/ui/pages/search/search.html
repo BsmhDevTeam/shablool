@@ -1,0 +1,8 @@
+<template name="Search">
+    {{> manageNavbar}}
+    <ul class="">
+        {{#each quiz in results}}
+          <div>{{> quizCard title=quiz.title user=quiz.user tags=quiz.tags}}</div>
+        {{/each}}
+      </ul>
+</template>
