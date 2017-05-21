@@ -4,11 +4,13 @@ import './management.html';
 import Quiz from '../../../api/quizes/quizes';
 
 Template.management.onCreated(function() {
-  Template.instance().subscribe('quiz-title');
+  this.autorun(() => {
+    this.subscribe('quizes.myQuizes');
+  });
 });
 
 Template.management.helpers({
-  getQuizes() {
+  myQuizes() {
     return Quiz.find();
   },
 });

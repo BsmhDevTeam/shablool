@@ -29,3 +29,4 @@ twbs:bootstrap
 reactive-dict
 arillo:flow-router-helpers
 easy:search
+react-meteor-data
