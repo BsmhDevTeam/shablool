@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../components/main-form/main-form.js';
+import { Home } from '../../components/main-form/main-form.js';
 
 let Home = () => (
     <div id="home">
@@ -22,3 +22,5 @@ let Home = () => (
         </p>
     </div>
 );
+
+export default Home;
