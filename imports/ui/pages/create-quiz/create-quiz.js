@@ -1,5 +1,4 @@
-import { Template } from 'meteor/templating';
-import { ReactiveDict } from 'meteor/reactive-dict';
+import React from 'react';
 import uuidV4 from 'uuid/v4';
 
 import './create-quiz.html';
@@ -11,12 +10,83 @@ import { Tag } from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
 // Utilities
-const normalizeTagName = s =>
-  [s]
-    .map(str => str.trim())
-    .map(str => str.toLocaleLowerCase())
-    .map(str => str.replace(/\s+/g, '-'))
+const normalizeTagName = str =>
+  [str]
+    .map(s => s.trim())
+    .map(s => s.toLocaleLowerCase())
+    .map(s => s.replace(/\s+/g, '-'))
     .pop();
+
+// React Page
+export default class HelloWorld extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      questions: [uuidV4()],
+      tags: [],
+    };
+  }
+
+  render() {
+    return (
+      <div id="create-quiz">
+    		<div class="row">
+    			<div class="col-sm-12">
+    				<div class="page-header">
+    					<input type="text" class="input-title form-control" placeholder="כותרת שאלון" />
+    				</div>
+    			</div>
+    		</div>
+    		{{#each questionId in questions}}
+    		<div class="row">
+    			<div class="col-sm-12">
+    				{{> questionForm removeQuestion=(removeQuestion questionId)}}
+    			</div>
+    		</div>
+    		{{/each}}
+    		<div class="row">
+    			<div class="col-sm-12">
+    				<button class="add-question btn btn-primary btn-lg btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+    			</div>
+    		</div>
+    		<hr />
+    		<div class="row">
+    			<div class="col-sm-9">
+    				<div class="row">
+    					<div class="col-lg-4">
+    						<form class="tags-form">
+    							<label for="tag" class="control-label">הוספת תגיות</label>
+    							<input name="tag" class="form-control input-lg" type="text">
+    						</form>
+    					</div>
+    					<div class="col-lg-8">
+    						{{#each tag in tags}}
+    							{{> tagTemplate tag=tag removeTag=(removeTag tag.id)}}
+    						{{/each}}
+    					</div>
+    				</div>
+    			</div>
+    			<div class="col-sm-3">
+    				<div class="form-group-lg">
+    					<label for="isPrivate" class="control-label">מי יכול למצוא את השאלון</label>
+    					<select name="isPrivate" class="is-private form-control">
+    						<option value="false">כולם</option>
+    						<option value="true">רק אני</option>
+    					</select>
+    				</div>
+    			</div>
+    		</div>
+    		<hr />
+    		<div class="row">
+    			<div class="col-sm-12">
+    				<button type="button" class="save-quiz btn btn-success btn-lg col-sm-2 pull-left"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+    			</div>
+    		</div>
+    	</div>
+    );
+  }
+}
+
 
 // On Create
 Template.createQuiz.onCreated(function() {
@@ -53,6 +123,7 @@ Template.createQuiz.helpers({
 Template.createQuiz.events({
   'click .add-question'(event, templateInstance) {
     const questions = templateInstance.state.get('questions');
+    console.log(questions);
     templateInstance.state.set('questions', [...questions, uuidV4()]);
   },
 

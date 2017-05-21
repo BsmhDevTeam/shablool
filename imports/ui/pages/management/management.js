@@ -5,11 +5,13 @@ import '../../components/my-quiz/my-quiz.js';
 import Quiz from '../../../api/quizes/quizes';
 
 Template.management.onCreated(function() {
-  Template.instance().subscribe('quiz-all');
+  this.autorun(() => {
+    this.subscribe('quizes.myQuizes');
+  });
 });
 
 Template.management.helpers({
-  getQuizes() {
+  myQuizes() {
     return Quiz.find();
   },
 

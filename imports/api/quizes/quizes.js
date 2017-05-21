@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
 import Question from '../questions/questions';
+import Tag from '../tags/tags.js';
 
 export const Quizes = new Mongo.Collection('quizes');
 
@@ -51,6 +52,12 @@ export default Class.create({
   meteorMethods: {
     delete() {
       return this.remove();
+    },
+  },
+
+  helpers: {
+    getTags() {
+      return Tag.find({ _id: { $in: this.tags } });
     },
   },
 });

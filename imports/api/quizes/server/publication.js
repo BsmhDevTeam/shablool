@@ -3,7 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import Quiz from '../quizes.js';
 
 if (Meteor.isServer) {
-  Meteor.publish('quiz-all', function() {
+  Meteor.publish('quizes.myQuizes', function() {
+    // TODO: filter only my quizes
     return Quiz.find();
   });
 
@@ -11,20 +12,21 @@ if (Meteor.isServer) {
     return Quiz.find({}, { fields: { title: true } });
   });
 
-  Meteor.publish('quiz-by-id', function(idFromRoute) {
-    return Quiz.find({ _id: idFromRoute }, {});
+  Meteor.publish('quizes.get', function(id) {
+    return Quiz.find(id);
+  });
+
+  Meteor.publish('quizes.search', function(query) {
+    return Quiz.find({
+      $or: [
+        {
+          'title': {
+            '$regex': query,
+            $options: 'i',
+          },
+        },
+      ],
+    });
   });
 }
 
-Meteor.publish('quizes.search', function(query) {
-  return Quiz.find({
-    $or: [
-      {
-        'title': {
-          '$regex': query,
-          $options: 'i',
-        },
-      },
-    ],
-  });
-});

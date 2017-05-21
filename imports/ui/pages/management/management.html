@@ -27,7 +27,7 @@
                 <a href="/CreateQuiz" class="add-question btn btn-primary btn-lg btn-block">שאלון חדש</a>
           			<table class="table table-filter">
     							<tbody>
-    								{{#each quiz in getQuizes}}
+    								{{#each quiz in myQuizes}}
     									{{> myQuiz deleteQuiz=(deleteQuiz quiz) quiz=quiz}}
     								{{/each}}
     							</tbody>
