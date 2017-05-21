@@ -1,13 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import Quize from '../quizes.js';
 
-if (Meteor.isServer) {
-  Meteor.publish('quiz-title', function() {
-    return Quize.find({}, { fields: { title: true } });
-  });
+Meteor.publish('quizes.myQuizes', function() {
+  // TODO: filter only my quizes
+  return Quize.find();
+});
 
-  Meteor.publish('quiz-by-id', function(idFromRoute) {
-    return Quize.find({ _id: idFromRoute }, {});
-  });
-}
-
+Meteor.publish('quizes.get', function(id) {
+  return Quize.find(id);
+});

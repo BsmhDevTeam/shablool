@@ -11,43 +11,50 @@ import Tag from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
 Template.editQuiz.onCreated(function() {
-  Template.instance().subscribe('quiz-by-id', FlowRouter.getParam('_id'));
-  const quiz = Quiz.findOne();
-  Template.instance().subscribe('quiz-by-id', quiz.tags);
+  this.getQuizId = () => FlowRouter.getParam('_id');
   this.state = new ReactiveDict();
-  this.state.setDefault({
-    questions: [uuidV4()],
-    tags: [],
+
+  this.autorun(() => {
+    this.subscribe('quizes.get', this.getQuizId());
+    this.subscribe('tags.all');
+
+    this.state.setDefault({
+      questions: Quiz.findOne().questions,
+    });
   });
 });
 
 Template.editQuiz.helpers({
-  getQuiz() {
+  quiz() {
     return Quiz.findOne();
+  },
+
+  questions() {
+    const instance = Template.instance();
+    return instance.state.get('questions');
   },
 
   removeQuestion(id) {
     const state = Template.instance().state;
     return () => () =>
-      state.set('questions', state.get('questions').filter(i => i !== id));
+      state.set('questions', state.get('questions').filter(q => q._id !== id));
   },
-  tags() {
-    const instance = Template.instance();
-    return instance.state.get('tags');
-  },
+
   removeTag(id) {
     const state = Template.instance().state;
     return () => () =>
       state.set('tags', state.get('tags').filter(tag => tag.id !== id));
   },
- 
+
 });
 
-Template.createQuiz.events({
+Template.editQuiz.events({
   'click .add-question'(event, templateInstance) {
     const questions = templateInstance.state.get('questions');
-    templateInstance.state.set('questions', [...questions, uuidV4()]);
+    console.log(questions);
+    templateInstance.state.set('questions', [...questions, { _id: uuidV4() }]);
   },
+
   'click .save-quiz'(event, templateInstance) {
     // get quiz title
     const title = templateInstance.$('.input-title').value;
@@ -101,6 +108,7 @@ Template.createQuiz.events({
       return existTag ? existTag._id : new Tag(newTag).create();
     });
   },
+
   'submit .tags-form'(event, templateInstance) {
     event.preventDefault();
     const tagName = event.target.tag.value;

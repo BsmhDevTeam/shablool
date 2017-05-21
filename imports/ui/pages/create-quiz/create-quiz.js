@@ -11,11 +11,11 @@ import { Tag } from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
 
 // Utilities
-const normalizeTagName = s =>
-  [s]
-    .map(str => str.trim())
-    .map(str => str.toLocaleLowerCase())
-    .map(str => str.replace(/\s+/g, '-'))
+const normalizeTagName = str =>
+  [str]
+    .map(s => s.trim())
+    .map(s => s.toLocaleLowerCase())
+    .map(s => s.replace(/\s+/g, '-'))
     .pop();
 
 // On Create
@@ -53,6 +53,7 @@ Template.createQuiz.helpers({
 Template.createQuiz.events({
   'click .add-question'(event, templateInstance) {
     const questions = templateInstance.state.get('questions');
+    console.log(questions);
     templateInstance.state.set('questions', [...questions, uuidV4()]);
   },
 
