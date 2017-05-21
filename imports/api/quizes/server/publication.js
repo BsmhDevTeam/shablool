@@ -1,17 +1,17 @@
 import { Meteor } from 'meteor/meteor';
-import Quize from '../quizes.js';
+import Quiz from '../quizes.js';
 
 if (Meteor.isServer) {
   Meteor.publish('quiz-all', function() {
-    return Quize.find();
+    return Quiz.find();
   });
 
   Meteor.publish('quiz-title', function() {
-    return Quize.find({}, { fields: { title: true } });
+    return Quiz.find({}, { fields: { title: true } });
   });
 
   Meteor.publish('quiz-by-id', function(idFromRoute) {
-    return Quize.find({ _id: idFromRoute }, {});
+    return Quiz.find({ _id: idFromRoute }, {});
   });
 }
 

@@ -28,26 +28,7 @@
           			<table class="table table-filter">
     							<tbody>
     								{{#each quiz in getQuizes}}
-    									<tr>
-    										<td>
-    											<p class="summary">{{quiz.title}}</p>
-    										</td>
-    										<td>
-    											<a href="javascript:;" class="star">
-    												<i class="glyphicon glyphicon-play"></i>
-    											</a>
-    										</td>
-    										<td>
-    											<a href={{pathFor 'Menage.EditQuiz' _id=quiz._id}} class="star">
-    												<i class="glyphicon glyphicon-pencil"></i>
-    											</a>
-    										</td>
-    										<td>
-    											<a href="#" class="delete">
-    												<i class="glyphicon glyphicon-remove"></i>
-    											</a>
-    										</td>
-    									</tr>
+    									{{> myQuiz deleteQuiz=(deleteQuiz quiz) quiz=quiz}}
     								{{/each}}
     							</tbody>
     						</table>

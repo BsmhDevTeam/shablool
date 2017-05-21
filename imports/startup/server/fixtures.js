@@ -1,13 +1,13 @@
 // // Fill the DB with example data on startup
 
 import { Meteor } from 'meteor/meteor';
-import Quiz from '../../api/quizes/quizes.js';
-import Tag from '../../api/tags/tags.js';
+import Quizes from '../../api/quizes/quizes.js';
+import Tags from '../../api/tags/tags.js';
 
 Meteor.startup(() => {
   let tagsId = [];
 
-  if (Tag.find().count() === 0) {
+  if (Tags.find().count() === 0) {
     const tags = [{
       name: 'loops',
     },
@@ -19,10 +19,10 @@ Meteor.startup(() => {
     },
     ];
 
-    tagsId = tags.map(tag => Tag.insert(tag));
+    tagsId = tags.map(tag => Tags.insert(tag));
   }
 
-  if (Quiz.find().count() === 0) {
+  if (Quizes.find().count() === 0) {
     const quizes = [{
       title: 'Loops',
       questions: [{
@@ -52,6 +52,6 @@ Meteor.startup(() => {
       lastUpdate: new Date(),
     }];
 
-    quizes.map(quiz => Quiz.insert(quiz));
+    quizes.map(quiz => Quizes.insert(quiz));
   }
 });
