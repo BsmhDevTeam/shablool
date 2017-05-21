@@ -1,3 +1,4 @@
+
 import { Meteor } from 'meteor/meteor';
 import Quiz from '../quizes.js';
 
@@ -15,3 +16,15 @@ if (Meteor.isServer) {
   });
 }
 
+Meteor.publish('quizes.search', function(query) {
+  return Quiz.find({
+    $or: [
+      {
+        'title': {
+          '$regex': query,
+          $options: 'i',
+        },
+      },
+    ],
+  });
+});

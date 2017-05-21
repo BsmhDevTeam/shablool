@@ -10,3 +10,4 @@ import { QuizesIndex } from '../../../api/quizes/quizes-index.js';
 Template.searchResults.helpers({
   quizesIndex: () => QuizesIndex,
 });
+

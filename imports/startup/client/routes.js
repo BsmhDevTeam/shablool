@@ -14,6 +14,7 @@ import '../../ui/pages/create-quiz/create-quiz';
 import '../../ui/pages/management/management.js';
 import '../../ui/pages/edit-quiz/edit-quiz.js';
 import '../../ui/pages/search-results/search-results';
+import '../../ui/pages/search/search.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -70,3 +71,11 @@ FlowRouter.notFound = {
     BlazeLayout.render('gameLayout', { main: 'notFound' });
   },
 };
+
+FlowRouter.route('/search/:query', {
+  name: 'Menage.Search',
+  action() {
+    BlazeLayout.render('manageLayout', { main: 'Search' });
+  },
+});
+
