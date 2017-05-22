@@ -1,18 +1,21 @@
+import React from 'react';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { mount } from 'react-mounter';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import layouts
 import '../../ui/layouts/game/game';
 import '../../ui/layouts/manage/manage';
+import ManageLayout from '../../ui/layouts/manage/manage-layout.js';
 
 // Import pages
 import '../../ui/pages/home/home';
 import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
-import '../../ui/pages/create-quiz/create-quiz';
+import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import '../../ui/pages/management/management.js';
-import '../../ui/pages/edit-quiz/edit-quiz.js';
+import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz';
 import '../../ui/pages/search-results/search-results';
 import '../../ui/pages/search/search.js';
 
@@ -41,7 +44,9 @@ FlowRouter.route('/Instructions', {
 FlowRouter.route('/CreateQuiz', {
   name: 'Manage.CreateQuiz',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'createQuiz' });
+    mount(ManageLayout, {
+      main: <CreateQuiz />,
+    });
   },
 });
 
@@ -62,7 +67,9 @@ FlowRouter.route('/SearchResults', {
 FlowRouter.route('/EditQuiz/:_id', {
   name: 'Menage.EditQuiz',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'editQuiz' });
+    mount(ManageLayout, {
+      main: <EditQuiz />,
+    });
   },
 });
 
@@ -78,4 +85,3 @@ FlowRouter.route('/search/:query', {
     BlazeLayout.render('manageLayout', { main: 'Search' });
   },
 });
-
