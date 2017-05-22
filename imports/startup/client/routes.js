@@ -4,49 +4,52 @@ import { mount } from 'react-mounter';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import layouts
-import '../../ui/layouts/game/game';
-import '../../ui/layouts/manage/manage';
-import ManageLayout from '../../ui/layouts/manage/manage-layout.js';
+import GameLayout from '../../ui/layouts/game/game.js';
+import ManageLayout from '../../ui/layouts/manage/manage.js';
 
 // Import pages
-import '../../ui/pages/home/home';
-import '../../ui/pages/not-found/not-found';
-import '../../ui/pages/instructions/instructions';
-import '../../ui/pages/game-lobby/game-lobby';
-import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
+import Home from '../../ui/pages/home/home';
+import NotFound from '../../ui/pages/not-found/not-found';
+
 import '../../ui/pages/management/management.js';
+<<<<<<< HEAD
 import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz';
 import '../../ui/pages/search-results/search-results';
 import '../../ui/pages/search/search.js';
+=======
+import Instructions from '../../ui/pages/instructions/instructions';
+import GameLobby from '../../ui/pages/game-lobby/game-lobby';
+import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
+import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
+import Search from '../../ui/pages/search/search.js';
+>>>>>>> 858aca37fcf7c5519d44014c713b206df47be20c
 
 // Set up all routes in the app
 FlowRouter.route('/', {
-  name: 'Game.home',
+  name: 'Game.Home',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'home' });
+    mount(GameLayout, { main: <Home /> });
   },
 });
 
 FlowRouter.route('/GameLobby', {
   name: 'Game.GameLobby',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'gameLobby' });
+    mount(GameLayout, { main: <GameLobby /> });
   },
 });
 
 FlowRouter.route('/Instructions', {
-  name: 'Game.instructions',
+  name: 'Game.Instructions',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'instructions' });
+    mount(GameLayout, { main: <Instructions /> });
   },
 });
 
 FlowRouter.route('/CreateQuiz', {
   name: 'Manage.CreateQuiz',
   action() {
-    mount(ManageLayout, {
-      main: <CreateQuiz />,
-    });
+    mount(ManageLayout, { main: <CreateQuiz /> });
   },
 });
 
@@ -57,31 +60,28 @@ FlowRouter.route('/Manage', {
   },
 });
 
-FlowRouter.route('/SearchResults', {
-  name: 'Manage.SearchResults',
-  action() {
-    BlazeLayout.render('manageLayout', { main: 'searchResults' });
+FlowRouter.route('/EditQuiz/:_id', {
+  name: 'Menage.EditQuiz',
+  action(params) {
+    mount(ManageLayout, { main: <EditQuiz id={params._id} /> });
   },
 });
 
-FlowRouter.route('/EditQuiz/:_id', {
-  name: 'Menage.EditQuiz',
+FlowRouter.route('/search/:query', {
+  name: 'Manage.Search',
   action() {
+<<<<<<< HEAD
     mount(ManageLayout, {
       main: <EditQuiz />,
     });
+=======
+    mount(ManageLayout, { main: <Search /> });
+>>>>>>> 858aca37fcf7c5519d44014c713b206df47be20c
   },
 });
 
 FlowRouter.notFound = {
   action() {
-    BlazeLayout.render('gameLayout', { main: 'notFound' });
+    mount(GameLayout, { main: <NotFound /> });
   },
 };
-
-FlowRouter.route('/search/:query', {
-  name: 'Menage.Search',
-  action() {
-    BlazeLayout.render('manageLayout', { main: 'Search' });
-  },
-});
