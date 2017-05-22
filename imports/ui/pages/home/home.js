@@ -1,7 +1,7 @@
 import React from 'react';
-import { Home } from '../../components/main-form/main-form.js';
+import { MainForm } from '../../components/main-form/main-form.js';
 
-let Home = () => (
+const Home = () => (
     <div id="home">
         <div className="container">
             <div className="row">

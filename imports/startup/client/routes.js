@@ -4,12 +4,11 @@ import { mount } from 'react-mounter';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import layouts
-import '../../ui/layouts/game/game';
-import '../../ui/layouts/manage/manage';
-import ManageLayout from '../../ui/layouts/manage/manage-layout.js';
+import GameLayout from '../../ui/layouts/game/game.js';
+import ManageLayout from '../../ui/layouts/manage/manage.js';
 
 // Import pages
-import '../../ui/pages/home/home';
+import Home from '../../ui/pages/home/home';
 import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
@@ -21,9 +20,11 @@ import '../../ui/pages/search/search.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
-  name: 'Game.home',
+  name: 'Game.Home',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'home' });
+    mount(GameLayout, {
+      main: <Home />,
+    });
   },
 });
 
@@ -65,7 +66,7 @@ FlowRouter.route('/SearchResults', {
 });
 
 FlowRouter.route('/EditQuiz/:_id', {
-  name: 'Menage.EditQuiz',
+  name: 'Manage.EditQuiz',
   action() {
     BlazeLayout.render('manageLayout', { main: 'editQuiz' });
   },
@@ -78,7 +79,7 @@ FlowRouter.notFound = {
 };
 
 FlowRouter.route('/search/:query', {
-  name: 'Menage.Search',
+  name: 'Manage.Search',
   action() {
     BlazeLayout.render('manageLayout', { main: 'Search' });
   },
