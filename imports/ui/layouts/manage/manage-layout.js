@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ManageLayout = props => (
+const ManageLayout = ({ main }) => (
   <div id="manage">
     <div className="container">
-      {props.main}
+      {main}
     </div>
   </div>
 );

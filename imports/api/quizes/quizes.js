@@ -29,7 +29,7 @@ export default Class.create({
         return [];
       },
     },
-    user: String, // read about authentication techniques
+    user: String, // read about authentication
     private: {
       // read about authorization models
       type: Boolean,

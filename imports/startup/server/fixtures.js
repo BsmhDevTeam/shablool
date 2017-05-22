@@ -1,6 +1,7 @@
 // // Fill the DB with example data on startup
 
 import { Meteor } from 'meteor/meteor';
+import uuidV4 from 'uuid/v4';
 import Quiz from '../../api/quizes/quizes.js';
 import Tag from '../../api/tags/tags.js';
 
@@ -26,16 +27,20 @@ Meteor.startup(() => {
     const quizes = [{
       title: 'Loops',
       questions: [{
+        _id: uuidV4(),
         text: 'מתי נשתמש בלולאות?',
         answers: [{
+          _id: uuidV4(),
           text: 'אף פעם',
           points: 0,
         },
         {
+          _id: uuidV4(),
           text: 'תמיד',
           points: 0,
         },
         {
+          _id: uuidV4(),
           text: 'קוד חוזר',
           points: 2,
         }],

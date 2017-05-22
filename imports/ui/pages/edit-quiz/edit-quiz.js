@@ -1,133 +1,136 @@
-import { FlowRouter } from 'meteor/kadira:flow-router';
-import { Template } from 'meteor/templating';
-import { ReactiveDict } from 'meteor/reactive-dict';
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
+import React from 'react';
 import uuidV4 from 'uuid/v4';
-
-import './edit-quiz.html';
-import '../../components/question-form/question-form.js';
-import '../../components/tag-template/tag-template.js';
-
-import Tag from '../../../api/tags/tags';
 import Quiz from '../../../api/quizes/quizes';
+import QuizForm from '../../components/quiz-form/quiz-form.js';
 
-Template.editQuiz.onCreated(function() {
-  this.getQuizId = () => FlowRouter.getParam('_id');
-  this.state = new ReactiveDict();
+// Utilities
+const newQuestion = () => {
+  const answers = [1, 2, 3, 4].map(() => ({
+    _id: uuidV4(),
+    text: '',
+    points: 0,
+  }));
+  return {
+    _id: uuidV4(),
+    text: '',
+    time: 30,
+    answers,
+  };
+};
 
-  this.autorun(() => {
-    this.subscribe('quizes.get', this.getQuizId());
-    this.subscribe('tags.all');
+const normalizeTagName = str =>
+  [str].map(s => s.trim()).map(s => s.toLocaleLowerCase()).map(s => s.replace(/\s+/g, '-')).pop();
 
-    this.state.setDefault({
-      questions: Quiz.findOne().questions,
-    });
-  });
-});
+// React Page
+class EditQuiz extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props.quiz;
+  }
 
-Template.editQuiz.helpers({
-  quiz() {
-    return Quiz.findOne();
-  },
+  render() {
+    const s = this.state;
 
-  questions() {
-    const instance = Template.instance();
-    return instance.state.get('questions');
-  },
-
-  removeQuestion(id) {
-    const state = Template.instance().state;
-    return () => () =>
-      state.set('questions', state.get('questions').filter(q => q._id !== id));
-  },
-
-  removeTag(id) {
-    const state = Template.instance().state;
-    return () => () =>
-      state.set('tags', state.get('tags').filter(tag => tag.id !== id));
-  },
-
-});
-
-Template.editQuiz.events({
-  'click .add-question'(event, templateInstance) {
-    const questions = templateInstance.state.get('questions');
-    console.log(questions);
-    templateInstance.state.set('questions', [...questions, { _id: uuidV4() }]);
-  },
-
-  'click .save-quiz'(event, templateInstance) {
-    // get quiz title
-    const title = templateInstance.$('.input-title').value;
-
-    // get quiestions
-    const forms = templateInstance.$('.question-form');
-    const questions = forms.map((i, form) => {
-      const answers = [
-        {
-          text: form.answer1.value,
-          points: form.points1.value,
-        },
-        {
-          text: form.answer2.value,
-          points: parseInt(form.points2.value, 10),
-        },
-        {
-          text: form.answer3.value,
-          points: parseInt(form.points3.value, 10),
-        },
-        {
-          text: form.answer4.value,
-          points: parseInt(form.points4.value, 10),
-        },
-      ];
-      return {
-        text: form.question.value,
-        answers,
-        order: i,
-        time: 30,
-      };
-    });
-
-    // create quiz
-    const quiz = new Quiz({
-      title,
-      questions,
-    });
-
-    // validate quiz
-    quiz.validate((e) => {
-      console.log(e);
-    });
-
-    // get tags
-    const tags = templateInstance.state.get('tags');
-    const tagsId = tags.map((t) => {
-      // check if tag exists
-      const newTag = { name: t.name };
-      const existTag = Tag.findOne(newTag); // TODO: better duplication checks
-      return existTag ? existTag._id : new Tag(newTag).create();
-    });
-  },
-
-  'submit .tags-form'(event, templateInstance) {
-    event.preventDefault();
-    const tagName = event.target.tag.value;
-    const tag = {
-      id: uuidV4(),
-      name: stantartizeTagName(tagName),
+    const changeQuizTitle = (e) => {
+      this.setState({ title: e.target.value });
     };
 
-    const tags = templateInstance.state.get('tags');
-    templateInstance.state.set('tags', [...tags, tag]);
+    const addQuestion = () => {
+      this.setState({
+        questions: [...s.questions, newQuestion()],
+      });
+    };
 
-    // clear input field
-    event.target.tag.value = '';
-  },
-});
+    const removeQuestion = id => () => {
+      this.setState({
+        questions: s.questions.filter(q => q._id !== id),
+      });
+    };
 
-const stantartizeTagName = s =>
-  [s]
-    .map(str => str.trim())
-    .map(str => str.toLocaleLowerCase())
-    .map(str => str.replace(/\s+/g, '-'))
-    .pop();
+    const addTag = (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const tagName = form.tag.value;
+
+      const newTag = {
+        _id: uuidV4(),
+        name: normalizeTagName(tagName),
+      };
+
+      this.setState({
+        tags: [...s.tags, newTag],
+      });
+
+      form.tag.value = '';
+    };
+
+    const removeTag = id => () => {
+      this.setState({
+        tags: s.tags.filter(t => t._id !== id),
+      });
+    };
+
+    const changeQuestionText = id => (e) => {
+      const text$ = e.target.value;
+      const questions$ = s.questions.map(q => (q._id !== id ? q : { ...q, text: text$ }));
+      this.setState({ questions: questions$ });
+    };
+
+    const changeQuestionTime = id => (e) => {
+      const time$ = e.target.value;
+      const questions$ = s.questions.map(q => (q._id !== id ? q : { ...q, time: time$ }));
+      this.setState({ questions: questions$ });
+    };
+
+    const changeAnswerText = qId => aId => (e) => {
+      const text$ = e.target.value;
+      const answers$ = s.questions
+        .find(q => q._id === qId)
+        .answers.map(a => (a._id !== aId ? a : { ...a, text: text$ }));
+      const questions$ = s.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      this.setState({ questions: questions$ });
+    };
+
+    const changeAnswerPoints = qId => aId => (e) => {
+      const points$ = e.target.value;
+      const answers$ = s.questions
+        .find(q => q._id === qId)
+        .answers.map(a => (a._id !== aId ? a : { ...a, points: points$ }));
+      const questions$ = s.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      this.setState({ questions: questions$ });
+    };
+
+    const actions = {
+      changeQuizTitle,
+      addQuestion,
+      changeQuestionText,
+      removeQuestion,
+      changeQuestionTime,
+      changeAnswerText,
+      changeAnswerPoints,
+      addTag,
+      removeTag,
+    };
+
+    return <QuizForm quiz={s} actions={actions} />;
+  }
+}
+
+const EditQuizContainer = ({ loading, quizId }) => {
+  if (loading) return <p>loading</p>;
+  const quiz = Quiz.findOne(quizId);
+  return <EditQuiz quiz={{ ...quiz, tags: quiz.getTags().fetch() }} />;
+};
+
+export default createContainer(({ id }) => {
+  Meteor.subscribe('tags.all');
+  const quizHandle = Meteor.subscribe('quizes.get', id);
+  const loading = !quizHandle.ready();
+  return {
+    loading,
+    quizId: id,
+  };
+}, EditQuizContainer);

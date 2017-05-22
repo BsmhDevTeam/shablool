@@ -13,9 +13,9 @@ import '../../ui/pages/home/home';
 import '../../ui/pages/not-found/not-found';
 import '../../ui/pages/instructions/instructions';
 import '../../ui/pages/game-lobby/game-lobby';
-import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import '../../ui/pages/management/management.js';
-import '../../ui/pages/edit-quiz/edit-quiz.js';
+import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
+import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import '../../ui/pages/search-results/search-results';
 import '../../ui/pages/search/search.js';
 
@@ -44,9 +44,7 @@ FlowRouter.route('/Instructions', {
 FlowRouter.route('/CreateQuiz', {
   name: 'Manage.CreateQuiz',
   action() {
-    mount(ManageLayout, {
-      main: <CreateQuiz />,
-    });
+    mount(ManageLayout, { main: <CreateQuiz /> });
   },
 });
 
@@ -66,8 +64,8 @@ FlowRouter.route('/SearchResults', {
 
 FlowRouter.route('/EditQuiz/:_id', {
   name: 'Menage.EditQuiz',
-  action() {
-    BlazeLayout.render('manageLayout', { main: 'editQuiz' });
+  action(params) {
+    mount(ManageLayout, { main: <EditQuiz id={params._id} /> });
   },
 });
 
