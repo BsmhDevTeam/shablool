@@ -10,13 +10,12 @@ import ManageLayout from '../../ui/layouts/manage/manage.js';
 // Import pages
 import Home from '../../ui/pages/home/home';
 import '../../ui/pages/not-found/not-found';
-import '../../ui/pages/instructions/instructions';
-import '../../ui/pages/game-lobby/game-lobby';
+import Instructions from '../../ui/pages/instructions/instructions';
+import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import '../../ui/pages/management/management.js';
 import '../../ui/pages/edit-quiz/edit-quiz.js';
-import '../../ui/pages/search-results/search-results';
-import '../../ui/pages/search/search.js';
+import Search from '../../ui/pages/search/search.js';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -31,14 +30,18 @@ FlowRouter.route('/', {
 FlowRouter.route('/GameLobby', {
   name: 'Game.GameLobby',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'gameLobby' });
+    mount(GameLayout, {
+      main: <GameLobby />,
+    });
   },
 });
 
 FlowRouter.route('/Instructions', {
-  name: 'Game.instructions',
+  name: 'Game.Instructions',
   action() {
-    BlazeLayout.render('gameLayout', { main: 'instructions' });
+    mount(GameLayout, {
+      main: <Instructions />,
+    });
   },
 });
 
@@ -58,13 +61,6 @@ FlowRouter.route('/Manage', {
   },
 });
 
-FlowRouter.route('/SearchResults', {
-  name: 'Manage.SearchResults',
-  action() {
-    BlazeLayout.render('manageLayout', { main: 'searchResults' });
-  },
-});
-
 FlowRouter.route('/EditQuiz/:_id', {
   name: 'Manage.EditQuiz',
   action() {
@@ -81,6 +77,8 @@ FlowRouter.notFound = {
 FlowRouter.route('/search/:query', {
   name: 'Manage.Search',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'Search' });
+    mount(ManageLayout, {
+      main: <Search />,
+    });
   },
 });
