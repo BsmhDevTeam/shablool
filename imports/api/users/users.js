@@ -16,15 +16,15 @@ const User = Class.create({
         type: 'maxLength',
         param: 40
       }]
-    }
+    },
     soldierId: String,
-	createdAt: {
+    createdAt: {
       value: Date,
       default: Date.Now()
     },
     lastUpdate: {
       value: Date,
-      default: Date.Now()
+      default: Date.Now(),
     }
   },
 });
