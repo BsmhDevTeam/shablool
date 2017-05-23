@@ -7,3 +7,5 @@ let PlayersLobby = (props) => (
         </li>   
     </div>
 );
+
+export default PlayersLobby;
