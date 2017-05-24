@@ -1,5 +1,5 @@
 import React from 'react';
-import { MainForm } from '../../components/main-form/main-form.js';
+import MainForm from '../../components/main-form/main-form.js';
 
 const Home = () => (
   <div id="home">
