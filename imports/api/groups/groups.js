@@ -12,7 +12,7 @@ const Group = Class.create({
       type:String,
       validators: [{
         type: 'minLength',
-        param: 3
+        param: 3,
       }, {
         type: 'maxLength',
         param: 40
@@ -21,11 +21,11 @@ const Group = Class.create({
     users: Users,
     createdAt: {
       value: Date,
-      default: Date.Now()
+      default: Date.Now(),
     },
     lastUpdate: {
       value: Date,
-      default: Date.Now()
-    }
+      default: Date.Now(),
+    },
   },
 });

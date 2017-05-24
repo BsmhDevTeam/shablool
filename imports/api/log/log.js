@@ -12,11 +12,11 @@ const Group = Class.create({
     points: Number,
     createdAt: {
       value: Date,
-      default: Date.Now()
+      default: Date.Now(),
     },
     lastUpdate: {
       value: Date,
-      default: Date.Now()
-    }
+      default: Date.Now(),
+    },
   },
 });
