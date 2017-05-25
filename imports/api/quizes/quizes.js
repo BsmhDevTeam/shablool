@@ -15,10 +15,12 @@ export default Class.create({
         {
           type: 'minLength',
           param: 3,
+          message: 'תן כותרת נורמלית!',
         },
         {
           type: 'maxLength',
           param: 40,
+          message: 'תן כותרת נורמלית!',
         },
       ],
     },

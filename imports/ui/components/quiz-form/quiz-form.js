@@ -1,24 +1,30 @@
 import React from 'react';
 import QuestionForm from '../../components/question-form/question-form.js';
 
-const QuizForm = ({ quiz, actions }) => (
+const QuizForm = ({ quiz, validations, actions }) => (
   <div id="create-quiz">
     <div className="row">
       <div className="col-sm-12">
         <div className="page-header">
-          <input
-            className="input-title form-control"
-            placeholder="כותרת שאלון"
-            value={quiz.title}
-            onChange={actions.changeQuizTitle}
-          />
+          <div className={`form-group ${validations.title ? 'has-error' : ''}`}>
+            {validations.title
+              ? <label className="control-label" htmlFor="title">{validations.title}</label>
+              : ''}
+            <input
+              name="title"
+              className="input-title form-control"
+              placeholder="כותרת שאלון"
+              value={quiz.title}
+              onChange={actions.changeQuizTitle}
+            />
+          </div>
         </div>
       </div>
     </div>
-    {quiz.questions.map(q => (
+    {quiz.questions.map((q, i) => (
       <div key={q._id} className="row">
         <div className="col-sm-12">
-          <QuestionForm question={q} actions={actions} />
+          <QuestionForm question={q} validations={validations.filter(v => new RegExp(`questions.${i}`).test(v))} actions={actions} />
         </div>
       </div>
     ))}
@@ -61,7 +67,7 @@ const QuizForm = ({ quiz, actions }) => (
     <hr />
     <div className="row">
       <div className="col-sm-12">
-        <button type="button" className="save-quiz btn btn-success btn-lg col-sm-2 pull-left">
+        <button className="btn btn-success btn-lg col-sm-2 pull-left" onClick={actions.saveQuiz}>
           <span className="glyphicon glyphicon-ok" aria-hidden="true" />
         </button>
       </div>
