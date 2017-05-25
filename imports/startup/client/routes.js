@@ -63,8 +63,8 @@ FlowRouter.route('/EditQuiz/:_id', {
 
 FlowRouter.route('/search/:query', {
   name: 'Manage.Search',
-  action() {
-    mount(ManageLayout, { main: <Search /> });
+  action(params) {
+    mount(ManageLayout, { main: <Search query={params.query} /> });
   },
 });
 

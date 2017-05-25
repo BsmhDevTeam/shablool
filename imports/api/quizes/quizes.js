@@ -53,4 +53,16 @@ export default Class.create({
       return Tag.find({ _id: { $in: this.tags } });
     },
   },
+  methods: {
+    forkQuiz: () => {
+      const quiz = new Quizes({
+        title: this.title,
+        questions: this.questions,
+        tags: this.tags,
+        user: 'Me',
+        private: this.private,
+      });
+      quiz.save();
+    },
+  },
 });

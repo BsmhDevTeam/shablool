@@ -1,19 +1,38 @@
-
 import React from 'react';
 import ManageNavbar from '../../components/manage-navbar/manage-navbar.js';
 import QuizCard from '../../components/quiz-card/quiz-card.js';
 
-const Search = () => (
+import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Meteor } from 'meteor/meteor';
+
+import Quiz from '/imports/api/quizes/quizes.js';
+import { createContainer } from 'meteor/react-meteor-data';
+
+const Search = (props) => (
   <div>
     <ManageNavbar />
     <ul>
-      {results.map(result => (
+      {props.results.map(quiz => (
         <div>
-          <QuizCard title={result.title} user={result.user} tags={result.tags} />
+          <QuizCard quiz={ quiz } />
         </div>
       ))}
     </ul>
   </div>
 );
 
-export default Search;
+const SearchContainer = ({ loading, query }) => {
+  console.log(loading);
+  if (loading) return <p>loading</p>;
+  const results = Quiz.find({});
+  return <Search results={results} />;
+};
+
+export default createContainer(({ query }) => {
+  const searchHandle = Meteor.subscribe('quizes.search', query);
+  const loading = !searchHandle.ready();
+  return {
+    loading,
+    query,
+  };
+}, SearchContainer);

@@ -113,7 +113,7 @@ const GameLobby = () => (
           ? <div className="lobby-players-names-area">
             <ul>
               {players.map(player => (
-                <PlayersLobby id={player.id} name={player.name} />
+                <PlayersLobby name={player.name} />
                 ))}
             </ul>
           </div>
