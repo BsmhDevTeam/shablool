@@ -27,62 +27,75 @@ const normalizeTagName = str =>
 class EditQuiz extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props.quiz;
+    this.state = {
+      quiz: props.quiz,
+      validations: {},
+    };
   }
 
   render() {
     const s = this.state;
 
     const changeQuizTitle = (e) => {
-      this.setState({ title: e.target.value });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, title: e.target.value };
+      this.setState({ quiz: quiz$ });
     };
 
     const addQuestion = () => {
-      this.setState({
-        questions: [...s.questions, newQuestion()],
-      });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: [...s.questions, newQuestion()] };
+      this.setState({ quiz: quiz$ });
     };
 
     const removeQuestion = id => () => {
-      this.setState({
-        questions: s.questions.filter(q => q._id !== id),
-      });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: s.questions.filter(q => q._id !== id) };
+      this.setState({ quiz: quiz$ });
     };
 
     const addTag = (e) => {
       e.preventDefault();
 
+      // get args
       const form = e.target;
       const tagName = form.tag.value;
 
+      // create new tag
       const newTag = {
         _id: uuidV4(),
         name: normalizeTagName(tagName),
       };
 
-      this.setState({
-        tags: [...s.tags, newTag],
-      });
+      // update state
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, tags: [...s.tags, newTag] };
+      this.setState({ quiz: quiz$ });
 
+      // clear form
       form.tag.value = '';
     };
 
     const removeTag = id => () => {
-      this.setState({
-        tags: s.tags.filter(t => t._id !== id),
-      });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, tags: s.tags.filter(t => t._id !== id) };
+      this.setState({ quiz: quiz$ });
     };
 
     const changeQuestionText = id => (e) => {
       const text$ = e.target.value;
       const questions$ = s.questions.map(q => (q._id !== id ? q : { ...q, text: text$ }));
-      this.setState({ questions: questions$ });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: questions$ };
+      this.setState({ quiz: quiz$ });
     };
 
     const changeQuestionTime = id => (e) => {
       const time$ = e.target.value;
       const questions$ = s.questions.map(q => (q._id !== id ? q : { ...q, time: time$ }));
-      this.setState({ questions: questions$ });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: questions$ };
+      this.setState({ quiz: quiz$ });
     };
 
     const changeAnswerText = qId => aId => (e) => {
@@ -91,7 +104,9 @@ class EditQuiz extends React.Component {
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, text: text$ }));
       const questions$ = s.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
-      this.setState({ questions: questions$ });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: questions$ };
+      this.setState({ quiz: quiz$ });
     };
 
     const changeAnswerPoints = qId => aId => (e) => {
@@ -100,7 +115,27 @@ class EditQuiz extends React.Component {
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, points: points$ }));
       const questions$ = s.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
-      this.setState({ questions: questions$ });
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, questions: questions$ };
+      this.setState({ quiz: quiz$ });
+    };
+
+    const saveQuiz = (e) => {
+      e.preventDefault();
+      const quiz = new Quiz(s.quiz);
+      // Validate
+      quiz.validate((err) => {
+        const validations = err.details.reduce((v, d) => {
+          const v$ = { ...v };
+          v$[d.name] = d.message;
+          return v$;
+        }, {});
+        console.log(validations);
+        // Check Validations and submit
+        this.setState({ validations });
+      });
+
+      // Save Quiz
     };
 
     const actions = {
@@ -113,9 +148,10 @@ class EditQuiz extends React.Component {
       changeAnswerPoints,
       addTag,
       removeTag,
+      saveQuiz,
     };
 
-    return <QuizForm quiz={s} actions={actions} />;
+    return <QuizForm quiz={s.quiz} validations={s.validations} actions={actions} />;
   }
 }
 
