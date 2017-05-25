@@ -12,17 +12,13 @@ import Home from '../../ui/pages/home/home';
 import NotFound from '../../ui/pages/not-found/not-found';
 
 import '../../ui/pages/management/management.js';
-<<<<<<< HEAD
-import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz';
-import '../../ui/pages/search-results/search-results';
-import '../../ui/pages/search/search.js';
-=======
 import Instructions from '../../ui/pages/instructions/instructions';
 import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import Search from '../../ui/pages/search/search.js';
->>>>>>> 858aca37fcf7c5519d44014c713b206df47be20c
+import Management from '../../ui/pages/management/management.js';
+//import '../../ui/pages/search-results/search-results';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -56,7 +52,7 @@ FlowRouter.route('/CreateQuiz', {
 FlowRouter.route('/Manage', {
   name: 'Manage.Home',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'management' });
+    mount(ManageLayout, { main: <Management /> });
   },
 });
 
@@ -70,13 +66,7 @@ FlowRouter.route('/EditQuiz/:_id', {
 FlowRouter.route('/search/:query', {
   name: 'Manage.Search',
   action() {
-<<<<<<< HEAD
-    mount(ManageLayout, {
-      main: <EditQuiz />,
-    });
-=======
     mount(ManageLayout, { main: <Search /> });
->>>>>>> 858aca37fcf7c5519d44014c713b206df47be20c
   },
 });
 

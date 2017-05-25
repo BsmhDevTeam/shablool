@@ -1,35 +1,32 @@
 import React from 'react';
 
-export default class MyQuiz extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+const MyQuiz = ({ quiz }) => {
+  const deleteQuiz = () => {
+    quiz.delete();
+  };
 
-  render() {
-  	const props = this.props;
+  return (
+  <tr>
+    <td>
+      <p className="summary">{quiz.title}</p>
+    </td>
+    <td>
+      <a href="javascript:;" className="star">
+        <i className="glyphicon glyphicon-play" />
+      </a>
+    </td>
+    <td>
+      <a className="star" href={`/EditQuiz/${quiz._id}`}>
+        <i className="glyphicon glyphicon-pencil" />
+      </a>
+    </td>
+    <td>
+      <button className="delete" onClick={deleteQuiz}>
+        <i className="glyphicon glyphicon-remove" />
+      </button>
+    </td>
+  </tr>
+);
+};
 
-	return(
-		{props.questions.map(q => 
-	    <tr>
-	        <td>
-	            <p className="summary">{q.title}</p>
-	        </td>
-	        <td>
-				<a href="javascript:;" className="star">
-	            	<i className="glyphicon glyphicon-play"></i>
-	            </a>
-	        </td> 	
-	        <td>
-	            <a className="star" href='/EditQuiz/'>
-	                <i className="glyphicon glyphicon-pencil"></i>
-	            </a>
-	        </td>
-	        <td>
-	            <a href="#" className="delete">
-	                <i class="glyphicon glyphicon-remove"></i>
-	            </a>
-	        </td>
-	    </tr>
-	)});
-  }
-}
+export default MyQuiz;

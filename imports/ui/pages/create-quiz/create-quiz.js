@@ -122,76 +122,6 @@ export default class CreateQuiz extends React.Component {
   }
 }
 
-<<<<<<< HEAD
-const TagTemplate = ({ tag, removeTag }) => (
-  <h2 className="pull-right">
-    <span className="label label-info">
-      {tag.name}
-      <span
-        className="glyphicon glyphicon-remove clickable"
-        aria-hidden="true"
-        onClick={removeTag}
-      />
-    </span>
-  </h2>
-  );
-
-
-const saveQuiz = (event, templateInstance) => {
-    // get quiz title
-  const title = templateInstance.$('.input-title');
-
-    // get quiestions
-  const forms = templateInstance.$('.question-form');
-  const questions = forms.map((i, form) => {
-    const answers = [
-      {
-        text: form.answer1.value,
-        points: parseInt(form.points1.value, 10),
-      },
-      {
-        text: form.answer2.value,
-        points: parseInt(form.points2.value, 10),
-      },
-      {
-        text: form.answer3.value,
-        points: parseInt(form.points3.value, 10),
-      },
-      {
-        text: form.answer4.value,
-        points: parseInt(form.points4.value, 10),
-      },
-    ];
-    return {
-      text: form.question.value,
-      answers,
-      order: i,
-      time: parseInt(form.time.value, 10),
-    };
-  });
-
-
-  console.log(title);
-    // create quiz
-  const quiz = new Quiz({
-    title,
-  });
-
-    // validate quiz
-  quiz.validate((e) => {
-    console.log(e);
-  });
-
-    // get tags
-  const tags = templateInstance.state.get('tags');
-  const tagsId = tags.map((t) => {
-      // check if tag exists
-    const newTag = { name: t.name };
-    const existTag = Tag.findOne(newTag); // TODO: better duplication checks
-    return existTag ? existTag._id : new Tag(newTag).save();
-  });
-};
-=======
 // TODO: CODE TO CONVERT
 
 // const saveQuiz = (event, templateInstance) => {
@@ -247,4 +177,3 @@ const saveQuiz = (event, templateInstance) => {
 //     return existTag ? existTag._id : new Tag(newTag).save();
 //   });
 // };
->>>>>>> 858aca37fcf7c5519d44014c713b206df47be20c

@@ -10,3 +10,5 @@ const MainForm = () => (
         </div>
     </form>
 );
+
+export default MainForm;
