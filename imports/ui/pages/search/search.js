@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ManageNavbar from '../../components/manage-navbar/manage-navbar.js';
-import { QuizCard } from '../../components/quiz-card/quiz-card.js';
+import QuizCard from '../../components/quiz-card/quiz-card.js';
 
 const Search = () => (
   <div>
