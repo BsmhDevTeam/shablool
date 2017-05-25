@@ -12,4 +12,3 @@ const MainForm = () => (
 );
 
 export default MainForm;
-

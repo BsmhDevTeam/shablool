@@ -48,6 +48,13 @@ export default Class.create({
       },
     },
   },
+
+  meteorMethods: {
+    delete() {
+      this.remove();
+    },
+  },
+
   helpers: {
     getTags() {
       return Tag.find({ _id: { $in: this.tags } });

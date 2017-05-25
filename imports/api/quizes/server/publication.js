@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import Quiz from '../quizes.js';
 
-Meteor.publish('quiz-title', function() {
+Meteor.publish('quizes.titlesOnly', function() {
   // TODO: filter private quizes
   return Quiz.find({}, { fields: { title: true } });
 });

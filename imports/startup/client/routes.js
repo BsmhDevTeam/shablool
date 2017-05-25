@@ -17,6 +17,8 @@ import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import Search from '../../ui/pages/search/search.js';
+import Management from '../../ui/pages/management/management.js';
+//import '../../ui/pages/search-results/search-results';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -50,7 +52,7 @@ FlowRouter.route('/CreateQuiz', {
 FlowRouter.route('/Manage', {
   name: 'Manage.Home',
   action() {
-    BlazeLayout.render('manageLayout', { main: 'management' });
+    mount(ManageLayout, { main: <Management /> });
   },
 });
 

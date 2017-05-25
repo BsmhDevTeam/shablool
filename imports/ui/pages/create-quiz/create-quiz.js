@@ -51,7 +51,7 @@ export default class CreateQuiz extends React.Component {
         questions: s.questions.filter(q => q._id !== id),
       });
     };
-
+    
     const addTag = (e) => {
       e.preventDefault();
 
