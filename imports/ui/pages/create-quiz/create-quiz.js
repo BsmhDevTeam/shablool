@@ -57,7 +57,7 @@ export default class CreateQuiz extends React.Component {
       const quiz$ = { ...quiz, questions: s.questions.filter(q => q._id !== id) };
       this.setState({ quiz: quiz$ });
     };
-
+    
     const addTag = (e) => {
       e.preventDefault();
 

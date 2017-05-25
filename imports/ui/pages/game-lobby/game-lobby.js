@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayersLobby } from '../../components/players-lobby/players-lobby';
+import PlayersLobby from '../../components/players-lobby/players-lobby';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
 const players = [
