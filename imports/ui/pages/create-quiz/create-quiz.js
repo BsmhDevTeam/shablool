@@ -57,7 +57,7 @@ export default class CreateQuiz extends React.Component {
       const quiz$ = { ...quiz, questions: s.questions.filter(q => q._id !== id) };
       this.setState({ quiz: quiz$ });
     };
-    
+
     const addTag = (e) => {
       e.preventDefault();
 
@@ -160,6 +160,10 @@ export default class CreateQuiz extends React.Component {
 }
 
 // TODO: CODE TO CONVERT
+
+
+// validations.filter(v => new RegExp(`questions.${i}`).test(v))
+
 
 // const saveQuiz = (event, templateInstance) => {
 //   // get quiz title

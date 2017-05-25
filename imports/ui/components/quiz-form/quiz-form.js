@@ -21,10 +21,10 @@ const QuizForm = ({ quiz, validations, actions }) => (
         </div>
       </div>
     </div>
-    {quiz.questions.map((q, i) => (
+    {quiz.questions.map(q => (
       <div key={q._id} className="row">
         <div className="col-sm-12">
-          <QuestionForm question={q} validations={validations.filter(v => new RegExp(`questions.${i}`).test(v))} actions={actions} />
+          <QuestionForm question={q} validations={validations} actions={actions} />
         </div>
       </div>
     ))}
