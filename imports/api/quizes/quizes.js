@@ -55,23 +55,15 @@ export default Class.create({
     delete() {
       this.remove();
     },
+    forkQuiz: () => {
+      const quiz = new Quizes(this);
+      quiz.save();
+    },
   },
 
   helpers: {
     getTags() {
       return Tag.find({ _id: { $in: this.tags } });
-    },
-  },
-  methods: {
-    forkQuiz: () => {
-      const quiz = new Quizes({
-        title: this.title,
-        questions: this.questions,
-        tags: this.tags,
-        user: 'Me',
-        private: this.private,
-      });
-      quiz.save();
     },
   },
 });
