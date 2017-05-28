@@ -1,5 +1,4 @@
 import React from 'react';
-import ManageNavbar from '../../components/manage-navbar/manage-navbar.js';
 import QuizCard from '../../components/quiz-card/quiz-card.js';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -10,7 +9,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 const Search = (props) => (
   <div>
-    <ManageNavbar />
     <ul>
       {props.results.map(quiz => (
         <div>

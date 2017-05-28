@@ -70,6 +70,13 @@ FlowRouter.route('/search/:query', {
   },
 });
 
+FlowRouter.route('/ViewQuiz/:quiz', {
+  name: 'Manage.ViewQuiz',
+  action(params) {
+    mount(ManageLayout, { main: <ViewQuiz quiz={params.quiz}/> });
+  },
+});
+
 FlowRouter.notFound = {
   action() {
     mount(GameLayout, { main: <NotFound /> });
