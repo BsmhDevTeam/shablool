@@ -39,4 +39,18 @@ export default Class.create({
       },
     },
   },
+
+  meteorMethods: {
+    create() {
+      return this.save();
+    },
+    update(fields) {
+      this.set(fields);
+      this.lastUpdated = new Date();
+      return this.save();
+    },
+    delete() {
+      return this.remove();
+    },
+  },
 });

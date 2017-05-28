@@ -7,9 +7,6 @@ const QuizForm = ({ quiz, validations, actions }) => (
       <div className="col-sm-12">
         <div className="page-header">
           <div className={`form-group ${validations.title ? 'has-error' : ''}`}>
-            {validations.title
-              ? <label className="control-label" htmlFor="title">{validations.title}</label>
-              : ''}
             <input
               name="title"
               className="input-title form-control"
@@ -17,17 +14,27 @@ const QuizForm = ({ quiz, validations, actions }) => (
               value={quiz.title}
               onChange={actions.changeQuizTitle}
             />
+            {validations.title
+              ? <label className="control-label" htmlFor="title">{validations.title}</label>
+              : ''}
           </div>
         </div>
       </div>
     </div>
-    {quiz.questions.map(q => (
-      <div key={q._id} className="row">
-        <div className="col-sm-12">
-          <QuestionForm question={q} validations={validations} actions={actions} />
+    {quiz.questions.map((q, i) => {
+      const questionValidations = validations.questions ? validations.questions[i] : {};
+      return (
+        <div key={q._id} className="row">
+          <div className="col-sm-12">
+            <QuestionForm
+              question={q}
+              validations={questionValidations || {}}
+              actions={actions}
+            />
+          </div>
         </div>
-      </div>
-    ))}
+      );
+    })}
     <div className="row">
       <div className="col-sm-12">
         <button className="btn btn-primary btn-lg btn-block" onClick={actions.addQuestion}>

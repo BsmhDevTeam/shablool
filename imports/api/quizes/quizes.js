@@ -20,7 +20,7 @@ export default Class.create({
         {
           type: 'maxLength',
           param: 40,
-          message: 'תן כותרת נורמלית!',
+          message: 'טוב נו מה אתה מגזים?! קצר קצת',
         },
       ],
     },
@@ -52,8 +52,16 @@ export default Class.create({
   },
 
   meteorMethods: {
+    create() {
+      return this.save();
+    },
+    update(fields) {
+      this.set(fields);
+      this.lastUpdated = new Date();
+      return this.save();
+    },
     delete() {
-      this.remove();
+      return this.remove();
     },
     forkQuiz: () => {
       const quiz = new Quizes(this);
