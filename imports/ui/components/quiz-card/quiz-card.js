@@ -30,7 +30,7 @@ const QuizCard = (props) => {
       </div>
       <div className="panel-footer">
         <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>העתק שאלון</a>
-        <a href="javascript:void(0)" className="btn">צפה בפרטים</a>
+        <a href={`/ViewQuiz/${props.quiz._id}`} className="btn">צפה בפרטים</a>
       </div>
     </div>
   );

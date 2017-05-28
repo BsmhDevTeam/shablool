@@ -1,4 +1,7 @@
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
+import Quiz from '../../../api/quizes/quizes';
 
 const ViewQuiz = ({ quiz }) => {
   return (
@@ -23,29 +26,39 @@ const RenderQuesion = ({ question }) => (
   <div>
     <div className="panel panel-default">
       <div className="panel-heading">
-        <h1>{question.text}</h1>
+        <h4>{question.text}</h4>
       </div>
-    </div>
-    <div className="panel-body">
-      {question.answers.map((answer, index) => (
-        <RenderAnswer
-          key={answer._id}
-          answer={answer}
-        />
-      ))}
+      <div className="panel-body">
+        {question.answers.map((answer, index) => (
+          <RenderAnswer
+            key={answer._id}
+            answer={answer}
+            index={index + 1}
+          />
+        ))}
+      </div>
     </div>
   </div>
 );
 
 const RenderAnswer = ({ answer, index }) => (
   <div className="row">
-    <div className="col-md-1">
-      {index}
-    </div>
-    <div className="col-md-11">
-      {answer.text}
-    </div>
+    <p className="fab-margin">{index}. {answer.text}</p>
   </div>
 );
 
-export default ViewQuiz;
+const ViewQuizContainer = ({ loading, quizId }) => {
+  if (loading) return <p>loading</p>;
+  const quiz = Quiz.findOne(quizId);
+  return <ViewQuiz quiz={{ ...quiz }} />;
+};
+
+export default createContainer(({ id }) => {
+  const quizHandle = Meteor.subscribe('quizes.get', id);
+  const loading = !quizHandle.ready();
+  return {
+    loading,
+    quizId: id,
+  };
+}, ViewQuizContainer);
+
