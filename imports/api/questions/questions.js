@@ -25,7 +25,16 @@ export default Class.create({
     },
     answers: [Answer],
     order: Number,
-    time: Number,
+    time: {
+      type: Number,
+      validators: [
+        {
+          type: 'gte',
+          param: 5,
+          message: 'מעט מידי זמן לשאלה',
+        },
+      ],
+    },
     createdAt: {
       type: Date,
       default() {

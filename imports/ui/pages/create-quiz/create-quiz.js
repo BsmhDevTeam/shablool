@@ -1,8 +1,7 @@
 import React from 'react';
 import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes.js';
-import Question from '../../../api/questions/questions.js';
-import Answer from '../../../api/answers/answers.js';
+import Tag from '../../../api/tags/tags.js';
 import QuizForm from '../../components/quiz-form/quiz-form.js';
 
 // Utilities
@@ -24,7 +23,7 @@ const normalizeTagName = str =>
   [str].map(s => s.trim()).map(s => s.toLocaleLowerCase()).map(s => s.replace(/\s+/g, '-')).pop();
 
 // React Page
-export default class CreateQuiz extends React.Component {
+class CreateQuiz extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,10 +31,10 @@ export default class CreateQuiz extends React.Component {
         title: '',
         questions: [newQuestion()],
         tags: [],
-        owner: 'Me',
+        owner: 'USER',
         private: false,
       },
-      validations: {},
+      validate: false,
     };
   }
 
@@ -124,52 +123,20 @@ export default class CreateQuiz extends React.Component {
       this.setState({ quiz: quiz$ });
     };
 
+    // TODO: set privacy field
+
     const saveQuiz = (e) => {
       e.preventDefault();
-
-      const questions = this.state.quiz.questions.map((q) => {
-        let qValidations = {};
-        // compute questions validaitons
-        const q$ = new Question(q);
-        q$.validate((err) => {
-          qValidations = err.details.reduce((v, d) => {
-            const v$ = { ...v };
-            v$[d.name] = d.message;
-            return v$;
-          }, {});
-        });
-        const answers = q.answers.map((a) => {
-          let aValidations = {};
-          // compute answers validations
-          const a$ = new Answer(a);
-          a$.validate((err) => {
-            aValidations = err.details.reduce((v, d) => {
-              const v$ = { ...v };
-              v$[d.name] = d.message;
-              return v$;
-            }, {});
-          });
-          return aValidations;
-        });
-        qValidations = { ...qValidations, answers };
-        return qValidations;
-      });
-
-      // compute quiz validations
-      const quiz = new Quiz(this.state.quiz);
-      quiz.validate((err) => {
-        const quizValidations = err.details.reduce((v, d) => {
-          const v$ = { ...v };
-          v$[d.name] = d.message;
-          return v$;
-        }, {});
-        const validations = { ...quizValidations, questions };
-        console.log(validations);
-        // Check Validations and submit
-        this.setState({ validations });
-      });
-
+      if (!this.state.validate) this.setState({ validate: true });
       // Save Quiz
+      const quiz = this.state.quiz;
+      const tags = quiz.tags.map((t) => {
+        const tag = Tag.findOne({ name: t.name });
+        return tag ? tag._id : new Tag(t).create();
+      });
+      const questions = quiz.questions.map((q, i) => ({ ...q, order: i }));
+      const quiz$ = new Quiz({ ...quiz, questions, tags }, { cast: true });
+      quiz$.create();
     };
 
     const actions = {
@@ -186,65 +153,9 @@ export default class CreateQuiz extends React.Component {
     };
 
     return (
-      <QuizForm quiz={this.state.quiz} validations={this.state.validations} actions={actions} />
+      <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
     );
   }
 }
 
-// TODO: CODE TO CONVERT
-
-// validations.filter(v => new RegExp(`questions.${i}`).test(v))
-
-// const saveQuiz = (event, templateInstance) => {
-//   // get quiz title
-//   const title = templateInstance.$('.input-title');
-//
-//   // get quiestions
-//   const forms = templateInstance.$('.question-form');
-//   const questions = forms.map((i, form) => {
-//     const answers = [
-//       {
-//         text: form.answer1.value,
-//         points: parseInt(form.points1.value, 10),
-//       },
-//       {
-//         text: form.answer2.value,
-//         points: parseInt(form.points2.value, 10),
-//       },
-//       {
-//         text: form.answer3.value,
-//         points: parseInt(form.points3.value, 10),
-//       },
-//       {
-//         text: form.answer4.value,
-//         points: parseInt(form.points4.value, 10),
-//       },
-//     ];
-//     return {
-//       text: form.question.value,
-//       answers,
-//       order: i,
-//       time: parseInt(form.time.value, 10),
-//     };
-//   });
-//
-//   console.log(title);
-//   // create quiz
-//   const quiz = new Quiz({
-//     title,
-//   });
-//
-//   // validate quiz
-//   quiz.validate((e) => {
-//     console.log(e);
-//   });
-//
-//   // get tags
-//   const tags = templateInstance.state.get('tags');
-//   const tagsId = tags.map((t) => {
-//     // check if tag exists
-//     const newTag = { name: t.name };
-//     const existTag = Tag.findOne(newTag); // TODO: better duplication checks
-//     return existTag ? existTag._id : new Tag(newTag).save();
-//   });
-// };
+export default CreateQuiz;

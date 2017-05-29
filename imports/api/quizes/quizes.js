@@ -31,7 +31,7 @@ export default Class.create({
         return [];
       },
     },
-    user: String, // read about authentication
+    owner: String, // read about authentication
     private: {
       // read about authorization models
       type: Boolean,
