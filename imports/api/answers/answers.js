@@ -9,13 +9,23 @@ export default Class.create({
   fields: {
     text: {
       type: String,
-      validators: [{
-        type: 'minLength',
-        param: 1,
-      }, {
-        type: 'maxLength',
-        param: 300,
-      }],
+      validators: [
+        {
+          type: 'minLength',
+          param: 1,
+          message: 'חובה למלא תשובה',
+        },
+        {
+          type: 'maxLength',
+          param: 300,
+          message: 'תשובה ארוכה מידי',
+        },
+        {
+          type: 'regexp',
+          param: /^.*\S.*$/,
+          message: 'תכניס תשובה נורמלית!',
+        },
+      ],
     },
     points: {
       type: Number,
