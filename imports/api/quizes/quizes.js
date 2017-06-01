@@ -20,7 +20,7 @@ export default Class.create({
         {
           type: 'maxLength',
           param: 40,
-          message: 'תן כותרת נורמלית!',
+          message: 'טוב נו מה אתה מגזים?! קצר קצת',
         },
       ],
     },
@@ -31,7 +31,7 @@ export default Class.create({
         return [];
       },
     },
-    user: String, // read about authentication
+    owner: String, // read about authentication
     private: {
       // read about authorization models
       type: Boolean,
@@ -52,18 +52,20 @@ export default Class.create({
   },
 
   meteorMethods: {
-    delete() {
-      this.remove();
+    create() {
+      return this.save();
     },
-    forkQuiz() {
-      const quiz = new Quizes({
-        title: this.title,
-        questions: this.questions,
-        tags: this.tags,
-        user: 'Me',
-        private: this.private,
-      });
-      quiz.save();
+    update(fields) {
+      this.set(fields);
+      this.lastUpdated = new Date();
+      return this.save();
+    },
+    delete() {
+      return this.remove();
+    },
+    forkQuiz(userId) {
+      const quiz = new Quizes({ ...this, owner: userId });
+      return quiz.save();
     },
   },
 

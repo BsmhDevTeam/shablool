@@ -25,7 +25,16 @@ export default Class.create({
     },
     answers: [Answer],
     order: Number,
-    time: Number,
+    time: {
+      type: Number,
+      validators: [
+        {
+          type: 'gte',
+          param: 5,
+          message: 'מעט מידי זמן לשאלה',
+        },
+      ],
+    },
     createdAt: {
       type: Date,
       default() {
@@ -37,6 +46,20 @@ export default Class.create({
       default() {
         return new Date();
       },
+    },
+  },
+
+  meteorMethods: {
+    create() {
+      return this.save();
+    },
+    update(fields) {
+      this.set(fields);
+      this.lastUpdated = new Date();
+      return this.save();
+    },
+    delete() {
+      return this.remove();
     },
   },
 });

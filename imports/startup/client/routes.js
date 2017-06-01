@@ -17,6 +17,7 @@ import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import Search from '../../ui/pages/search/search.js';
+import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
 //import '../../ui/pages/search-results/search-results';
 
@@ -67,6 +68,13 @@ FlowRouter.route('/search/:query', {
   name: 'Manage.Search',
   action(params) {
     mount(ManageLayout, { main: <Search query={params.query} /> });
+  },
+});
+
+FlowRouter.route('/ViewQuiz/:_id', {
+  name: 'Manage.ViewQuiz',
+  action(params) {
+    mount(ManageLayout, { main: <ViewQuiz id={params._id}/> });
   },
 });
 
