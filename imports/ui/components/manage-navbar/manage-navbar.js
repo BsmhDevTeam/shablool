@@ -37,12 +37,14 @@ const ManageNavbar = () => {
             <div className="form-group">
               <input
                 className="form-control"
-                placeholder="Search"
+                placeholder="חפש שאלון"
                 name="query"
                 type="text"
               />
             </div>
-            <button type="submit" className="btn btn-default">Search</button>
+            <button type="submit" className="btn btn-default">
+              <span className="glyphicon glyphicon-search"></span>
+            </button>
           </form>
         </div>
       </div>

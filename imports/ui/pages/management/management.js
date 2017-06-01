@@ -142,10 +142,7 @@ const ManagementContainer = ({ loading, quizes }) => {
           <div className="tab-content">
             <div className="tab-pane fade in active" id="tab1">
               <h3>השאלונים שלי</h3>
-              <a
-                href="/CreateQuiz"
-                className="add-question btn btn-primary btn-lg btn-block"
-              >
+              <a href="/CreateQuiz" className="add-question btn btn-primary btn-lg btn-block">
                 שאלון חדש
               </a>
               <table className="table table-filter">

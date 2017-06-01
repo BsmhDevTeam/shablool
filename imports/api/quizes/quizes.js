@@ -55,15 +55,7 @@ export default Class.create({
     delete() {
       this.remove();
     },
-  },
-
-  helpers: {
-    getTags() {
-      return Tag.find({ _id: { $in: this.tags } });
-    },
-  },
-  methods: {
-    forkQuiz: () => {
+    forkQuiz() {
       const quiz = new Quizes({
         title: this.title,
         questions: this.questions,
@@ -72,6 +64,12 @@ export default Class.create({
         private: this.private,
       });
       quiz.save();
+    },
+  },
+
+  helpers: {
+    getTags() {
+      return Tag.find({ _id: { $in: this.tags } });
     },
   },
 });
