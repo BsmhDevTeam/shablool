@@ -134,7 +134,7 @@ class CreateQuiz extends React.Component {
         const tag = Tag.findOne({ name: t.name });
         return tag ? tag._id : new Tag(t).create();
       });
-      const questions = quiz.questions.map((q, i) => ({ ...q, order: i }));
+      const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = new Quiz({ ...quiz, questions, tags }, { cast: true });
       quiz$.create();
     };
