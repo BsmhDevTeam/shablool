@@ -1,7 +1,6 @@
 import React from 'react';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
-import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 // Import layouts
 import GameLayout from '../../ui/layouts/game/game.js';
@@ -9,9 +8,6 @@ import ManageLayout from '../../ui/layouts/manage/manage.js';
 
 // Import pages
 import Home from '../../ui/pages/home/home';
-import NotFound from '../../ui/pages/not-found/not-found';
-
-import '../../ui/pages/management/management.js';
 import Instructions from '../../ui/pages/instructions/instructions';
 import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
@@ -19,7 +15,7 @@ import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import Search from '../../ui/pages/search/search.js';
 import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
-//import '../../ui/pages/search-results/search-results';
+import NotFound from '../../ui/pages/not-found/not-found';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -74,7 +70,7 @@ FlowRouter.route('/search/:query', {
 FlowRouter.route('/ViewQuiz/:_id', {
   name: 'Manage.ViewQuiz',
   action(params) {
-    mount(ManageLayout, { main: <ViewQuiz id={params._id}/> });
+    mount(ManageLayout, { main: <ViewQuiz id={params._id} /> });
   },
 });
 
