@@ -164,11 +164,9 @@ class EditQuiz extends React.Component {
     };
 
     return (
-      <QuizForm
-        quiz={this.state.quiz}
-        validate={this.state.validate}
-        actions={actions}
-      />
+      <div id="edit-quiz">
+        <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
+      </div>
     );
   }
 }

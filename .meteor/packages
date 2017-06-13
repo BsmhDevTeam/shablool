@@ -27,3 +27,6 @@ arillo:flow-router-helpers
 react-meteor-data
 static-html
 dynamic-import
+accounts-ui
+accounts-github
+service-configuration

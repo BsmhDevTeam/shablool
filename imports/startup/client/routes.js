@@ -8,6 +8,7 @@ import ManageLayout from '../../ui/layouts/manage/manage.js';
 
 // Import pages
 import Home from '../../ui/pages/home/home';
+import Login from '../../ui/pages/login/login';
 import Instructions from '../../ui/pages/instructions/instructions';
 import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
@@ -23,6 +24,13 @@ FlowRouter.route('/', {
   name: 'Game.Home',
   action() {
     mount(GameLayout, { main: <Home /> });
+  },
+});
+
+FlowRouter.route('/Login', {
+  name: 'Game.Login',
+  action() {
+    mount(GameLayout, { main: <Login /> });
   },
 });
 
