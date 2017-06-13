@@ -8,9 +8,10 @@ import QuizForm from '../../components/quiz-form/quiz-form.js';
 
 // Utilities
 const newQuestion = () => {
-  const answers = [1, 2, 3, 4].map(() => ({
+  const answers = [1, 2, 3, 4].map(i => ({
     _id: uuidV4(),
     text: '',
+    order: i,
     points: 0,
   }));
   return {
@@ -23,7 +24,11 @@ const newQuestion = () => {
 };
 
 const normalizeTagName = str =>
-  [str].map(s => s.trim()).map(s => s.toLocaleLowerCase()).map(s => s.replace(/\s+/g, '-')).pop();
+  [str]
+    .map(s => s.trim())
+    .map(s => s.toLocaleLowerCase())
+    .map(s => s.replace(/\s+/g, '-'))
+    .pop();
 
 // React Page
 class EditQuiz extends React.Component {
@@ -50,7 +55,10 @@ class EditQuiz extends React.Component {
 
     const removeQuestion = id => () => {
       const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, questions: quiz.questions.filter(q => q._id !== id) };
+      const quiz$ = {
+        ...quiz,
+        questions: quiz.questions.filter(q => q._id !== id),
+      };
       this.setState({ quiz: quiz$ });
     };
 
@@ -85,7 +93,9 @@ class EditQuiz extends React.Component {
     const changeQuestionText = id => (e) => {
       const quiz = this.state.quiz;
       const text$ = e.target.value;
-      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, text: text$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== id ? q : { ...q, text: text$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -93,7 +103,9 @@ class EditQuiz extends React.Component {
     const changeQuestionTime = id => (e) => {
       const quiz = this.state.quiz;
       const time$ = e.target.value;
-      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, time: time$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== id ? q : { ...q, time: time$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -104,7 +116,9 @@ class EditQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, text: text$ }));
-      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -115,7 +129,9 @@ class EditQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, points: points$ }));
-      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -148,7 +164,11 @@ class EditQuiz extends React.Component {
     };
 
     return (
-      <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
+      <QuizForm
+        quiz={this.state.quiz}
+        validate={this.state.validate}
+        actions={actions}
+      />
     );
   }
 }

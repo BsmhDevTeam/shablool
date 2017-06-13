@@ -16,6 +16,7 @@ import Search from '../../ui/pages/search/search.js';
 import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
 import NotFound from '../../ui/pages/not-found/not-found';
+import Question from '../../ui/pages/question/question';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -71,6 +72,13 @@ FlowRouter.route('/ViewQuiz/:_id', {
   name: 'Manage.ViewQuiz',
   action(params) {
     mount(ManageLayout, { main: <ViewQuiz id={params._id} /> });
+  },
+});
+
+FlowRouter.route('/Question/:_id', {
+  name: 'Manage.Question',
+  action(params) {
+    mount(ManageLayout, { main: <Question id={params._id} /> });
   },
 });
 

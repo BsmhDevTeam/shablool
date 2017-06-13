@@ -1,14 +1,14 @@
 import React from 'react';
 
-const GameNavbar = () => (
+const GameNavbar = ({text, num}) => (
   <nav className="navbar navbar-default navbar-fixed-top navbar-game">
     <div className="container-fluid navabr-message-area">
       <div className="navbar-bis-header">
         <p className="">
           <span>
-            כנס לכתובת <strong>zahool.idf</strong> והירשם למשחק בעזרת הקוד:
+            {text}
           </span>
-          <strong>675123</strong>
+          <strong>{num}</strong>
         </p>
       </div>
     </div>

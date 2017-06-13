@@ -8,7 +8,7 @@ const User = Class.create({
   collection: Users,
   fields: {
     name: {
-      type:String,
+      type: String,
       validators: [{
         type: 'minLength',
         param: 3

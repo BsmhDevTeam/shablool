@@ -27,6 +27,7 @@ export default Class.create({
         },
       ],
     },
+    order: Number,
     points: {
       type: Number,
       default: 0,
