@@ -18,6 +18,7 @@ import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
 import NotFound from '../../ui/pages/not-found/not-found';
 import Question from '../../ui/pages/question/question';
+import Game from '../../ui/pages/game/game';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -95,3 +96,10 @@ FlowRouter.notFound = {
     mount(GameLayout, { main: <NotFound /> });
   },
 };
+
+FlowRouter.route('/Game/:_id', {
+  name: 'Manage.Game',
+  action(params) {
+    mount(GameLayout, { main: <Game id={params._id} /> });
+  },
+});

@@ -1,4 +1,4 @@
-// import Meteor from 'meteor/meteor';
+import Meteor from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class, Union } from 'meteor/jagi:astronomy';
 import { countBy, groupBy, sortBy, mapObject, pairs } from 'underscore';
@@ -127,7 +127,6 @@ export default Class.create({
   collection: Games,
   fields: {
     quiz: Quiz,
-    players: [String],
     gameLog: {
       type: [GameEvent],
       default() {
@@ -150,9 +149,8 @@ export default Class.create({
 
   meteorMethods: {
     PlayerReg(userId) {
-      const isUserExist = this.players.find(user => user === userId);
+      const isUserExist = this.getGamePlayersId().find(user => user === userId);
       const registerPlayer = () => {
-        this.players = this.players.concat(userId);
         const newReg = new PlayerReg({
           playerId: userId,
         });
@@ -261,9 +259,9 @@ export default Class.create({
         val.reduce((a, b) => a + b, 0),
       ); // => {userId: finalScore, ...}
       const scoreByUser = pairs(finalScoreByUser).map(a => ({
-        userName: 'Meteor.users.findOne(u => u._id === a[0]).name',
+        userName: Meteor.users.findOne(u => u._id === a[0]).name,
         userScore: a[1],
-      })); // => [{userName: id, userScore: score}, {userName: id, userScore: score}, ...]
+      })); // => [{userName: name, userScore: score}, {userName: name, userScore: score}, ...]
       const scoreByUserNamesSorted = sortBy(scoreByUser, 'userScore').first(5);
       return scoreByUserNamesSorted; // => [{userName, score}, {userName: score},...] - 5 elements
     },
@@ -300,6 +298,23 @@ export default Class.create({
         orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents.questionId;
       return qId;
+    },
+    getGamePlayersId() {
+      const playerEvent = this.gameLog.filter(e => e instanceof PlayerReg);
+      const playersId = playerEvent.map(e => e.playerId);
+      return playersId;
+    },
+    getGamePlayersName() {
+      const playersId = this.getGamePlayersId();
+      const playersNames = playersId.map(pId => Meteor.users.findOne(u => u._id === pId).name);
+      return playersNames;
+    },
+    getLastEvent() {
+      const lastEvent = this.gameLog[-1];
+      return lastEvent;
+    },
+    getWinner() {
+      return this.scoreList().first();
     },
     // NextQuestionId() {
     //   const qId = this.LastQuestionToEndId === this.LastQuestionToStartId ?
