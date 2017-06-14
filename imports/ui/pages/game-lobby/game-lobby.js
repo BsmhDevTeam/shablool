@@ -2,7 +2,7 @@ import React from 'react';
 import PlayersLobby from '../../components/players-lobby/players-lobby';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
-const GameLobby = ({players}) => (
+const GameLobby = ({players, startGame}) => (
   <div className="game-lobby">
     <GameNavbar />
     <div className="main-content">
@@ -21,7 +21,7 @@ const GameLobby = ({players}) => (
         </div>
         <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
           <div className="next-button-area center-txt">
-            <a className="btn">התחל</a>
+            <a href="javascript:void(0)" className="btn" onClick={startGame}>התחל</a>
           </div>
         </div>
       </div>

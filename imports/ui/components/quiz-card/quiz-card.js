@@ -1,9 +1,20 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import Game from '/imports/api/games/games';
 
-const QuizCard = (props) => {
+const QuizCard = ({ quiz }) => {
   const forkQuiz = () => {
-    props.quiz.forkQuiz();
+    quiz.forkQuiz();
   };
+
+  const deleteQuiz = () => {
+    quiz.delete();
+  };
+
+  const startGame = () => {
+    Game.InitGame(quiz);
+  };
+
   return (
     <div className="panel panel-defualt">
       <div className="panel-heading">
@@ -14,13 +25,13 @@ const QuizCard = (props) => {
         />
       </div>
       <div className="panel-body">
-        <h5 className="quiz-title">{props.quiz.title}</h5>
+        <h5 className="quiz-title">{quiz.title}</h5>
         <p className="tags-row">
-          {props.quiz.user}
+          {quiz.user}
         </p>
         <p className="tags-row">
           <ul>
-            {props.quiz.tags.map(tag => (
+            {quiz.tags.map(tag => (
               <li>
                 <label className="tags">{tag.name}</label>
               </li>
@@ -29,8 +40,28 @@ const QuizCard = (props) => {
         </p>
       </div>
       <div className="panel-footer">
-        <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>העתק שאלון</a>
-        <a href={`/ViewQuiz/${props.quiz._id}`} className="btn">צפה בפרטים</a>
+        {quiz.owner === Meteor.user()._id
+          ? <span>
+            <a
+              href='javascript:void(0)'
+              className="delete"
+              onClick={deleteQuiz}
+            >
+              <i className="glyphicon glyphicon-remove" />
+            </a>
+            <a href={`/EditQuiz/${quiz._id}`} className="star">
+              <span className="glyphicon glyphicon-pencil" />
+            </a>
+            <a href="javascript:void(0)" className="btn" onClick={startGame}>
+              העתק שאלון
+            </a>
+          </span>
+          : <span>
+            <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>
+              העתק שאלון
+            </a>
+            <a href={`/ViewQuiz/${quiz._id}`} className="btn">צפה בפרטים</a>
+          </span>}
       </div>
     </div>
   );

@@ -14,9 +14,16 @@ const calculateTimeDelta = (t1, t2) => {
 const calculateScore = (deltaTime, score, questionTime) => {
   // y = mx + n
   const timeFunc = deltaTime / questionTime;
-  const mx = (Math.abs(score) * -1) / timeFunc;
+  const mx = Math.abs(score) * -1 / timeFunc;
   const finalScore = score > 0 ? mx + score : mx;
   return finalScore;
+};
+
+const generateCode = () => {
+  const length = 6;
+  return Math.floor(
+    (10 ** length - 10 ** (length - 1) - 1) * Math.random() + 10 ** (length - 1),
+  );
 };
 
 const GameInit = Class.create({
@@ -133,6 +140,12 @@ export default Class.create({
         return [new GameInit()];
       },
     },
+    code: {
+      type: String,
+      default() {
+        return generateCode(); // TODO: Bum!
+      },
+    },
     createdAt: {
       type: Date,
       default() {
@@ -148,6 +161,10 @@ export default Class.create({
   },
 
   meteorMethods: {
+    InitGame(quiz) {
+      const game = new Games({ quiz });
+      return game.save();
+    },
     PlayerReg(userId) {
       const isUserExist = this.getGamePlayersId().find(user => user === userId);
       const registerPlayer = () => {
@@ -193,9 +210,8 @@ export default Class.create({
       this.save();
       return true;
     },
-    NextQuestion(qId) {
-      // TODO: get the Id
-      // qId = this.LastQuestionToEndId();
+    NextQuestion() {
+      qId = this.nextQuestionId();
       const questionStarted = new QuestionStart({
         questionId: qId,
       });
@@ -306,7 +322,9 @@ export default Class.create({
     },
     getGamePlayersName() {
       const playersId = this.getGamePlayersId();
-      const playersNames = playersId.map(pId => Meteor.users.findOne(u => u._id === pId).name);
+      const playersNames = playersId.map(
+        pId => Meteor.users.findOne(u => u._id === pId).name,
+      );
       return playersNames;
     },
     getLastEvent() {
@@ -316,9 +334,19 @@ export default Class.create({
     getWinner() {
       return this.scoreList().first();
     },
-    // NextQuestionId() {
-    //   const qId = this.LastQuestionToEndId === this.LastQuestionToStartId ?
-    //  this.LastQuestionToStartId + 1 : null;
-    // },
+    nextQuestionId() {
+      const currentQuestionId = this.LastQuestionToEndId;
+      const currentQuestionOrder = this.quiz.questions.findOne(
+        q => q._id === currentQuestionId,
+      ).order;
+      const nextQuestion = this.quiz.questions.findOne(
+        q => q.order === currentQuestionOrder + 1,
+      );
+      return isCurrentQuestionEnded ? nextQuestion._id : null;
+    },
+    isCurrentQuestionEnded() {
+      const isEnded = this.LastQuestionToStartId === this.LastQuestionToEndId;
+      return isEnded;
+    },
   },
 });

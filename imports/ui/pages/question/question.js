@@ -6,11 +6,7 @@ import GameNavbar from '../../components/game-navbar/game-navbar';
 import BarChart from '../../components/bar-chart/bar-chart';
 import CountdownTimer from '../../components/count-down-timer/count-down-timer';
 
-const Question = ({
-  question,
-  isEnded,
-  actions,
-}) => {
+const Question = ({ question, isEnded, actions, owner }) => {
   const selectAnswer = (aId) => {
     actions.PlayerAnswer(Meteor.user().id, question._id, aId);
   };
@@ -34,6 +30,15 @@ const Question = ({
               : <img src="/img/questionDefaultImg.png" alt="defaultImg" />}
           </div>
           <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
+            {owner === Meteor.user()
+              ? <a
+                href="javacript:void(0)"
+                className="btn btn-primary"
+                onClick={actions.nextQuestion}
+              >
+                  לשאלה הבאה
+                </a>
+              : ''}
             <p className="answer-count" id="answer-count-number">
               {actions.answerCount()}
             </p>
@@ -46,11 +51,7 @@ const Question = ({
   );
 };
 
-const QuestionContainer = ({
-  loading,
-  isEnded,
-  actions,
-}) => {
+const QuestionContainer = ({ loading, isEnded, actions, owner }) => {
   if (loading) return <p>loading</p>;
   const question = Question.findOne();
   return (
@@ -58,20 +59,18 @@ const QuestionContainer = ({
       question={question}
       isEnded={isEnded}
       actions={actions}
+      owner={owner}
     />
   );
 };
 
-export default createContainer(({
-  id,
-  isEnded,
-  actions,
-}) => {
+export default createContainer(({ id, isEnded, actions, owner }) => {
   const questionHandle = Meteor.subscribe('questions.get', id);
   const loading = !questionHandle.ready();
   return {
     loading,
     isEnded,
     actions,
+    owner,
   };
 }, QuestionContainer);
