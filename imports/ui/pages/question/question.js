@@ -12,10 +12,10 @@ const Question = ({
   actions,
 }) => {
   const selectAnswer = (aId) => {
-    PlayerAnswer(Meteor.user().id, question._id, aId);
+    actions.PlayerAnswer(Meteor.user().id, question._id, aId);
   };
 
-  const actions = {
+  const answerActions = {
     selectAnswer,
   };
   return (
@@ -30,17 +30,17 @@ const Question = ({
           </div>
           <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
             {isEnded
-              ? <BarChart answers={answersGroupCount()} />
+              ? <BarChart answers={actions.answersGroupCount} />
               : <img src="/img/questionDefaultImg.png" alt="defaultImg" />}
           </div>
           <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
             <p className="answer-count" id="answer-count-number">
-              {answerCount()}
+              {actions.answerCount()}
             </p>
             <p className="answer-count">Answers</p>
           </div>
         </div>
-        <Answers answers={question.answers} actions={actions} />
+        <Answers answers={question.answers} actions={answerActions} />
       </div>
     </div>
   );

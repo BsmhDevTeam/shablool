@@ -18,7 +18,7 @@ import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
 import NotFound from '../../ui/pages/not-found/not-found';
 import Question from '../../ui/pages/question/question';
-import Game from '../../ui/pages/game/game';
+import GameManager from '../../ui/pages/game/game';
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -97,9 +97,9 @@ FlowRouter.notFound = {
   },
 };
 
-FlowRouter.route('/Game/:_id', {
+FlowRouter.route('/Game/:gameId', {
   name: 'Manage.Game',
   action(params) {
-    mount(GameLayout, { main: <Game id={params._id} /> });
+    mount(GameLayout, { main: <GameManager id={params.gameId} /> });
   },
 });
