@@ -31,16 +31,19 @@ Meteor.startup(() => {
         text: 'מתי נשתמש בלולאות?',
         answers: [{
           _id: uuidV4(),
+          order: 1,
           text: 'אף פעם',
           points: 0,
         },
         {
           _id: uuidV4(),
+          order: 2,
           text: 'תמיד',
           points: 0,
         },
         {
           _id: uuidV4(),
+          order: 3,
           text: 'קוד חוזר',
           points: 2,
         }],
@@ -50,6 +53,7 @@ Meteor.startup(() => {
         lastUpdate: new Date(),
       },
       ],
+      owner: "me",
       tags: tagsId,
       user: '8142023',
       private: false,
