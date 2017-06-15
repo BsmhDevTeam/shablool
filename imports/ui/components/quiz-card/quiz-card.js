@@ -11,10 +11,9 @@ const QuizCard = ({ quiz }) => {
     quiz.delete();
   };
 
-  const startGame = () => {
+  const initGame = () => {
     Game.InitGame(quiz);
   };
-
   return (
     <div className="panel panel-defualt">
       <div className="panel-heading">
@@ -40,10 +39,10 @@ const QuizCard = ({ quiz }) => {
         </p>
       </div>
       <div className="panel-footer">
-        {quiz.owner === Meteor.user()._id
+        {quiz.owner === Meteor.userId()
           ? <span>
             <a
-              href='javascript:void(0)'
+              href="javascript:void(0)"
               className="delete"
               onClick={deleteQuiz}
             >
@@ -52,14 +51,14 @@ const QuizCard = ({ quiz }) => {
             <a href={`/EditQuiz/${quiz._id}`} className="star">
               <span className="glyphicon glyphicon-pencil" />
             </a>
-            <a href="javascript:void(0)" className="btn" onClick={startGame}>
-              העתק שאלון
-            </a>
+            <a href="javascript:void(0)" className="btn" onClick={initGame}>
+                התחל משחק!
+              </a>
           </span>
           : <span>
             <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>
-              העתק שאלון
-            </a>
+                העתק שאלון
+              </a>
             <a href={`/ViewQuiz/${quiz._id}`} className="btn">צפה בפרטים</a>
           </span>}
       </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const MyQuiz = ({ quiz }) => {
   const deleteQuiz = () => {
     quiz.delete();

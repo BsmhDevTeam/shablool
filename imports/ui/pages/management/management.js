@@ -82,9 +82,7 @@ const Management = ({ quizes }) => (
 
 const ManagementContainer = ({ loading, quizes }) => {
   if (loading) return <p>loading</p>;
-  return (
-    <Management quizes={quizes} />
-  );
+  return <Management quizes={quizes} />;
 };
 
 export default createContainer(() => {

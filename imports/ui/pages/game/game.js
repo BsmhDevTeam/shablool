@@ -20,6 +20,7 @@ const GameManager = ({ game }) => {
       ? <GameLobby
         players={game.getGamePlayersName()}
         startGame={game.StartGame}
+        gameCode={game.code}
       />
       : '',
     PlayerReg: <Instructions />,

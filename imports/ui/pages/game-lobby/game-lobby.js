@@ -2,9 +2,9 @@ import React from 'react';
 import PlayersLobby from '../../components/players-lobby/players-lobby';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
-const GameLobby = ({players, startGame}) => (
+const GameLobby = ({players, startGame, gameCode}) => (
   <div className="game-lobby">
-    <GameNavbar />
+    <GameNavbar text={`:הצטרף למשחק עם הקוד ${gameCode}`} num="" />
     <div className="main-content">
       <div className="row">
         <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
