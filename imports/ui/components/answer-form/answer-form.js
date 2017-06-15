@@ -1,5 +1,5 @@
 import React from 'react';
-import Answer from '../../../api/answers/answers.js';
+import { Answer } from '/imports/api/quizes/quizes.js';
 
 // validations
 const validateText = (text) => {

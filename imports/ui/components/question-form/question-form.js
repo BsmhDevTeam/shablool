@@ -1,6 +1,6 @@
 import React from 'react';
+import { Question } from '/imports/api/quizes/quizes.js';
 import AnswerForm from '../answer-form/answer-form.js';
-import Question from '../../../api/questions/questions.js';
 
 // validations
 const validateText = (text) => {

@@ -46,6 +46,8 @@ jquery@1.11.10
 kadira:flow-router@2.12.1
 launch-screen@1.1.1
 less@2.7.9
+lidorcg:rocketchat-custom-oauth@1.0.0
+lidorcg:rocketchat-gitlab@0.0.1
 livedata@1.0.18
 localstorage@1.1.0
 logging@1.1.17
@@ -96,6 +98,7 @@ tmeasday:test-reporter-helpers@0.2.1
 tracker@1.1.3
 ui@1.0.13
 underscore@1.0.10
+underscorestring:underscore.string@2.4.0
 url@1.1.0
 webapp@1.3.16
 webapp-hashing@1.0.9

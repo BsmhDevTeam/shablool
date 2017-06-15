@@ -30,3 +30,5 @@ dynamic-import
 accounts-ui
 accounts-github
 service-configuration
+lidorcg:rocketchat-custom-oauth
+lidorcg:rocketchat-gitlab
