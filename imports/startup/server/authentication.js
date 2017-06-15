@@ -15,9 +15,11 @@ ServiceConfiguration.configurations.upsert(
   { service: 'gitlab' },
   {
     $set: {
-      clientId: 'ff52b1cbd45605f4b2a7c35d5eb48e7defb73c668423a049010fb5dbc02d56ae',
+      clientId: '3972cd31c474a8cac37c4c75f7cf4592f7014998aab662ee0fe111b674883351',
       loginStyle: 'popup',
-      secret: '93e74d0b5d65ba9ad097667faead43624ddae328c65558409eb8df2782f99aea',
+      secret: '40726a4ac7a012b52c75e2a062119b6143a9cfdc8461c115680c7d7fbac0a88a',
     },
   },
 );
+
+// TODO: configure service before PRODUCTION
