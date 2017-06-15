@@ -1,10 +1,14 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import Game from '/imports/api/games/games';
+import Quiz from '/imports/api/quizes/quizes';
 
 const QuizCard = ({ quiz }) => {
   const forkQuiz = () => {
-    quiz.forkQuiz();
+    const questions = quiz.questions;
+    const title = quiz.title;
+    const newQuiz = new Quiz({ questions, title, owner: Meteor.userId() });
+    newQuiz.create();
   };
 
   const deleteQuiz = () => {
@@ -20,7 +24,8 @@ const QuizCard = ({ quiz }) => {
         <img
           className="quiz-panel-img"
           alt="quiz"
-          src="./img/quiz-img/{{ id }}"
+          src="../../img/quiz-img/{{ id }}.png"
+          onError="this.src='../../img/quiz-default.png'"
         />
       </div>
       <div className="panel-body">
@@ -40,27 +45,24 @@ const QuizCard = ({ quiz }) => {
       </div>
       <div className="panel-footer">
         {quiz.owner === Meteor.userId()
-          ? <span>
-            <a
-              href="javascript:void(0)"
-              className="delete"
-              onClick={deleteQuiz}
-            >
-              <i className="glyphicon glyphicon-remove" />
-            </a>
-            <a href={`/EditQuiz/${quiz._id}`} className="star">
-              <span className="glyphicon glyphicon-pencil" />
-            </a>
-            <a href="javascript:void(0)" className="btn" onClick={initGame}>
-                התחל משחק!
-              </a>
-          </span>
-          : <span>
-            <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>
-                העתק שאלון
-              </a>
-            <a href={`/ViewQuiz/${quiz._id}`} className="btn">צפה בפרטים</a>
-          </span>}
+          ?
+        <span>
+          <a href="javascript:void(0)" className="delete" onClick={deleteQuiz}>
+            <i className="glyphicon glyphicon-remove" />
+          </a>
+          <a href={`/EditQuiz/${quiz._id}`} className="star">
+            <span className="glyphicon glyphicon-pencil" />
+          </a>
+          <a href="javascript:void(0)" className="btn" onClick={initGame}>
+            התחל משחק!
+          </a>
+        </span>
+        : <span>
+          <a href="javascript:void(0)" className="btn" onClick={forkQuiz}>
+            העתק שאלון
+          </a>
+          <a href={`/ViewQuiz/${quiz._id}`} className="btn">צפה בפרטים</a>
+        </span>}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes.js';
 import Tag from '../../../api/tags/tags.js';
@@ -151,7 +152,7 @@ class CreateQuiz extends React.Component {
         return tag ? tag._id : new Tag(t).create();
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
-      const quiz$ = new Quiz({ ...quiz, questions, tags }, { cast: true });
+      const quiz$ = new Quiz({ ...quiz, questions, tags, owner: Meteor.userId() }, { cast: true });
       quiz$.create();
     };
 

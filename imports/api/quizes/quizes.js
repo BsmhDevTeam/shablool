@@ -63,10 +63,6 @@ export default Class.create({
     delete() {
       return this.remove();
     },
-    forkQuiz(userId) {
-      const quiz = new Quizes({ ...this, owner: userId });
-      return quiz.save();
-    },
   },
 
   helpers: {

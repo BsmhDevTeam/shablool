@@ -65,7 +65,11 @@ const Management = ({ quizes }) => (
               שאלון חדש
             </a>
             <div className="row">
-              {quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)}
+              {quizes.filter(q => q.owner === Meteor.userId()).length
+                ? quizes
+                    .filter(q => q.owner === Meteor.userId())
+                    .map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
+                : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
           </div>
           <div className="tab-pane fade in" id="tab2">
