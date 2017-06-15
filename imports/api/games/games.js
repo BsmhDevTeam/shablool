@@ -22,94 +22,108 @@ const calculateScore = (deltaTime, score, questionTime) => {
 const generateCode = () => {
   const length = 6;
   return Math.floor(
-    (10 ** length - 10 ** (length - 1) - 1) * Math.random() + 10 ** (length - 1),
+    (((10 ** length) - (10 ** (length - 1)) - 1) * Math.random()) + (10 ** (length - 1)),
   );
 };
 
 const GameInit = Class.create({
   name: 'GameInit',
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const PlayerReg = Class.create({
   name: 'PlayerReg',
-  playerId: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    playerId: {
+      type: String,
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const GameStarted = Class.create({
   name: 'GameStarted',
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const QuestionStart = Class.create({
   name: 'QuestionStart',
-  questionId: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    questionId: {
+      type: String,
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const PlayerAnswer = Class.create({
   name: 'PlayerAnswer',
-  userId: {
-    type: String,
-  },
-  answerId: {
-    type: String,
-  },
-  questionId: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    userId: {
+      type: String,
+    },
+    answerId: {
+      type: String,
+    },
+    questionId: {
+      type: String,
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const QuestionEnd = Class.create({
   name: 'QuestionEnd',
-  questionId: {
-    type: String,
-  },
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    questionId: {
+      type: String,
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
 
 const GameEnd = Class.create({
   name: 'GameEnd',
-  createdAt: {
-    type: Date,
-    default() {
-      return new Date();
+  fields: {
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
     },
   },
 });
@@ -135,15 +149,18 @@ export default Class.create({
   fields: {
     quiz: Quiz,
     gameLog: {
-      type: [GameEvent],
+      type: [Object],
       default() {
-        return [new GameInit()];
+        const init = new GameInit();
+        console.log(init instanceof GameInit);
+        console.log(init);
+        return [init];
       },
     },
     code: {
       type: String,
       default() {
-        return generateCode(); // TODO: Bum!
+        return '' + generateCode(); // TODO: Bum!
       },
     },
     createdAt: {
@@ -161,9 +178,8 @@ export default Class.create({
   },
 
   meteorMethods: {
-    InitGame(quiz) {
-      const game = new Games({ quiz });
-      return game.save();
+    InitGame() {
+      return this.save();
     },
     PlayerReg(userId) {
       const isUserExist = this.getGamePlayersId().find(user => user === userId);
