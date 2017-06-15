@@ -1,15 +1,16 @@
-import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import React from 'react';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import LoginButtons from '../../components/login-buttons/login-buttons.js';
 
 const Login = () => {
-  console.log(Meteor.user());
   const login = () => {
     Meteor.loginWithGithub((err) => {
       if (err) {
         console.log(err);
+        FlowRouter.go('/LoginError');
       } else {
-        console.log(Meteor.user());
+        FlowRouter.go('/');
       }
     });
   };
