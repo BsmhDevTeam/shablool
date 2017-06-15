@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import Quiz from '../quizes.js';
+import Quiz, { Question } from '../quizes.js';
 
 Meteor.publish('quizes.titlesOnly', function() {
   // TODO: filter private quizes
@@ -33,4 +33,12 @@ Meteor.publish('quizes.search', function(query) {
       },
     ],
   });
+});
+
+Meteor.publish('questions.all', () => {
+  Question.find();
+});
+
+Meteor.publish('questions.get', (id) => {
+  Question.find(id);
 });
