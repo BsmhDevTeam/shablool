@@ -3,12 +3,15 @@ import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Quiz from '/imports/api/quizes/quizes';
+import Tag from '/imports/api/tags/tags';
+
 
 const QuizCard = ({ quiz }) => {
   const forkQuiz = () => {
     const questions = quiz.questions;
     const title = quiz.title;
-    const newQuiz = new Quiz({ questions, title, owner: Meteor.userId() });
+    const tags = quiz.tags;
+    const newQuiz = new Quiz({ questions, title, tags, owner: Meteor.userId() });
     newQuiz.create();
   };
 
@@ -18,10 +21,8 @@ const QuizCard = ({ quiz }) => {
 
   const initGame = () => {
     const game = new Game({ quiz });
-    console.log(game);
-    const gameId = game.InitGame();
-    console.log(gameId);
-    FlowRouter.go('Manage.Game', { gameId });
+    game.initGame();
+    FlowRouter.go('Manage.Game', { code: game.code });
   };
   return (
     <div className="panel panel-defualt">
@@ -37,15 +38,15 @@ const QuizCard = ({ quiz }) => {
         <p className="tags-row">
           {quiz.user}
         </p>
-        <p className="tags-row">
+        <div className="tags-row">
           <ul>
             {quiz.tags.map(tag => (
-              <li>
-                <label className="tags">{tag.name}</label>
+              <li key={tag}>
+                <label className="tags">{Tag.findOne(tag)}</label>
               </li>
             ))}
           </ul>
-        </p>
+        </div>
       </div>
       <div className="panel-footer">
         {quiz.owner === Meteor.userId()

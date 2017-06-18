@@ -43,7 +43,7 @@ FlowRouter.route('/Game/:code', {
   name: 'Manage.Game',
   triggersEnter: [verifyLogin],
   action(params) {
-    mount(GameLayout, { main: <GameManager id={params.code} /> });
+    mount(GameLayout, { main: <GameManager code={params.code} /> });
   },
 });
 

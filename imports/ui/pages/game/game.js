@@ -19,14 +19,14 @@ const GameManager = ({ game }) => {
     GameInit: gameOwner === Meteor.user()
       ? <GameLobby
         players={game.getGamePlayersName()}
-        startGame={game.StartGame}
+        startGame={game.startGame}
         gameCode={game.code}
       />
       : '',
     PlayerReg: <Instructions />,
     QuestionStart: (
       <Question
-        id={game.LastQuestionToStartId()}
+        id={game.lastQuestionToStartId()}
         isEnded={false}
         actions={jsonQuestionActions}
         owner={gameOwner}
@@ -34,14 +34,14 @@ const GameManager = ({ game }) => {
     ),
     PlayerAnswer: (
       <Question
-        id={game.LastQuestionToStartId()}
+        id={game.lastQuestionToStartId()}
         isEnded={false}
         actions={jsonQuestionActions}
       />
     ),
     QuestionEnd: (
       <Question
-        id={game.LastQuestionToStartId()}
+        id={game.lastQuestionToStartId()}
         isEnded
         actions={jsonQuestionActions}
       />

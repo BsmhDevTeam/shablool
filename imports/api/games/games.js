@@ -22,7 +22,7 @@ const calculateScore = (deltaTime, score, questionTime) => {
 const generateCode = () => {
   const length = 6;
   return (Math.floor(
-    (((10 ** length) - (10 ** (length - 1)) - 1) * Math.random()) + (10 ** (length - 1)))
+    (((Math.pow(10, length)) - (Math.pow(10, (length - 1))) - 1) * Math.random()) + (Math.pow(10,(length - 1))))
   ).toString();
 };
 
@@ -128,19 +128,6 @@ const GameEnd = Class.create({
   },
 });
 
-const GameEvent = Union.create({
-  name: 'GameEvent',
-  types: [
-    GameInit,
-    PlayerReg,
-    GameStarted,
-    QuestionStart,
-    PlayerAnswer,
-    QuestionEnd,
-    GameEnd,
-  ],
-});
-
 const Games = new Mongo.Collection('games');
 
 export default Class.create({
@@ -178,10 +165,10 @@ export default Class.create({
   },
 
   meteorMethods: {
-    InitGame() {
+    initGame() {
       return this.save();
     },
-    PlayerReg(userId) {
+    playerRegiste(userId) {
       const isUserExist = this.getGamePlayersId().find(user => user === userId);
       const registerPlayer = () => {
         const newReg = new PlayerReg({
@@ -193,13 +180,13 @@ export default Class.create({
       };
       return isUserExist && registerPlayer;
     },
-    StartGame() {
+    startGame() {
       // Starting game
       const gameStarted = new GameStarted();
       this.gameLog = this.gameLog.concat(gameStarted);
       this.save();
       // Starting first question
-      const firstQuestion = this.Quiz.questions.find(q => q.order === 1);
+      const firstQuestion = this.quiz.questions.find(q => q.order === 1);
       const questionStarted = new QuestionStart({
         questionId: firstQuestion._id,
       });
@@ -216,17 +203,17 @@ export default Class.create({
       setTimeout(questionEndToLog, firstQuestion.time);
       return true;
     },
-    PlayerAnswer(uId, qId, aId) {
-      const playerAnswer = new PlayerAnswer({
+    playerAnswer(uId, qId, aId) {
+      const playerAnswerEvent = new PlayerAnswer({
         userId: uId,
         questionId: qId,
         answerId: aId,
       });
-      this.gameLog = this.gameLog.concat(playerAnswer);
+      this.gameLog = this.gameLog.concat(playerAnswerEvent);
       this.save();
       return true;
     },
-    NextQuestion() {
+    nextQuestion() {
       const qId = this.nextQuestionId();
       const questionStarted = new QuestionStart({
         questionId: qId,
@@ -248,7 +235,7 @@ export default Class.create({
   helpers: {
     // getLastQuestionId() {},
     answersGroupCount() {
-      const lastQuestionId = this.LastQuestionToStartId();
+      const lastQuestionId = this.lastQuestionToStartId();
       const getAnswerOrder = id =>
         this.quiz.questions
           .find(q => q._id === lastQuestionId)
@@ -264,7 +251,7 @@ export default Class.create({
       return playersAnswerEvents.length;
     },
     getQuestionAnswers() {
-      const lastQuestionId = this.LastQuestionToStartId();
+      const lastQuestionId = this.lastQuestionToStartId();
       const playersAnswerEvents = this.gameLog
         .filter(e => e instanceof PlayerAnswer)
         .filter(e => e.questionId === lastQuestionId);
@@ -315,7 +302,7 @@ export default Class.create({
       const time = question.time;
       return time;
     },
-    LastQuestionToStartId() {
+    lastQuestionToStartId() {
       const questionLog = this.gameLog.filter(e => e instanceof QuestionStart);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents =
@@ -323,7 +310,7 @@ export default Class.create({
       const qId = lastQuestionEvents.questionId;
       return qId;
     },
-    LastQuestionToEndId() {
+    lastQuestionToEndId() {
       const questionLog = this.gameLog.filter(e => e instanceof QuestionEnd);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents =
@@ -351,11 +338,11 @@ export default Class.create({
       return this.scoreList().first();
     },
     isCurrentQuestionEnded() {
-      const isEnded = this.LastQuestionToStartId === this.LastQuestionToEndId;
+      const isEnded = this.lastQuestionToStartId() === this.lastQuestionToEndId();
       return isEnded;
     },
     nextQuestionId() {
-      const currentQuestionId = this.LastQuestionToEndId;
+      const currentQuestionId = this.lastQuestionToEndId();
       const currentQuestionOrder = this.quiz.questions.findOne(
         q => q._id === currentQuestionId,
       ).order;

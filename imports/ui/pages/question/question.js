@@ -8,7 +8,7 @@ import CountdownTimer from '../../components/count-down-timer/count-down-timer';
 
 const Question = ({ question, isEnded, actions, owner }) => {
   const selectAnswer = (aId) => {
-    actions.PlayerAnswer(Meteor.user().id, question._id, aId);
+    actions.playerAnswer(Meteor.user().id, question._id, aId);
   };
 
   const answerActions = {
