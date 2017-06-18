@@ -48,7 +48,7 @@ const GameManager = ({ game }) => {
     ),
     GameEnd: <Winner winner={game.getWinner()} />,
   };
-  return jsonPageByEvent[game.getLastEvent];
+  return jsonPageByEvent[game.getLastEvent()];
 };
 
 const GameManagerContainer = ({ loading }) => {
@@ -57,8 +57,8 @@ const GameManagerContainer = ({ loading }) => {
   return <GameManager game={game} />;
 };
 
-export default createContainer(({ id }) => {
-  const gameHandle = Meteor.subscribe('games.get', id);
+export default createContainer(({ code }) => {
+  const gameHandle = Meteor.subscribe('games.getByCode', code);
   const loading = !gameHandle.ready();
   return {
     loading,
