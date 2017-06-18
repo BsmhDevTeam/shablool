@@ -1,6 +1,6 @@
 import Meteor from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { Class, Union } from 'meteor/jagi:astronomy';
+import { Class } from 'meteor/jagi:astronomy';
 import { countBy, groupBy, sortBy, mapObject, pairs } from 'underscore';
 import Quiz from '../quizes/quizes.js';
 
@@ -14,16 +14,16 @@ const calculateTimeDelta = (t1, t2) => {
 const calculateScore = (deltaTime, score, questionTime) => {
   // y = mx + n
   const timeFunc = deltaTime / questionTime;
-  const mx = (Math.abs(score) * -1) / timeFunc;
+  const mx = -Math.abs(score) / timeFunc;
   const finalScore = score > 0 ? mx + score : mx;
   return finalScore;
 };
 
 const generateCode = () => {
-  const length = 6;
-  return (Math.floor(
-    (((Math.pow(10, length)) - (Math.pow(10, (length - 1))) - 1) * Math.random()) + (Math.pow(10,(length - 1))))
-  ).toString();
+  const n = 6;
+  return Math.floor(
+    (((10 ** n) - (10 ** (n - 1)) - 1) * Math.random()) + (10 ** (n - 1)),
+  );
 };
 
 const GameInit = Class.create({
@@ -128,26 +128,21 @@ const GameEnd = Class.create({
   },
 });
 
-const Games = new Mongo.Collection('games');
-
 export default Class.create({
   name: 'Game',
-  collection: Games,
+  collection: new Mongo.Collection('games'),
   fields: {
     quiz: Quiz,
     gameLog: {
       type: [Object],
       default() {
-        const init = new GameInit();
-        console.log(init instanceof GameInit);
-        console.log(init);
-        return [init];
+        return [new GameInit()];
       },
     },
     code: {
       type: String,
       default() {
-        return generateCode(); // TODO: Bum!
+        return generateCode().toString();
       },
     },
     createdAt: {
@@ -168,7 +163,7 @@ export default Class.create({
     initGame() {
       return this.save();
     },
-    playerRegiste(userId) {
+    playerRegister(userId) {
       const isUserExist = this.getGamePlayersId().find(user => user === userId);
       const registerPlayer = () => {
         const newReg = new PlayerReg({
@@ -233,7 +228,7 @@ export default Class.create({
     },
   },
   helpers: {
-    // getLastQuestionId() {},
+    getLastQuestionId() {},
     answersGroupCount() {
       const lastQuestionId = this.lastQuestionToStartId();
       const getAnswerOrder = id =>
