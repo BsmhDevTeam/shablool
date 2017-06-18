@@ -14,16 +14,16 @@ const calculateTimeDelta = (t1, t2) => {
 const calculateScore = (deltaTime, score, questionTime) => {
   // y = mx + n
   const timeFunc = deltaTime / questionTime;
-  const mx = Math.abs(score) * -1 / timeFunc;
+  const mx = (Math.abs(score) * -1) / timeFunc;
   const finalScore = score > 0 ? mx + score : mx;
   return finalScore;
 };
 
 const generateCode = () => {
   const length = 6;
-  return Math.floor(
-    (((10 ** length) - (10 ** (length - 1)) - 1) * Math.random()) + (10 ** (length - 1)),
-  );
+  return (Math.floor(
+    (((10 ** length) - (10 ** (length - 1)) - 1) * Math.random()) + (10 ** (length - 1)))
+  ).toString();
 };
 
 const GameInit = Class.create({
@@ -160,7 +160,7 @@ export default Class.create({
     code: {
       type: String,
       default() {
-        return '' + generateCode(); // TODO: Bum!
+        return generateCode(); // TODO: Bum!
       },
     },
     createdAt: {
@@ -227,7 +227,7 @@ export default Class.create({
       return true;
     },
     NextQuestion() {
-      qId = this.nextQuestionId();
+      const qId = this.nextQuestionId();
       const questionStarted = new QuestionStart({
         questionId: qId,
       });
@@ -350,6 +350,10 @@ export default Class.create({
     getWinner() {
       return this.scoreList().first();
     },
+    isCurrentQuestionEnded() {
+      const isEnded = this.LastQuestionToStartId === this.LastQuestionToEndId;
+      return isEnded;
+    },
     nextQuestionId() {
       const currentQuestionId = this.LastQuestionToEndId;
       const currentQuestionOrder = this.quiz.questions.findOne(
@@ -358,11 +362,7 @@ export default Class.create({
       const nextQuestion = this.quiz.questions.findOne(
         q => q.order === currentQuestionOrder + 1,
       );
-      return isCurrentQuestionEnded ? nextQuestion._id : null;
-    },
-    isCurrentQuestionEnded() {
-      const isEnded = this.LastQuestionToStartId === this.LastQuestionToEndId;
-      return isEnded;
+      return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
     },
   },
 });
