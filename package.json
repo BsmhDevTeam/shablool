@@ -21,6 +21,7 @@
   "devDependencies": {
     "@meteorjs/eslint-config-meteor": "^1.0.5",
     "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-exponentiation-operator": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-import-resolver-meteor": "^0.4.0",
@@ -31,5 +32,8 @@
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"
+  },
+  "babel": {
+    "plugins": ["transform-exponentiation-operator"]
   }
 }

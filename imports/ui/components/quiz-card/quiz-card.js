@@ -18,9 +18,7 @@ const QuizCard = ({ quiz }) => {
 
   const initGame = () => {
     const game = new Game({ quiz });
-    console.log(game);
-    const gameId = game.InitGame();
-    console.log(gameId);
+    const gameId = game.initGame();
     FlowRouter.go('Manage.Game', { gameId });
   };
   return (
