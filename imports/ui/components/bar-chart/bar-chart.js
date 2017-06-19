@@ -15,7 +15,8 @@ const colorsJson = {
   3: '#5cb85c',
 };
 
-const BarChart = ({ answers }) => {
+const BarChart = ({ game }) => {
+  const answers = game.answersGroupCount();
   const orders = Object.keys(answers);
   const options = {
     // Boolean - Whether grid lines are shown across the chart

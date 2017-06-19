@@ -9,54 +9,42 @@ import GameLobby from '../../pages/game-lobby/game-lobby';
 
 const GameManager = ({ game }) => {
   const gameOwner = game.quiz.owner;
-  const jsonQuestionActions = {
-    answerCount: game.answerCount,
-    answersGroupCount: game.answersGroupCount,
-    PlayerAnswer: game.playerAnswer,
-    nextQuestion: game.nextQuestion,
-  };
   const jsonPageByEvent = {
     GameInit: () => (
       gameOwner === Meteor.userId()
       ? <GameLobby
-        players={game.getGamePlayersName()}
-        startGame={game.startGame}
-        gameCode={game.code}
+        game={game}
       />
       : null),
     PlayerReg: () => (
       gameOwner === Meteor.userId()
       ? <GameLobby
-        players={game.getGamePlayersName()}
-        startGame={game.startGame}
-        gameCode={game.code}
+        game={game}
       />
       : <Instructions />),
     QuestionStart: () => (
       <Question
-        id={game.lastQuestionToStartId()}
+        game={game}
         isEnded={false}
-        actions={jsonQuestionActions}
-        owner={gameOwner}
       />
     ),
     PlayerAnswer: () => (
       <Question
-        id={game.lastQuestionToStartId()}
+        game={game}
         isEnded={false}
-        actions={jsonQuestionActions}
       />
     ),
     QuestionEnd: () => (
       <Question
-        id={game.lastQuestionToStartId()}
+        game={game}
         isEnded
-        actions={jsonQuestionActions}
       />
     ),
     GameEnd: () => <Winner winner={game.getWinner()} />,
   };
-  return jsonPageByEvent[game.getLastEvent().nameType]();
+  const type = game.getLastEvent().nameType;
+  const gameRouter = jsonPageByEvent[type];
+  return gameRouter();
 };
 
 const GameManagerContainer = ({ loading, game }) => {

@@ -21,7 +21,7 @@ const QuizCard = ({ quiz }) => {
 
   const initGame = () => {
     const game = new Game({ quiz });
-    game.initGame();
+    game.applyMethod('initGame', []);
     FlowRouter.go('Manage.Game', { code: game.code });
   };
   return (

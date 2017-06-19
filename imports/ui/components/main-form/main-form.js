@@ -9,12 +9,21 @@ const MainForm = () => {
     event.preventDefault();
     const gameCode = event.target.gameCode.value;
     const maybeGame = Game.find({ code: gameCode }).fetch();
-    const gameWithNoRegisteredUser = maybeGame.filter(g => !g.isUserRegistered());
+    const gameWithNoRegisteredUser = maybeGame.filter(
+      g => !g.isUserRegistered(),
+    );
     const gamesWithRegisteredUser = [
-      ...gameWithNoRegisteredUser.map(g => g.playerRegister() && g),
+      ...gameWithNoRegisteredUser.map((g) => {
+        g.applyMethod('playerRegister', []);
+        console.log(g);
+        return g;
+      }),
       ...maybeGame.filter(g => g.isUserRegistered()),
     ];
-    const redirectToGame = gamesWithRegisteredUser.map(g => FlowRouter.go('Manage.Game', { code: g.code }));
+    console.log(gamesWithRegisteredUser);
+    const redirectToGame = gamesWithRegisteredUser.map(g =>
+      FlowRouter.go('Manage.Game', { code: g.code }),
+    );
     return redirectToGame.length ? null : alert('המשחק לא קיים');
   };
   return (
