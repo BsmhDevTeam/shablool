@@ -3,7 +3,7 @@ import GameNavbar from '../../components/game-navbar/game-navbar';
 
 const Instructions = () => (
   <div>
-    <GameNavbar text="2" num="1" />
+    <GameNavbar text="" num="" />
     <div className="main-content">
       <div className="row">
         <div className="screen-main-instructions">

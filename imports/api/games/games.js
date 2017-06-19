@@ -1,4 +1,4 @@
-import Meteor from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
 import { countBy, groupBy, sortBy, mapObject, pairs } from 'underscore';
@@ -22,13 +22,29 @@ const calculateScore = (deltaTime, score, questionTime) => {
 const generateCode = () => {
   const n = 6;
   return Math.floor(
-    (((10 ** n) - (10 ** (n - 1)) - 1) * Math.random()) + (10 ** (n - 1)),
+    (10 ** n - 10 ** (n - 1) - 1) * Math.random() + 10 ** (n - 1),
   );
+};
+
+const eventTypes = {
+  GameInit: 'GameInit',
+  PlayerReg: 'PlayerReg',
+  GameStarted: 'GameStarted',
+  QuestionStart: 'QuestionStart',
+  PlayerAnswer: 'PlayerAnswer',
+  QuestionEnd: 'QuestionEnd',
+  GameEnd: 'GameEnd',
 };
 
 const GameInit = Class.create({
   name: 'GameInit',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.GameInit;
+      },
+    },
     createdAt: {
       type: Date,
       default() {
@@ -41,6 +57,12 @@ const GameInit = Class.create({
 const PlayerReg = Class.create({
   name: 'PlayerReg',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.PlayerReg;
+      },
+    },
     playerId: {
       type: String,
     },
@@ -56,6 +78,12 @@ const PlayerReg = Class.create({
 const GameStarted = Class.create({
   name: 'GameStarted',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.GameStarted;
+      },
+    },
     createdAt: {
       type: Date,
       default() {
@@ -68,6 +96,12 @@ const GameStarted = Class.create({
 const QuestionStart = Class.create({
   name: 'QuestionStart',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.QuestionStart;
+      },
+    },
     questionId: {
       type: String,
     },
@@ -83,6 +117,12 @@ const QuestionStart = Class.create({
 const PlayerAnswer = Class.create({
   name: 'PlayerAnswer',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.PlayerAnswer;
+      },
+    },
     userId: {
       type: String,
     },
@@ -104,6 +144,12 @@ const PlayerAnswer = Class.create({
 const QuestionEnd = Class.create({
   name: 'QuestionEnd',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.QuestionEnd;
+      },
+    },
     questionId: {
       type: String,
     },
@@ -119,6 +165,12 @@ const QuestionEnd = Class.create({
 const GameEnd = Class.create({
   name: 'GameEnd',
   fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.GameEnd;
+      },
+    },
     createdAt: {
       type: Date,
       default() {
@@ -163,17 +215,16 @@ export default Class.create({
     initGame() {
       return this.save();
     },
-    playerRegister(userId) {
-      const isUserExist = this.getGamePlayersId().find(user => user === userId);
+    playerRegister() {
       const registerPlayer = () => {
         const newReg = new PlayerReg({
-          playerId: userId,
+          playerId: Meteor.userId(),
         });
         this.gameLog = this.gameLog.concat(newReg);
         this.save();
         return true;
       };
-      return isUserExist && registerPlayer;
+      return !this.isUserRegistered() && registerPlayer();
     },
     startGame() {
       // Starting game
@@ -228,6 +279,10 @@ export default Class.create({
     },
   },
   helpers: {
+    isUserRegistered() {
+      const isUserExist = this.getGamePlayersId().find(user => user === Meteor.userId());
+      return !!isUserExist;
+    },
     getLastQuestionId() {},
     answersGroupCount() {
       const lastQuestionId = this.lastQuestionToStartId();
@@ -248,14 +303,14 @@ export default Class.create({
     getQuestionAnswers() {
       const lastQuestionId = this.lastQuestionToStartId();
       const playersAnswerEvents = this.gameLog
-        .filter(e => e instanceof PlayerAnswer)
+        .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === lastQuestionId);
       return playersAnswerEvents;
     },
     scoreList() {
       const playersAnswers = this.gameLog
-        .filter(e => e instanceof PlayerAnswer) // => [PlayerAnswer, PlayerAnswer, PlayerAnswer...]
-        .map(({ userId, answerId, createdAt, questionId }) => ({
+        .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer, PlayerAnswer, PlayerAnswer...]
+        .map(({ userId, answerId, questionId, createdAt }) => ({
           userId,
           timeDelta: calculateTimeDelta(
             createdAt,
@@ -281,7 +336,7 @@ export default Class.create({
     },
     getQuestionStartTime(qId) {
       const questionStartEvent = this.gameLog
-        .filter(e => e instanceof QuestionStart)
+        .filter(e => e.nameType === eventTypes.QuestionStart)
         .filter(e => e.questionId === qId);
       const questionStartTime = questionStartEvent.createdAt;
       return questionStartTime;
@@ -298,7 +353,9 @@ export default Class.create({
       return time;
     },
     lastQuestionToStartId() {
-      const questionLog = this.gameLog.filter(e => e instanceof QuestionStart);
+      const questionLog = this.gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents =
         orderedQuestionsLog[orderedQuestionsLog.length - 1];
@@ -306,7 +363,9 @@ export default Class.create({
       return qId;
     },
     lastQuestionToEndId() {
-      const questionLog = this.gameLog.filter(e => e instanceof QuestionEnd);
+      const questionLog = this.gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents =
         orderedQuestionsLog[orderedQuestionsLog.length - 1];
@@ -314,26 +373,28 @@ export default Class.create({
       return qId;
     },
     getGamePlayersId() {
-      const playerEvent = this.gameLog.filter(e => e instanceof PlayerReg);
+      const playerEvent = this.gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
       const playersId = playerEvent.map(e => e.playerId);
       return playersId;
     },
     getGamePlayersName() {
       const playersId = this.getGamePlayersId();
-      const playersNames = playersId.map(
-        pId => Meteor.users.findOne(u => u._id === pId).name,
-      );
-      return playersNames;
+      const players = playersId.map(pId => Meteor.users.findOne(pId));
+      const playersName = players.map(p => p.services.github.username);
+      return playersName;
     },
     getLastEvent() {
-      const lastEvent = this.gameLog[-1];
+      const lastEvent = this.gameLog[this.gameLog.length - 1];
       return lastEvent;
     },
     getWinner() {
       return this.scoreList().first();
     },
     isCurrentQuestionEnded() {
-      const isEnded = this.lastQuestionToStartId() === this.lastQuestionToEndId();
+      const isEnded =
+        this.lastQuestionToStartId() === this.lastQuestionToEndId();
       return isEnded;
     },
     nextQuestionId() {

@@ -12,19 +12,27 @@ const GameManager = ({ game }) => {
   const jsonQuestionActions = {
     answerCount: game.answerCount,
     answersGroupCount: game.answersGroupCount,
-    PlayerAnswer: game.PlayerAnswer,
-    nextQuestion: game.NextQuestion,
+    PlayerAnswer: game.playerAnswer,
+    nextQuestion: game.nextQuestion,
   };
   const jsonPageByEvent = {
-    GameInit: gameOwner === Meteor.user()
+    GameInit: () => (
+      gameOwner === Meteor.userId()
       ? <GameLobby
         players={game.getGamePlayersName()}
         startGame={game.startGame}
         gameCode={game.code}
       />
-      : '',
-    PlayerReg: <Instructions />,
-    QuestionStart: (
+      : null),
+    PlayerReg: () => (
+      gameOwner === Meteor.userId()
+      ? <GameLobby
+        players={game.getGamePlayersName()}
+        startGame={game.startGame}
+        gameCode={game.code}
+      />
+      : <Instructions />),
+    QuestionStart: () => (
       <Question
         id={game.lastQuestionToStartId()}
         isEnded={false}
@@ -32,35 +40,37 @@ const GameManager = ({ game }) => {
         owner={gameOwner}
       />
     ),
-    PlayerAnswer: (
+    PlayerAnswer: () => (
       <Question
         id={game.lastQuestionToStartId()}
         isEnded={false}
         actions={jsonQuestionActions}
       />
     ),
-    QuestionEnd: (
+    QuestionEnd: () => (
       <Question
         id={game.lastQuestionToStartId()}
         isEnded
         actions={jsonQuestionActions}
       />
     ),
-    GameEnd: <Winner winner={game.getWinner()} />,
+    GameEnd: () => <Winner winner={game.getWinner()} />,
   };
-  return jsonPageByEvent[game.getLastEvent()];
+  return jsonPageByEvent[game.getLastEvent().nameType]();
 };
 
-const GameManagerContainer = ({ loading }) => {
+const GameManagerContainer = ({ loading, game }) => {
   if (loading) return <p>loading</p>;
-  const game = Game.findOne();
   return <GameManager game={game} />;
 };
 
 export default createContainer(({ code }) => {
+  const usersHandle = Meteor.subscribe('users.names');
   const gameHandle = Meteor.subscribe('games.getByCode', code);
-  const loading = !gameHandle.ready();
+  const loading = !gameHandle.ready() || !usersHandle.ready();
+  const game = Game.findOne();
   return {
     loading,
+    game,
   };
 }, GameManagerContainer);
