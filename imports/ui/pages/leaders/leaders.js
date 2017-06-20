@@ -4,6 +4,7 @@ import GameNavbar from '../../components/game-navbar/game-navbar';
 
 const Leaders = () => (
   <div id="leaders">
+    <div className="game-background" />
     <div className="container">
       <div className="row">
         <GameNavbar text="Leaders" num="" />

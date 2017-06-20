@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import Quiz from '../../../api/quizes/quizes';
+import Loading from '../../components/loading/loading';
 
 const ViewQuiz = ({ quiz }) => {
   return (
@@ -48,7 +49,7 @@ const RenderAnswer = ({ answer, index }) => (
 );
 
 const ViewQuizContainer = ({ loading, quizId }) => {
-  if (loading) return <p>loading</p>;
+  if (loading) return <Loading />;
   const quiz = Quiz.findOne(quizId);
   return <ViewQuiz quiz={{ ...quiz }} />;
 };

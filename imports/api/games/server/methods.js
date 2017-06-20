@@ -1,5 +1,11 @@
 import { Meteor } from 'meteor/meteor';
-import Game, { PlayerReg, GameStarted, QuestionStart, QuestionEnd, PlayerAnswer } from '../games';
+import Game, {
+  PlayerReg,
+  GameStarted,
+  QuestionStart,
+  QuestionEnd,
+  PlayerAnswer,
+} from '../games';
 
 Game.extend({
   meteorMethods: {
@@ -31,14 +37,17 @@ Game.extend({
       this.save();
       // Ending question
       const questionEndToLog = () => {
-        const questionEnd = new QuestionEnd({
-          questionId: firstQuestion._id,
-        });
-        this.gameLog = this.gameLog.concat(questionEnd);
-        this.save();
+        this.questionEnd(firstQuestion._id);
       };
       Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
       return true;
+    },
+    questionEnd(qId) {
+      const questionEnd = new QuestionEnd({
+        questionId: qId,
+      });
+      this.gameLog = this.gameLog.concat(questionEnd);
+      this.save();
     },
     playerAnswer(uId, qId, aId) {
       const playerAnswerEvent = new PlayerAnswer({
@@ -51,21 +60,19 @@ Game.extend({
       return true;
     },
     nextQuestion() {
+      // start question
       const qId = this.nextQuestionId();
       const questionStarted = new QuestionStart({
         questionId: qId,
       });
-      const questionEnd = new QuestionEnd({
-        questionId: qId,
-      });
-      const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () => {
-        this.gameLog = this.gameLog.concat(questionEnd);
-        this.save();
-      };
       this.gameLog = this.gameLog.concat(questionStarted);
       this.save();
-      setTimeout(questionEndToLog, q.time);
+      // end question
+      const q = this.quiz.questions.find(ques => ques._id === qId);
+      const questionEndToLog = () => {
+        this.questionEnd(qId);
+      };
+      setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
   },

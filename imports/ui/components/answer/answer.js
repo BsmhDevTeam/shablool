@@ -3,11 +3,15 @@ import { Meteor } from 'meteor/meteor';
 
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
-    game.selectAnswer(
-      Meteor.userId(),
-      game.lastQuestionToStartId(),
-      answer._id,
-    );
+    console.log('game:');
+    console.log(game);
+    console.log('answer:');
+    console.log(answer);
+    console.log('qid:');
+    console.log(game.lastQuestionToStartId());
+    console.log('aid:');
+    console.log(answer._id);
+    game.applyMethod('playerAnswer', [Meteor.userId(), game.lastQuestionToStartId(), answer._id]);
   };
   return (
     <div

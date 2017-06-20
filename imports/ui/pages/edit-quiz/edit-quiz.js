@@ -5,6 +5,7 @@ import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes';
 import Tag from '../../../api/tags/tags.js';
 import QuizForm from '../../components/quiz-form/quiz-form.js';
+import Loading from '../../components/loading/loading';
 
 // Utilities
 const newQuestion = () => {
@@ -16,7 +17,6 @@ const newQuestion = () => {
   }));
   return {
     _id: uuidV4(),
-    owner: 'USER',
     text: '',
     time: 30,
     answers,
@@ -172,7 +172,7 @@ class EditQuiz extends React.Component {
 }
 
 const EditQuizContainer = ({ loading }) => {
-  if (loading) return <p>loading</p>;
+  if (loading) return <Loading />;
   const quiz = Quiz.findOne();
   return <EditQuiz quiz={{ ...quiz, tags: quiz.getTags().fetch() }} />;
 };

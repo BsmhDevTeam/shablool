@@ -9,6 +9,7 @@ const GameLobby = ({ game }) => {
   };
   return (
     <div className="game-lobby">
+      <div className="game-background" />
       <GameNavbar text={`:הצטרף למשחק עם הקוד ${game.code}`} num="" />
       <div className="main-content">
         <div className="row">

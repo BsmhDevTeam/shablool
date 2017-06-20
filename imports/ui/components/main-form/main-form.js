@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Game from '/imports/api/games/games';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import Loading from '../loading/loading';
 
 const MainForm = () => {
   const gameReg = (event) => {
@@ -47,7 +48,7 @@ const MainForm = () => {
 };
 
 const GameManagerContainer = ({ loading }) => {
-  if (loading) return <p>loading</p>;
+  if (loading) return <Loading />;
   return <MainForm />;
 };
 

@@ -3,11 +3,10 @@ import MainForm from '../../components/main-form/main-form.js';
 
 const Home = () => (
   <div id="home">
-    <div className="container">
-      <div className="row">
-        <div id="logo-area">
-          <h1>צהו"ל!</h1>
-        </div>
+    <div className="game-background" />
+    <div className="row">
+      <div id="logo-area">
+        <h1>צהו"ל!</h1>
       </div>
     </div>
     <div className="row">

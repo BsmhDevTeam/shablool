@@ -220,20 +220,23 @@ export default Class.create({
       );
       return !!isUserExist;
     },
-    getLastQuestionId() {},
     answersGroupCount() {
-      const lastQuestionId = this.lastQuestionToStartId();
+      const lastQuestionId = this.lastQuestionToStartId(); // => qId
+      console.log('lastQuestionId:');
       console.log(lastQuestionId);
       const getAnswerOrder = id =>
         this.quiz.questions
           .find(q => q._id === lastQuestionId)
-          .answers.find(a => a._id === id).order;
-      const playersAnswerEvents = this.getQuestionAnswers()
-        .map(e => e.answerId)
-        .map(getAnswerOrder);
-      const questionsAnswers = countBy(playersAnswerEvents, o => o);
-      console.log(questionsAnswers);
-      return questionsAnswers;
+          .answers.find(a => a._id === id).order; // answer._id => answer.order
+      const playersAnswerEvents = this.getQuestionAnswers() // => [PlayerAnswer, ...] of the lastQuestion
+        .map(e => e.answerId) // => [answerId, ...]
+        .map(getAnswerOrder); // => [answerOrder, ...]
+      const questionsAnswersJson = countBy(playersAnswerEvents, o => o); // => {1: num, 2: num, ...}
+      const questionAnswersArray = pairs(questionsAnswersJson).map(a => ({
+        answerOrder: a[0],
+        count: a[1],
+      }));
+      return questionAnswersArray;
     },
     answerCount() {
       const playersAnswerEvents = this.getQuestionAnswers();

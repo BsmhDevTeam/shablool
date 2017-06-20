@@ -37,7 +37,7 @@ class CreateQuiz extends React.Component {
         title: '',
         questions: [newQuestion()],
         tags: [],
-        owner: 'USER',
+        owner: Meteor.userId(),
         private: false,
       },
       validate: false,
