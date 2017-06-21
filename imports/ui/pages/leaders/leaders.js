@@ -3,10 +3,8 @@ import React from 'react';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
 const Leaders = ({ game }) => {
-  console.log('scoreList:');
-  console.log(game.scoreList());
   const nextQuestion = () => {
-    game.applyMethod('nextQuestion', []);
+    game.applyMethod('endGameOrNextQuestion', []);
   };
   return (
     <div id="leaders">

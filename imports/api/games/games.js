@@ -14,17 +14,7 @@ import {
 import Quiz from '../quizes/quizes.js';
 
 const calculateTimeDelta = (t1, t2) => {
-  console.log('t1:');
-  console.log(t1);
-  console.log('t1.getTime():');
-  console.log(t1.getTime());
-  console.log('t2:');
-  console.log(t2);
-  console.log('t2.getTime():');
-  console.log(t2.getTime());
   const datesDelta = t1.getTime() - t2.getTime(); // TODO: Check if we need the getTime method.
-  console.log('datesDelta:');
-  console.log(datesDelta);
   const secondsBetweenTime = datesDelta / 1000;
   const secondsBetweenDates = Math.abs(secondsBetweenTime);
   return secondsBetweenDates;
@@ -260,14 +250,6 @@ export default Class.create({
           const isPlayerEvent =
             event.nameType === eventTypes.PlayerAnswer ||
             event.nameType === eventTypes.PlayerReg;
-          console.log('event:');
-          console.log(event);
-          console.log('Meteor.userId():');
-          console.log(Meteor.userId());
-          console.log('isPlayerEvent');
-          console.log(isPlayerEvent);
-          console.log('event.playerId === Meteor.userId()');
-          console.log(event.playerId === Meteor.userId());
           return (
             page ||
             (!isPlayerEvent && event.nameType) ||
@@ -414,7 +396,7 @@ export default Class.create({
       return lastEvent;
     },
     getWinner() {
-      return this.scoreList().first();
+      return first(this.scoreList());
     },
     isCurrentQuestionEnded() {
       const isEnded =

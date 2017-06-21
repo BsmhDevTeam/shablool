@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { max } from 'underscore';
 import Game, {
   PlayerReg,
   GameStarted,
@@ -6,6 +7,7 @@ import Game, {
   QuestionEnd,
   PlayerAnswer,
   ShowLeaders,
+  GameEnd,
 } from '../games';
 
 Game.extend({
@@ -93,6 +95,15 @@ Game.extend({
       this.gameLog = this.gameLog.concat(showLeadersEvent);
       this.save();
       return true;
+    },
+    endGame() {
+      const gameEnd = new GameEnd();
+      this.gameLog = this.gameLog.concat(gameEnd);
+      this.save();
+    },
+    endGameOrNextQuestion() {
+      const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
+      return lastQuestionOrder === this.lastQuestionToEnd().order ? this.endGame() : this.nextQuestion();
     },
   },
 });
