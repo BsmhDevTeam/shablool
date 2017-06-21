@@ -50,14 +50,24 @@ Game.extend({
       this.save();
     },
     playerAnswer(uId, qId, aId) {
-      const playerAnswerEvent = new PlayerAnswer({
-        userId: uId,
-        questionId: qId,
-        answerId: aId,
-      });
-      this.gameLog = this.gameLog.concat(playerAnswerEvent);
-      this.save();
-      return true;
+      const addingPlayerAnswerEvent = () => {
+        const playerAnswerEvent = new PlayerAnswer({
+          userId: uId,
+          questionId: qId,
+          answerId: aId,
+        });
+        this.gameLog = this.gameLog.concat(playerAnswerEvent);
+        this.save();
+        return true;
+      };
+      const playerAnswerEventArray = this.gameLog.filter(
+        e => e.nameType === this.getEventTypes().PlayerAnswer,
+      );
+      const playerAlreadyAnswer = playerAnswerEventArray.find(
+        e => e.userId === uId && e.questionId === qId,
+      );
+      const _ = !playerAlreadyAnswer ? addingPlayerAnswerEvent() : false;
+      return _;
     },
     nextQuestion() {
       // start question

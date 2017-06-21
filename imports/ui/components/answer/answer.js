@@ -1,16 +1,16 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
+const glyphIconsJson = {
+  1: 'fa fa-star',
+  2: 'fa fa-square',
+  3: 'fa fa-circle',
+  4: 'fa fa-heart',
+};
+
+
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
-    console.log('game:');
-    console.log(game);
-    console.log('answer:');
-    console.log(answer);
-    console.log('qid:');
-    console.log(game.lastQuestionToStartId());
-    console.log('aid:');
-    console.log(answer._id);
     game.applyMethod('playerAnswer', [Meteor.userId(), game.lastQuestionToStartId(), answer._id]);
   };
   return (
@@ -24,7 +24,7 @@ const Answer = ({ answer, index, game }) => {
           className={`btn btn-answer-${index} answer-button`}
           onClick={selectAnswer}
         >
-          <i className={`fa fa-answer-${index} answer-icon`} />
+          <i className={`${glyphIconsJson[answer.order]} answer-icon`} />
           <h3>{answer.text}</h3>
         </button>
       </div>

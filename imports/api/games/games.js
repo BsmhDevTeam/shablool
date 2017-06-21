@@ -230,13 +230,18 @@ export default Class.create({
           .answers.find(a => a._id === id).order; // answer._id => answer.order
       const playersAnswerEvents = this.getQuestionAnswers() // => [PlayerAnswer, ...] of the lastQuestion
         .map(e => e.answerId) // => [answerId, ...]
-        .map(getAnswerOrder); // => [answerOrder, ...]
+        .map(getAnswerOrder) // => [answerOrder, ...]
+        .concat([1, 2, 3, 4]); // => so there will always be 4 columns in the bar chart
       const questionsAnswersJson = countBy(playersAnswerEvents, o => o); // => {1: num, 2: num, ...}
       const questionAnswersArray = pairs(questionsAnswersJson).map(a => ({
         answerOrder: a[0],
         count: a[1],
       }));
-      return questionAnswersArray;
+      const answerOrderCount = questionAnswersArray.map(a => ({
+        answerOrder: a.answerOrder,
+        count: a.count - 1, // because we addere 1 to the count before
+      }));
+      return answerOrderCount;
     },
     answerCount() {
       const playersAnswerEvents = this.getQuestionAnswers();
@@ -352,6 +357,9 @@ export default Class.create({
         q => q.order === currentQuestionOrder + 1,
       );
       return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
+    },
+    getEventTypes() {
+      return eventTypes;
     },
   },
 });
