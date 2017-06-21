@@ -31,10 +31,11 @@ const calculateTimeDelta = (t1, t2) => {
 };
 
 const calculateScore = (deltaTime, score, questionTime) => {
+  // TODO: what if deltaTime = 0 ?
   // y = mx + n
   const timeFunc = deltaTime / questionTime;
-  const mx = -Math.abs(score) / timeFunc;
-  const finalScore = score > 0 ? mx + score : mx;
+  const mx = score / timeFunc;
+  const finalScore = Math.round(mx * 10) + score;
   return finalScore;
 };
 
