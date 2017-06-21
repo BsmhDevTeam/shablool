@@ -332,6 +332,7 @@ export default Class.create({
         })); // => [{playerId: id, userScore: score}, ...]
       console.log('playersAnswers:');
       console.log(playersAnswers);
+      // TODO: scoresByUser does not equal to what we want. need to change it.
       const scoresByUser = groupBy(playersAnswers, 'playerId'); // => {playerId: [score, score, score], ...}
       console.log('scoresByUser:');
       console.log(scoresByUser);
