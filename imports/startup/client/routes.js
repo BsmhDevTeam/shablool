@@ -11,15 +11,13 @@ import ManageLayout from '../../ui/layouts/manage/manage.js';
 import Home from '../../ui/pages/home/home';
 import Login from '../../ui/pages/login/login';
 import LoginError from '../../ui/pages/login-error/login-error';
-import Instructions from '../../ui/pages/instructions/instructions';
-import GameLobby from '../../ui/pages/game-lobby/game-lobby';
 import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
 import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
 import Search from '../../ui/pages/search/search.js';
 import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
 import Management from '../../ui/pages/management/management.js';
 import NotFound from '../../ui/pages/not-found/not-found';
-import GameManager from '../../ui/pages/game/game';
+import GameRouter from '../../ui/pages/game-router/game-router';
 
 
 const verifyLogin = () => {
@@ -40,26 +38,10 @@ FlowRouter.route('/', {
 });
 
 FlowRouter.route('/Game/:code', {
-  name: 'Manage.Game',
+  name: 'Game.Main',
   triggersEnter: [verifyLogin],
   action(params) {
-    mount(GameLayout, { main: <GameManager code={params.code} /> });
-  },
-});
-
-FlowRouter.route('/GameLobby', {
-  name: 'Game.GameLobby',
-  triggersEnter: [verifyLogin],
-  action() {
-    mount(GameLayout, { main: <GameLobby /> });
-  },
-});
-
-FlowRouter.route('/Instructions', {
-  name: 'Game.Instructions',
-  triggersEnter: [verifyLogin],
-  action() {
-    mount(GameLayout, { main: <Instructions /> });
+    mount(GameLayout, { main: <GameRouter code={params.code} /> });
   },
 });
 

@@ -22,7 +22,7 @@ const QuizCard = ({ quiz }) => {
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
-    FlowRouter.go('Manage.Game', { code: game.code });
+    FlowRouter.go('Game.Main', { code: game.code });
   };
   return (
     <div className="panel panel-defualt">

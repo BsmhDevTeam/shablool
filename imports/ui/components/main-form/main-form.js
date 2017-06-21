@@ -23,7 +23,7 @@ const MainForm = () => {
     ];
     console.log(gamesWithRegisteredUser);
     const redirectToGame = gamesWithRegisteredUser.map(g =>
-      FlowRouter.go('Manage.Game', { code: g.code }),
+      FlowRouter.go('Game.Main', { code: g.code }),
     );
     return redirectToGame.length ? null : alert('המשחק לא קיים');
   };
@@ -47,7 +47,7 @@ const MainForm = () => {
   );
 };
 
-const GameManagerContainer = ({ loading }) => {
+const MainFormContainer = ({ loading }) => {
   if (loading) return <Loading />;
   return <MainForm />;
 };
@@ -58,4 +58,4 @@ export default createContainer(() => {
   return {
     loading,
   };
-}, GameManagerContainer);
+}, MainFormContainer);

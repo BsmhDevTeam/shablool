@@ -2,7 +2,7 @@ import React from 'react';
 import Game from '../../../api/games/games.js';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
-const Leaders = () => (
+const Leaders = ({ game }) => (
   <div id="leaders">
     <div className="game-background" />
     <div className="container">
@@ -12,7 +12,7 @@ const Leaders = () => (
       <div className="row">
         <div className="table">
           <tbody className="table-style">
-            {Game.scoreList.map((object, index) => (
+            {game.scoreList.map((object, index) => (
               <tr className={index === 0 ? 'leader' : ''}>
                 <td>
                   {object.userName}

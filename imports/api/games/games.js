@@ -1,7 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import { countBy, groupBy, sortBy, mapObject, pairs } from 'underscore';
+import {
+  countBy,
+  groupBy,
+  sortBy,
+  mapObject,
+  pairs,
+  reduceRight,
+} from 'underscore';
 import Quiz from '../quizes/quizes.js';
 
 const calculateTimeDelta = (t1, t2) => {
@@ -33,6 +40,7 @@ const eventTypes = {
   QuestionStart: 'QuestionStart',
   PlayerAnswer: 'PlayerAnswer',
   QuestionEnd: 'QuestionEnd',
+  ShowLeaders: 'ShowLeaders',
   GameEnd: 'GameEnd',
 };
 
@@ -123,7 +131,7 @@ export const PlayerAnswer = Class.create({
         return eventTypes.PlayerAnswer;
       },
     },
-    userId: {
+    playerId: {
       type: String,
     },
     answerId: {
@@ -152,6 +160,24 @@ export const QuestionEnd = Class.create({
     },
     questionId: {
       type: String,
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
+    },
+  },
+});
+
+export const ShowLeaders = Class.create({
+  name: 'ShowLeaders',
+  fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.ShowLeaders;
+      },
     },
     createdAt: {
       type: Date,
@@ -214,6 +240,30 @@ export default Class.create({
   meteorMethods: {},
 
   helpers: {
+    getGamePage() {
+      return reduceRight(
+        this.gameLog,
+        (page, event) => {
+          const isPlayerEvent =
+            event.nameType === eventTypes.PlayerAnswer ||
+            event.nameType === eventTypes.PlayerReg;
+          console.log('event:');
+          console.log(event);
+          console.log('Meteor.userId():');
+          console.log(Meteor.userId());
+          console.log('isPlayerEvent');
+          console.log(isPlayerEvent);
+          console.log('event.playerId === Meteor.userId()');
+          console.log(event.playerId === Meteor.userId());
+          return (
+            page ||
+            (!isPlayerEvent && event.nameType) ||
+            (isPlayerEvent && (event.playerId === Meteor.userId()) && event.nameType)
+          );
+        },
+        '',
+      );
+    },
     isUserRegistered() {
       const isUserExist = this.getGamePlayersId().find(
         user => user === Meteor.userId(),
@@ -259,7 +309,10 @@ export default Class.create({
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
         .map(({ userId, answerId, questionId, createdAt }) => ({
           userId,
-          timeDelta: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+          timeDelta: calculateTimeDelta(
+            createdAt,
+            this.getQuestionStartTime(questionId),
+          ),
           answerScore: this.getAnswerScore(questionId, answerId),
           questionTime: this.getQuestionTime(questionId),
         })) // => [{userId, timeDelta: t, answerScore: a, questionTime: q}]
@@ -323,6 +376,13 @@ export default Class.create({
       const qId = lastQuestionEvents.questionId;
       return qId;
     },
+    lastQuestionToEnd() {
+      const lastQuestionId = this.lastQuestionToEndId();
+      const lastQuestion = this.quiz.questions.find(
+        q => q._id === lastQuestionId,
+      );
+      return lastQuestion;
+    },
     getGamePlayersId() {
       const playerEvent = this.gameLog.filter(
         e => e.nameType === eventTypes.PlayerReg,
@@ -349,12 +409,10 @@ export default Class.create({
       return isEnded;
     },
     nextQuestionId() {
-      const currentQuestionId = this.lastQuestionToEndId();
-      const currentQuestionOrder = this.quiz.questions.findOne(
-        q => q._id === currentQuestionId,
-      ).order;
-      const nextQuestion = this.quiz.questions.findOne(
-        q => q.order === currentQuestionOrder + 1,
+      const lastQuestion = this.lastQuestionToEnd();
+      const lastQuestionOrder = lastQuestion.order;
+      const nextQuestion = this.quiz.questions.find(
+        q => q.order === lastQuestionOrder + 1,
       );
       return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
     },

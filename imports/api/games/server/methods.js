@@ -5,6 +5,7 @@ import Game, {
   QuestionStart,
   QuestionEnd,
   PlayerAnswer,
+  ShowLeaders,
 } from '../games';
 
 Game.extend({
@@ -52,7 +53,7 @@ Game.extend({
     playerAnswer(uId, qId, aId) {
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
-          userId: uId,
+          playerId: uId,
           questionId: qId,
           answerId: aId,
         });
@@ -64,9 +65,11 @@ Game.extend({
         e => e.nameType === this.getEventTypes().PlayerAnswer,
       );
       const playerAlreadyAnswer = playerAnswerEventArray.find(
-        e => e.userId === uId && e.questionId === qId,
+        e => e.playerId === uId && e.questionId === qId,
       );
-      const _ = !playerAlreadyAnswer ? addingPlayerAnswerEvent() : false;
+      const _ = !playerAlreadyAnswer && this.quiz.owner !== Meteor.userId()
+        ? addingPlayerAnswerEvent()
+        : false;
       return _;
     },
     nextQuestion() {
@@ -82,7 +85,13 @@ Game.extend({
       const questionEndToLog = () => {
         this.questionEnd(qId);
       };
-      setTimeout(questionEndToLog, q.time * 1000);
+      Meteor.setTimeout(questionEndToLog, q.time * 1000);
+      return true;
+    },
+    showLeaders() {
+      const showLeadersEvent = new ShowLeaders();
+      this.gameLog = this.gameLog.concat(showLeadersEvent);
+      this.save();
       return true;
     },
   },
