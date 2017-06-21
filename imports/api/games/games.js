@@ -12,7 +12,17 @@ import {
 import Quiz from '../quizes/quizes.js';
 
 const calculateTimeDelta = (t1, t2) => {
+  console.log('t1:');
+  console.log(t1);
+  console.log('t1.getTime():');
+  console.log(t1.getTime());
+  console.log('t2:');
+  console.log(t2);
+  console.log('t2.getTime():');
+  console.log(t2.getTime());
   const datesDelta = t1.getTime() - t2.getTime(); // TODO: Check if we need the getTime method.
+  console.log('datesDelta:');
+  console.log(datesDelta);
   const secondsBetweenTime = datesDelta / 1000;
   const secondsBetweenDates = Math.abs(secondsBetweenTime);
   return secondsBetweenDates;
@@ -307,46 +317,70 @@ export default Class.create({
     scoreList() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
-        .map(({ userId, answerId, questionId, createdAt }) => ({
-          userId,
+        .map(({ playerId, answerId, questionId, createdAt }) => ({
+          playerId,
           timeDelta: calculateTimeDelta(
             createdAt,
             this.getQuestionStartTime(questionId),
           ),
           answerScore: this.getAnswerScore(questionId, answerId),
           questionTime: this.getQuestionTime(questionId),
-        })) // => [{userId, timeDelta: t, answerScore: a, questionTime: q}]
-        .map(({ userId, timeDelta, answerScore, questionTime }) => ({
-          userId,
+        })) // => [{playerId, timeDelta: t, answerScore: a, questionTime: q}]
+        .map(({ playerId, timeDelta, answerScore, questionTime }) => ({
+          playerId,
           userScore: calculateScore(timeDelta, answerScore, questionTime),
-        })); // => [{userId, userScore}]
-      const scoresByUser = groupBy(playersAnswers, 'userId'); // => {userId: [score, score, score]}
+        })); // => [{playerId: id, userScore: score}, ...]
+      console.log('playersAnswers:');
+      console.log(playersAnswers);
+      const scoresByUser = groupBy(playersAnswers, 'playerId'); // => {playerId: [score, score, score], ...}
+      console.log('scoresByUser:');
+      console.log(scoresByUser);
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
-      ); // => {userId: finalScore,}
+      ); // => {playerId: finalScore, ...}
+      console.log('finalScoreByUser:');
+      console.log(finalScoreByUser);
       const scoreByUser = pairs(finalScoreByUser).map(a => ({
         userName: Meteor.users.findOne(u => u._id === a[0]).name,
         userScore: a[1],
       })); // => [{userName: name, userScore: score}, {userName: name, userScore: score}, ...]
+      console.log('scoreByUser:');
+      console.log(scoreByUser);
       const scoreByUserNamesSorted = sortBy(scoreByUser, 'userScore').first(5);
+      console.log('scoreByUserNamesSorted:');
+      console.log(scoreByUserNamesSorted);
       return scoreByUserNamesSorted; // => [{userName, score}, {userName: score},...] - 5 elements
     },
     getQuestionStartTime(qId) {
       const questionStartEvent = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionStart)
-        .filter(e => e.questionId === qId);
+        .find(e => e.questionId === qId);
+      console.log('questionStartEvent:');
+      console.log(questionStartEvent);
       const questionStartTime = questionStartEvent.createdAt;
+      console.log('questionStartTime:');
+      console.log(questionStartTime);
       return questionStartTime;
     },
     getAnswerScore(qId, aId) {
+      console.log('qId:');
+      console.log(qId);
+      console.log('aId:');
+      console.log(aId);
       const question = this.quiz.questions.find(q => q._id === qId);
+      console.log('question:');
+      console.log(question);
       const answer = question.answers.find(a => a._id === aId);
+      console.log('answer:');
+      console.log(answer);
       const score = answer.points;
       return score;
     },
     getQuestionTime(qId) {
       const question = this.quiz.questions.find(q => q._id === qId);
       const time = question.time;
+      console.log('time:');
+      console.log(time);
       return time;
     },
     lastQuestionToStartId() {

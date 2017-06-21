@@ -8,8 +8,8 @@ const QuestionStatistics = ({ game }) => {
   console.log('Hey, You are in the statistics page');
   const question = game.lastQuestionToStart();
 
-  const nextQuestion = () => {
-    game.applyMethod('nextQuestion', []);
+  const showLeaders = () => {
+    game.applyMethod('showLeaders', []);
   };
 
   return (
@@ -22,9 +22,9 @@ const QuestionStatistics = ({ game }) => {
             ? <a
               href="javacript:void(0)"
               className="btn btn-primary"
-              onClick={nextQuestion}
+              onClick={showLeaders}
             >
-                לשאלה הבאה
+                לטבלת המובילים
               </a>
             : ''}
       <div className="row">
