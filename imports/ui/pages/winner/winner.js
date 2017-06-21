@@ -37,7 +37,7 @@ const Winner = ({ winner }) => {
           </div>
           <div className="row">
             <div className="winner-score">
-              <p>{winner.userScore}</p>
+              <p>!with {winner.userScore} points</p>
             </div>
           </div>
         </div>
