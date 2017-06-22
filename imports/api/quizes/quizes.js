@@ -50,7 +50,6 @@ export const Answer = Class.create({
   },
 });
 
-
 export const Question = Class.create({
   name: 'Question',
   fields: {
@@ -99,7 +98,6 @@ export const Question = Class.create({
   },
 });
 
-
 export default Class.create({
   name: 'Quiz',
   collection: Quizes,
@@ -126,7 +124,7 @@ export default Class.create({
         return [];
       },
     },
-    owner: String, // read about authentication
+    owner: String,
     private: {
       // read about authorization models
       type: Boolean,

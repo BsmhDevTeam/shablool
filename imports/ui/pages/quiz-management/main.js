@@ -60,10 +60,8 @@ const Main = ({ quizes }) =>
               שאלון חדש
             </a>
             <div className="row">
-              {quizes.filter(q => q.owner === Meteor.userId()).length
-                ? quizes
-                    .filter(q => q.owner === Meteor.userId())
-                    .map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
+              {quizes.length
+                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
                 : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
           </div>
@@ -84,7 +82,7 @@ const ManagementContainer = ({ loading, quizes }) => {
 };
 
 export default createContainer(() => {
-  const quizesHandle = Meteor.subscribe('quizes.myQuizes');
+  const quizesHandle = Meteor.subscribe('quizes.my-quizes');
   const loading = !quizesHandle.ready();
   const quizes = Quiz.find().fetch();
   return {
