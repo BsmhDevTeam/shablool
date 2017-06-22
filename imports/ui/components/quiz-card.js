@@ -39,10 +39,10 @@ const QuizCard = ({ quiz }) => {
             />
           </div>
           <div className="col-md-4">
-            <p><h5 className="quiz-title">{quiz.title}</h5></p>
+            <h5 className="quiz-title">{quiz.title}</h5>
             <p>
               <span className="quiz-owner-span">
-                הועלה ע"י {quiz.owner}
+                {`הועלה ע"י ${quiz.owner}`}
               </span>
             </p>
             <p><strong>{quiz.questions.length} </strong><span>שאלות</span></p>
