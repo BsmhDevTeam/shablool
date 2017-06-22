@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import QuizCard from '../../components/quiz-card/quiz-card';
 import Quiz from '../../../api/quizes/quizes';
+import Loading from '../../components/loading/loading';
 
 const Management = ({ quizes }) => (
   <div id="quizes">
@@ -85,7 +86,7 @@ const Management = ({ quizes }) => (
 );
 
 const ManagementContainer = ({ loading, quizes }) => {
-  if (loading) return <p>loading</p>;
+  if (loading) return <Loading />;
   return <Management quizes={quizes} />;
 };
 

@@ -7,7 +7,6 @@ const Login = () => {
   const login = () => {
     Meteor.loginWithGithub((err) => {
       if (err) {
-        console.log(err);
         FlowRouter.go('/LoginError');
       } else {
         FlowRouter.go('/');
@@ -16,6 +15,7 @@ const Login = () => {
   };
   return (
     <div id="login">
+      <div className="game-background" />
       <div className="container">
         <div className="row">
           <div className="col-md-4" />

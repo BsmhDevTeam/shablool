@@ -7,6 +7,9 @@ const Quizes = new Mongo.Collection('quizes');
 export const Answer = Class.create({
   name: 'Answer',
   fields: {
+    _id: {
+      type: String,
+    },
     text: {
       type: String,
       validators: [
@@ -17,7 +20,7 @@ export const Answer = Class.create({
         },
         {
           type: 'maxLength',
-          param: 300,
+          param: 30,
           message: 'תשובה ארוכה מידי',
         },
         {
@@ -51,6 +54,9 @@ export const Answer = Class.create({
 export const Question = Class.create({
   name: 'Question',
   fields: {
+    _id: {
+      type: String,
+    },
     text: {
       type: String,
       validators: [
@@ -61,7 +67,7 @@ export const Question = Class.create({
         },
         {
           type: 'maxLength',
-          param: 300,
+          param: 150,
           message: 'טוב נו מה אתה מגזים?! קצר קצת',
         },
       ],

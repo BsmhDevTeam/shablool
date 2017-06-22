@@ -1,31 +1,48 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import Game from '../../../api/games/games.js';
 import GameNavbar from '../../components/game-navbar/game-navbar';
 
-const Leaders = () => (
-  <div id="leaders">
-    <div className="container">
+const Leaders = ({ game }) => {
+  const nextQuestion = () => {
+    game.applyMethod('endGameOrNextQuestion', []);
+  };
+  return (
+    <div id="leaders">
+      <div className="game-background" />
+      {game.quiz.owner === Meteor.userId()
+              ? <div className="row">
+                  <div className="next-question-button">
+                    <a
+                    href="javacript:void(0)"
+                    className="btn btn-primary"
+                    onClick={nextQuestion}
+                    >
+                      לשאלה הבאה
+                    </a>
+                  </div>
+                </div>
+              : ''}
       <div className="row">
         <GameNavbar text="Leaders" num="" />
       </div>
       <div className="row">
-        <div className="table">
-          <tbody className="table-style">
-            {Game.scoreList.map((object, index) => (
+        <table className="table leaders-table">
+          <tbody>
+            {game.scoreList().map((object, index) => (
               <tr className={index === 0 ? 'leader' : ''}>
-                <td>
-                  {object.userName}
-                </td>
                 <td className="to-the-right">
                   {object.userScore}
+                </td>
+                <td>
+                  {object.userName}
                 </td>
               </tr>
             ))}
           </tbody>
-        </div>
+        </table>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Leaders;

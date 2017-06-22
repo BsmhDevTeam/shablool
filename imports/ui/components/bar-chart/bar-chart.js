@@ -1,42 +1,36 @@
 import React from 'react';
-import { Bar } from 'react-chartjs';
+import { BarChart, XAxis, Bar, ResponsiveContainer, Cell } from 'recharts';
 
 const glyphIconsJson = {
-  0: '\f004',
-  1: '\f111',
-  2: '\f0c8',
-  3: '\f005',
+  1: 'fa fa-star',
+  2: 'fa fa-square',
+  3: 'fa fa-circle',
+  4: 'fa fa-heart',
 };
 
 const colorsJson = {
-  0: '#d9534f',
-  1: '#5bc0de',
-  2: '#f0ad4e',
-  3: '#5cb85c',
+  1: '#1668cb',
+  2: '#e21c3f',
+  3: '#2b8d12',
+  4: '#d59c04',
 };
 
-const BarChart = ({ answers }) => {
-  const orders = Object.keys(answers);
-  const options = {
-    // Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines: false,
-    // Boolean - Whether to show horizontal lines (except X axis)
-    scaleShowHorizontalLines: false,
-    // Boolean - Whether to show vertical lines (except Y axis)
-    scaleShowVerticalLines: false,
-  };
-  const getData = (order, count) => {
-    const data = {
-      labels: [glyphIconsJson[order]],
-      datasets: [{
-        fillColor: colorsJson[order],
-        data: [count],
-      }],
-    };
-    return data;
-  };
-  const barsChart = orders.map(o => <Bar data={getData(o, answers[o])} options={options} />);
-  return barsChart;
+const AnswerBar = ({ game }) => {
+  const data = game.answersGroupCount();
+
+  return (
+    <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+      <BarChart data={data}>
+        <XAxis dataKey="answerOrder" />
+        <Bar dataKey="count" fill="#8884d8">
+          {data.map((entry, index) => {
+            const color = colorsJson[entry.answerOrder];
+            return <Cell fill={color} />;
+          })}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
 };
 
-export default BarChart;
+export default AnswerBar;

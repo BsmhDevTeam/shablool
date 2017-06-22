@@ -1,7 +1,18 @@
 #game-layout{
   height: 100vh;
-  -webkit-animation: bgcolorchange 8s infinite;
-  animation: 24s infinite bgcolorchange;
+  
+  .game-background {
+    z-index: -1;
+    -webkit-animation: bgcolorchange 8s infinite;
+    animation: 24s infinite bgcolorchange;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
 
   .alert {
     box-sizing: border-box;

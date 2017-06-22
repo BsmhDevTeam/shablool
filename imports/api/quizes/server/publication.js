@@ -34,11 +34,3 @@ Meteor.publish('quizes.search', function(query) {
     ],
   });
 });
-
-Meteor.publish('questions.all', () => {
-  Question.find();
-});
-
-Meteor.publish('questions.get', (id) => {
-  Question.find(id);
-});

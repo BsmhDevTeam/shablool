@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuizCard from '../../components/quiz-card/quiz-card.js';
+import Loading from '../../components/loading/loading';
 
 const Search = ({ results }) => (
   <div>
@@ -17,7 +18,7 @@ const Search = ({ results }) => (
 );
 
 const SearchContainer = ({ loading }) => {
-  if (loading) return <p>loading</p>;
+  if (loading) return <Loading />;
   const results = Quiz.find();
   return <Search results={results} />;
 };

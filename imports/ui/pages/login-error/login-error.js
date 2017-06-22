@@ -2,6 +2,7 @@ import React from 'react';
 
 const LoginError = () =>
   <div id="login-error">
+    <div className="game-background" />
     <div className="container">
       <div className="row">
         <div className="col-md-4" />

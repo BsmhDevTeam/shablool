@@ -1,18 +1,17 @@
 import React from 'react';
 import Answer from '../answer/answer';
 
-const Answers = ({ answers, actions }) => (
-  <div className="container">
-    <div className="row">
-      {answers.map((answer, index) => (
-        <Answer
-          answer={answer}
-          index={index + 1}
-          action={actions.selectAnswer}
-        />
+const Answers = ({ answers, game }) => (
+  <div className="row">
+    {answers.map((answer, index) => (
+      <Answer
+        answer={answer}
+        index={index + 1}
+        game={game}
+        key={answer._id}
+      />
       ))}
-    </div>
   </div>
-);
+  );
 
 export default Answers;
