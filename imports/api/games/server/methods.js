@@ -103,7 +103,9 @@ Game.extend({
     },
     endGameOrNextQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
-      return lastQuestionOrder === this.lastQuestionToEnd().order ? this.endGame() : this.nextQuestion();
+      return lastQuestionOrder === this.lastQuestionToEnd().order
+        ? this.endGame()
+        : this.nextQuestion();
     },
   },
 });

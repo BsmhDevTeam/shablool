@@ -1,5 +1,5 @@
 import React from 'react';
-import ManageNavbar from '../../components/manage-navbar/manage-navbar.js';
+import ManageNavbar from '../../components/manage-navbar.js';
 
 const ManageLayout = ({ main }) => (
   <div id="manage">

@@ -8,16 +8,16 @@ import GameLayout from '../../ui/layouts/game/game.js';
 import ManageLayout from '../../ui/layouts/manage/manage.js';
 
 // Import pages
-import Home from '../../ui/pages/home/home';
+import Home from '../../ui/pages/game-shared/home';
 import Login from '../../ui/pages/login/login';
-import LoginError from '../../ui/pages/login-error/login-error';
-import CreateQuiz from '../../ui/pages/create-quiz/create-quiz';
-import EditQuiz from '../../ui/pages/edit-quiz/edit-quiz.js';
-import Search from '../../ui/pages/search/search.js';
-import ViewQuiz from '../../ui/pages/view-quiz/view-quiz';
-import Management from '../../ui/pages/management/management.js';
+import LoginError from '../../ui/pages/login/login-error';
+import CreateQuiz from '../../ui/pages/quiz-management/create-quiz';
+import EditQuiz from '../../ui/pages/quiz-management/edit-quiz.js';
+import Search from '../../ui/pages/quiz-management/search.js';
+import ViewQuiz from '../../ui/pages/quiz-management/view-quiz';
+import Main from '../../ui/pages/quiz-management/main.js';
+import GameRouter from '../../ui/pages/game-shared/game-router';
 import NotFound from '../../ui/pages/not-found/not-found';
-import GameRouter from '../../ui/pages/game-router/game-router';
 
 
 const verifyLogin = () => {
@@ -57,7 +57,7 @@ FlowRouter.route('/Manage', {
   name: 'Manage.Home',
   triggersEnter: [verifyLogin],
   action() {
-    mount(ManageLayout, { main: <Management /> });
+    mount(ManageLayout, { main: <Main /> });
   },
 });
 

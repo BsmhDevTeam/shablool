@@ -1,18 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import LoginButtons from '../../components/login-buttons/login-buttons.js';
 
 const Login = () => {
   const login = () => {
-    Meteor.loginWithGithub((err) => {
-      if (err) {
-        FlowRouter.go('/LoginError');
-      } else {
-        FlowRouter.go('/');
-      }
-    });
+    Meteor.loginWithGithub(
+      err => (err ? FlowRouter.go('Game.LoginError') : FlowRouter.go('Game.Home')),
+    );
   };
+
+  const isAlreadyLoggedIn = Meteor.loggingIn() || Meteor.userId();
+
   return (
     <div id="login">
       <div className="game-background" />
@@ -20,7 +18,10 @@ const Login = () => {
         <div className="row">
           <div className="col-md-4" />
           <div className="col-md-4">
-            <LoginButtons login={login} />
+            <button className="btn btn-lg btn-warning btn-block" onClick={login}>
+              Login
+              <i className="fa fa-gitlab" aria-hidden="true" />
+            </button>
           </div>
           <div className="col-md-4" />
         </div>

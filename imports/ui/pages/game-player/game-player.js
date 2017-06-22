@@ -2,48 +2,26 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Game from '/imports/api/games/games';
-import Leaders from '../leaders/leaders';
-import Instructions from '../instructions/instructions';
-import Question from '../question/question';
-import QuestionStatistics from '../question-statistics/question-statistics';
-import Winner from '../winner/winner';
-import Loading from '../../components/loading/loading';
-import AnswerSent from '../answer-sent/answer-sent';
+import Leaders from '../game-shared/leaders.js';
+import Question from '../game-shared/question.js';
+import QuestionStatistics from '../game-shared/question-statistics';
+import Winner from '../game-shared/winner';
+import Instructions from './instructions.js';
+import AnswerSent from './answer-sent.js';
+import Loading from '../../components/loading';
 
 const GamePlayer = ({ game }) => {
-  const jsonPageByEvent = {
+  const mapEventToPages = {
     GameInit: () => null,
     PlayerReg: () => <Instructions />,
-    QuestionStart: () => (
-      <Question
-        game={game}
-      />
-    ),
-    PlayerAnswer: () => (
-      <AnswerSent />
-    ),
-    QuestionEnd: () => (
-      <QuestionStatistics
-        game={game}
-      />
-    ),
-    ShowLeaders: () => (
-      <Leaders
-        game={game}
-      />
-    ),
-    GameEnd: () => (
-      <Winner
-        winner={game.getWinner()}
-      />
-    ),
+    QuestionStart: () => <Question game={game} />,
+    PlayerAnswer: () => <AnswerSent />,
+    QuestionEnd: () => <QuestionStatistics game={game} />,
+    ShowLeaders: () => <Leaders game={game} />,
+    GameEnd: () => <Winner winner={game.getWinner()} />,
   };
-  console.log('gameLog-player:');
-  console.log(game.gameLog);
-  const type = game.getGamePage();
-  console.log('type');
-  console.log(type);
-  const gameRouter = jsonPageByEvent[type];
+  const event = game.getGamePage();
+  const gameRouter = mapEventToPages[event];
   return gameRouter();
 };
 

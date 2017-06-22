@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
 import {
+  max,
   countBy,
   groupBy,
   sortBy,
@@ -29,11 +30,12 @@ const calculateScore = (deltaTime, score, questionTime) => {
   return finalScore;
 };
 
-const generateCode = () => {
-  const n = 6;
-  return Math.floor(
-    (10 ** n - 10 ** (n - 1) - 1) * Math.random() + 10 ** (n - 1),
-  );
+const generateCode = (n) => {
+  const lowerBound = 10 ** (n - 1);
+  const upperBound = 10 ** n;
+  const randUpperBound = upperBound - lowerBound - 1;
+  const rand = randUpperBound * Math.random();
+  return Math.floor(rand + lowerBound);
 };
 
 const eventTypes = {
@@ -223,7 +225,7 @@ export default Class.create({
     code: {
       type: String,
       default() {
-        return generateCode().toString();
+        return generateCode(6).toString();
       },
     },
     createdAt: {
@@ -248,32 +250,26 @@ export default Class.create({
         this.gameLog,
         (page, event) => {
           const isPlayerEvent =
-            event.nameType === eventTypes.PlayerAnswer ||
-            event.nameType === eventTypes.PlayerReg;
+            event.nameType === eventTypes.PlayerAnswer || event.nameType === eventTypes.PlayerReg;
           return (
             page ||
             (!isPlayerEvent && event.nameType) ||
-            (isPlayerEvent && (event.playerId === Meteor.userId()) && event.nameType)
+            (isPlayerEvent && event.playerId === Meteor.userId() && event.nameType)
           );
         },
         '',
       );
     },
     isUserRegistered() {
-      const isUserExist = this.getGamePlayersId().find(
-        user => user === Meteor.userId(),
-      );
+      const isUserExist = this.getGamePlayersId().find(user => user === Meteor.userId());
       return !!isUserExist;
     },
     answersGroupCount() {
       const lastQuestionId = this.lastQuestionToStartId(); // => qId
-      console.log('lastQuestionId:');
-      console.log(lastQuestionId);
       const getAnswerOrder = id =>
-        this.quiz.questions
-          .find(q => q._id === lastQuestionId)
-          .answers.find(a => a._id === id).order; // answer._id => answer.order
-      const playersAnswerEvents = this.getQuestionAnswers() // => [PlayerAnswer, ...] of the lastQuestion
+        this.quiz.questions.find(q => q._id === lastQuestionId).answers.find(a => a._id === id)
+          .order; // answer._id => answer.order
+      const playersAnswerEvents = this.getQuestionAnswers() // => [PlayerAnswer, ...]
         .map(e => e.answerId) // => [answerId, ...]
         .map(getAnswerOrder) // => [answerOrder, ...]
         .concat([1, 2, 3, 4]); // => so there will always be 4 columns in the bar chart
@@ -304,10 +300,7 @@ export default Class.create({
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
         .map(({ playerId, answerId, questionId, createdAt }) => ({
           playerId,
-          timeDelta: calculateTimeDelta(
-            createdAt,
-            this.getQuestionStartTime(questionId),
-          ),
+          timeDelta: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
           answerScore: this.getAnswerScore(questionId, answerId),
           questionTime: this.getQuestionTime(questionId),
         })) // => [{playerId, timeDelta: t, answerScore: a, questionTime: q}]
@@ -315,7 +308,9 @@ export default Class.create({
           playerId,
           userScore: calculateScore(timeDelta, answerScore, questionTime),
         })); // => [{playerId: id, userScore: score}, ...]
-      const scoresByUser = mapObject(groupBy(playersAnswers, 'playerId'), a => pluck(a, 'userScore')); // => {playerId: [score, score, score], ...}
+      const scoresByUser = mapObject(groupBy(playersAnswers, 'playerId'), a =>
+        pluck(a, 'userScore'),
+      ); // => {playerId: [score, score, score], ...}
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
       ); // => {playerId: finalScore, ...}
@@ -345,43 +340,31 @@ export default Class.create({
       return time;
     },
     lastQuestionToStartId() {
-      const questionLog = this.gameLog.filter(
-        e => e.nameType === eventTypes.QuestionStart,
-      );
+      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
-      const lastQuestionEvents =
-        orderedQuestionsLog[orderedQuestionsLog.length - 1];
+      const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents.questionId;
       return qId;
     },
     lastQuestionToStart() {
       const lastQuestionId = this.lastQuestionToStartId();
-      const lastQuestion = this.quiz.questions.find(
-        q => q._id === lastQuestionId,
-      );
+      const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
     lastQuestionToEndId() {
-      const questionLog = this.gameLog.filter(
-        e => e.nameType === eventTypes.QuestionEnd,
-      );
+      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
-      const lastQuestionEvents =
-        orderedQuestionsLog[orderedQuestionsLog.length - 1];
+      const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents.questionId;
       return qId;
     },
     lastQuestionToEnd() {
       const lastQuestionId = this.lastQuestionToEndId();
-      const lastQuestion = this.quiz.questions.find(
-        q => q._id === lastQuestionId,
-      );
+      const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
     getGamePlayersId() {
-      const playerEvent = this.gameLog.filter(
-        e => e.nameType === eventTypes.PlayerReg,
-      );
+      const playerEvent = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
       const playersId = playerEvent.map(e => e.playerId);
       return playersId;
     },
@@ -399,20 +382,21 @@ export default Class.create({
       return first(this.scoreList());
     },
     isCurrentQuestionEnded() {
-      const isEnded =
-        this.lastQuestionToStartId() === this.lastQuestionToEndId();
+      const isEnded = this.lastQuestionToStartId() === this.lastQuestionToEndId();
       return isEnded;
     },
     nextQuestionId() {
       const lastQuestion = this.lastQuestionToEnd();
       const lastQuestionOrder = lastQuestion.order;
-      const nextQuestion = this.quiz.questions.find(
-        q => q.order === lastQuestionOrder + 1,
-      );
+      const nextQuestion = this.quiz.questions.find(q => q.order === lastQuestionOrder + 1);
       return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
     },
     getEventTypes() {
       return eventTypes;
+    },
+    isLastQuestion() {
+      const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
+      return lastQuestionOrder === this.lastQuestionToEnd().order;
     },
   },
 });
