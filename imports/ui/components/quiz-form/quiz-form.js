@@ -78,7 +78,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
             <label htmlFor="isPrivate" className="control-label">
               מי יכול למצוא את השאלון
             </label>
-            <select name="isPrivate" className="is-private form-control">
+            <select name="isPrivate" className="is-private form-control" onChange={actions.changeQuizPrivacy}>
               <option value="false">כולם</option>
               <option value="true">רק אני</option>
             </select>

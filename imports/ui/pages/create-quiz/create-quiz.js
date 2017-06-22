@@ -66,34 +66,6 @@ class CreateQuiz extends React.Component {
       this.setState({ quiz: quiz$ });
     };
 
-    const addTag = (e) => {
-      e.preventDefault();
-
-      // get args
-      const form = e.target;
-      const tagName = form.tag.value;
-
-      // create new tag
-      const newTag = {
-        _id: uuidV4(),
-        name: normalizeTagName(tagName),
-      };
-
-      // update state
-      const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      this.setState({ quiz: quiz$ });
-
-      // clear form
-      form.tag.value = '';
-    };
-
-    const removeTag = id => () => {
-      const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t._id !== id) };
-      this.setState({ quiz: quiz$ });
-    };
-
     const changeQuestionText = id => (e) => {
       const quiz = this.state.quiz;
       const text$ = e.target.value;
@@ -140,7 +112,39 @@ class CreateQuiz extends React.Component {
       this.setState({ quiz: quiz$ });
     };
 
-    // TODO: set privacy field
+    const addTag = (e) => {
+      e.preventDefault();
+
+      // get args
+      const form = e.target;
+      const tagName = form.tag.value;
+
+      // create new tag
+      const newTag = {
+        _id: uuidV4(),
+        name: normalizeTagName(tagName),
+      };
+
+      // update state
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
+      this.setState({ quiz: quiz$ });
+
+      // clear form
+      form.tag.value = '';
+    };
+
+    const removeTag = id => () => {
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t._id !== id) };
+      this.setState({ quiz: quiz$ });
+    };
+
+    const changeQuizPrivacy = (e) => {
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, private: e.target.value };
+      this.setState({ quiz: quiz$ });
+    };
 
     const saveQuiz = (e) => {
       e.preventDefault();
@@ -158,6 +162,7 @@ class CreateQuiz extends React.Component {
 
     const actions = {
       changeQuizTitle,
+      changeQuizPrivacy,
       addQuestion,
       changeQuestionText,
       removeQuestion,

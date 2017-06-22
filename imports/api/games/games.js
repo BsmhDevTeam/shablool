@@ -8,31 +8,24 @@ import {
   mapObject,
   pairs,
   reduceRight,
+  pluck,
+  first,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
 
 const calculateTimeDelta = (t1, t2) => {
-  console.log('t1:');
-  console.log(t1);
-  console.log('t1.getTime():');
-  console.log(t1.getTime());
-  console.log('t2:');
-  console.log(t2);
-  console.log('t2.getTime():');
-  console.log(t2.getTime());
   const datesDelta = t1.getTime() - t2.getTime(); // TODO: Check if we need the getTime method.
-  console.log('datesDelta:');
-  console.log(datesDelta);
   const secondsBetweenTime = datesDelta / 1000;
   const secondsBetweenDates = Math.abs(secondsBetweenTime);
   return secondsBetweenDates;
 };
 
 const calculateScore = (deltaTime, score, questionTime) => {
+  // TODO: what if deltaTime = 0 ?
   // y = mx + n
   const timeFunc = deltaTime / questionTime;
-  const mx = -Math.abs(score) / timeFunc;
-  const finalScore = score > 0 ? mx + score : mx;
+  const mx = score / timeFunc;
+  const finalScore = Math.round(mx * 10) + score;
   return finalScore;
 };
 
@@ -257,14 +250,6 @@ export default Class.create({
           const isPlayerEvent =
             event.nameType === eventTypes.PlayerAnswer ||
             event.nameType === eventTypes.PlayerReg;
-          console.log('event:');
-          console.log(event);
-          console.log('Meteor.userId():');
-          console.log(Meteor.userId());
-          console.log('isPlayerEvent');
-          console.log(isPlayerEvent);
-          console.log('event.playerId === Meteor.userId()');
-          console.log(event.playerId === Meteor.userId());
           return (
             page ||
             (!isPlayerEvent && event.nameType) ||
@@ -330,58 +315,33 @@ export default Class.create({
           playerId,
           userScore: calculateScore(timeDelta, answerScore, questionTime),
         })); // => [{playerId: id, userScore: score}, ...]
-      console.log('playersAnswers:');
-      console.log(playersAnswers);
-      // TODO: scoresByUser does not equal to what we want. need to change it.
-      const scoresByUser = groupBy(playersAnswers, 'playerId'); // => {playerId: [score, score, score], ...}
-      console.log('scoresByUser:');
-      console.log(scoresByUser);
+      const scoresByUser = mapObject(groupBy(playersAnswers, 'playerId'), a => pluck(a, 'userScore')); // => {playerId: [score, score, score], ...}
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
       ); // => {playerId: finalScore, ...}
-      console.log('finalScoreByUser:');
-      console.log(finalScoreByUser);
       const scoreByUser = pairs(finalScoreByUser).map(a => ({
-        userName: Meteor.users.findOne(u => u._id === a[0]).name,
+        userName: Meteor.users.findOne(a[0]).services.github.username,
         userScore: a[1],
       })); // => [{userName: name, userScore: score}, {userName: name, userScore: score}, ...]
-      console.log('scoreByUser:');
-      console.log(scoreByUser);
-      const scoreByUserNamesSorted = sortBy(scoreByUser, 'userScore').first(5);
-      console.log('scoreByUserNamesSorted:');
-      console.log(scoreByUserNamesSorted);
+      const scoreByUserNamesSorted = first(sortBy(scoreByUser, 'userScore'), 5);
       return scoreByUserNamesSorted; // => [{userName, score}, {userName: score},...] - 5 elements
     },
     getQuestionStartTime(qId) {
       const questionStartEvent = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
-      console.log('questionStartEvent:');
-      console.log(questionStartEvent);
       const questionStartTime = questionStartEvent.createdAt;
-      console.log('questionStartTime:');
-      console.log(questionStartTime);
       return questionStartTime;
     },
     getAnswerScore(qId, aId) {
-      console.log('qId:');
-      console.log(qId);
-      console.log('aId:');
-      console.log(aId);
       const question = this.quiz.questions.find(q => q._id === qId);
-      console.log('question:');
-      console.log(question);
       const answer = question.answers.find(a => a._id === aId);
-      console.log('answer:');
-      console.log(answer);
       const score = answer.points;
       return score;
     },
     getQuestionTime(qId) {
       const question = this.quiz.questions.find(q => q._id === qId);
       const time = question.time;
-      console.log('time:');
-      console.log(time);
       return time;
     },
     lastQuestionToStartId() {
@@ -436,7 +396,7 @@ export default Class.create({
       return lastEvent;
     },
     getWinner() {
-      return this.scoreList().first();
+      return first(this.scoreList());
     },
     isCurrentQuestionEnded() {
       const isEnded =

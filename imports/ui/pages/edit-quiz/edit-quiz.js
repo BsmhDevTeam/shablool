@@ -136,6 +136,12 @@ class EditQuiz extends React.Component {
       this.setState({ quiz: quiz$ });
     };
 
+    const changeQuizPrivacy = (e) => {
+      const quiz = this.state.quiz;
+      const quiz$ = { ...quiz, private: e.target.value };
+      this.setState({ quiz: quiz$ });
+    };
+
     const saveQuiz = (e) => {
       e.preventDefault();
       if (!this.state.validate) this.setState({ validate: true });
@@ -160,6 +166,7 @@ class EditQuiz extends React.Component {
       changeAnswerPoints,
       addTag,
       removeTag,
+      changeQuizPrivacy,
       saveQuiz,
     };
 
