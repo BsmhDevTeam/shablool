@@ -52,13 +52,19 @@ const Main = ({ quizes }) =>
           </div>
         </div>
       </div>
-      <div className="well">
+      <div className="">
         <div className="tab-content">
           <div className="tab-pane fade in active" id="tab1">
             <h3>השאלונים שלי</h3>
-            <a href="/CreateQuiz" className="add-question btn btn-primary btn-lg btn-block">
-              שאלון חדש
-            </a>
+              <div className="row">
+                <a href="/CreateQuiz" className="add-question">
+                  <div className="panel panel-default" id="add-quiz-panel">
+                    <div className="panel-body">
+                      <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
+                    </div>
+                  </div>
+                </a>
+              </div>
             <div className="row">
               {quizes.length
                 ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)

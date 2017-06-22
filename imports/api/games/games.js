@@ -21,13 +21,10 @@ const calculateTimeDelta = (t1, t2) => {
   return secondsBetweenDates;
 };
 
-const calculateScore = (deltaTime, score, questionTime) => {
-  // TODO: what if deltaTime = 0 ?
-  // y = mx + n
-  const timeFunc = deltaTime / questionTime;
-  const mx = score / timeFunc;
-  const finalScore = Math.round(mx * 10) + score;
-  return finalScore;
+const calculateScore = (dt, s, qt) => {
+  const portion = s > 0 ? qt - dt : dt;
+  const finalScore = (portion / qt) * s;
+  return Math.round(finalScore);
 };
 
 const generateCode = (n) => {
