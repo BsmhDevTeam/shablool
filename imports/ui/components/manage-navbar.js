@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const ManageNavbar = () => {
@@ -8,7 +9,7 @@ const ManageNavbar = () => {
     FlowRouter.go('Manage.Search', { query });
   };
   return (
-    <nav className="navbar navbar-default navbar-fixed-top">
+    <nav className="navbar navbar-default navbar-fixed-top manage-navbar">
       <div className="container-fluid">
         <div className="navbar-header">
           <button
@@ -23,14 +24,11 @@ const ManageNavbar = () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand">צהו"ל</a>
+          <a href="/" className="navbar-brand navbar-link-element">צהו"ל</a>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
-          <ul className="nav navbar-nav">
-            <li className="manage-nav-li"><a href="/profile">פרופיל</a></li>
-          </ul>
           <form
-            className="js-search navbar-form navbar-left"
+            className="js-search navbar-form navbar-right"
             role="search"
             onSubmit={search}
           >
@@ -43,9 +41,17 @@ const ManageNavbar = () => {
               />
             </div>
             <button type="submit" className="btn btn-default">
-              <span className="glyphicon glyphicon-search"></span>
+              <span className="glyphicon glyphicon-search" />
             </button>
           </form>
+          <ul className="nav navbar-nav navbar-left">
+            <li className="manage-nav-li">
+              <a href="/Manage" className="navbar-link-element">
+                <span>ברוך הבא, {Meteor.userId()} </span>
+                <span className="glyphicon glyphicon-user" />
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
