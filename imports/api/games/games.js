@@ -323,6 +323,12 @@ export default Class.create({
         .filter(e => e.questionId === lastQuestionId);
       return playersAnswerEvents;
     },
+    getAllPlayersId() {
+      const playersRegEvents = this.gameLog
+        .filter(e => e.nameType === eventTypes.PlayerReg);
+      const playersId = playersRegEvents.map(e => e.playerId);
+      return playersId;
+    },
     scoreListById() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
@@ -345,9 +351,10 @@ export default Class.create({
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
       ); // => {playerId: finalScore, ...}
-      const scoreByUserId = pairs(finalScoreByUser).map(a => ({
-        userId: a[0],
-        userScore: a[1],
+      const players = this.getAllPlayersId();
+      const scoreByUserId = players.map(pId => ({
+        userId: pId,
+        userScore: finalScoreByUser[pId] || 0,
       })); // => [{userId: name, userScore: score}, ...]
       return sortBy(scoreByUserId, 'userScore');
     },
@@ -367,11 +374,11 @@ export default Class.create({
       return scoreByUserNamesSorted; // => [{userName, score}, ...] - 5 elements
     },
     getScoreByUserId(pId) {
-      const uidAndScore = this.scoreListById().find(o => o.userId === pId);
-      return uidAndScore.userScore;
+      const uIdAndScore = this.scoreListById().find(o => o.playerId === pId);
+      return uIdAndScore.userScore;
     },
     getPlaceByUserId(pId) {
-      const place = this.scoreListById().findIndex(o => o.userId === pId);
+      const place = this.scoreListById().findIndex(o => o.playerId === pId);
       return place + 1;
     },
     getQuestionStartTime(qId) {
@@ -459,9 +466,6 @@ export default Class.create({
       );
       return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
     },
-    getEventTypes() {
-      return eventTypes;
-    },
     isLastQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
       return lastQuestionOrder === this.lastQuestionToEnd().order;
@@ -481,7 +485,7 @@ export default Class.create({
       const currentTime = new Date();
       const currentTimeInSeconds = currentTime.getTime() / 1000;
       const timePassed = questionStartEvent.map(
-        e => currentTimeInSeconds - e.createdAt.getTime() / 1000,
+        e => currentTimeInSeconds - (e.createdAt.getTime() / 1000),
       );
       const timeLeft = timePassed.map(
         t => this.quiz.questions.find(q => q._id === questionId).time - t,
