@@ -23,7 +23,7 @@ const calculateTimeDelta = (t1, t2) => {
 
 const calculateScore = (dt, s, qt) => {
   const portion = s > 0 ? qt - dt : dt;
-  const finalScore = portion / (qt * s);
+  const finalScore = (portion / qt) * s;
   return Math.ceil(finalScore);
 };
 
@@ -336,16 +336,8 @@ export default Class.create({
       const scoresByUser = mapObject(groupBy(playersAnswers, 'playerId'), a =>
         pluck(a, 'userScore'),
       ); // => {playerId: [score, score, score], ...}
-<<<<<<< HEAD
-      const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
-        val.reduce((a, b) => a + b, 0),
-      ); // => {playerId: finalScore, ...}
-      console.log('finalScoreByUser:');
-      console.log(finalScoreByUser);
-=======
       const finalScoreByUser = mapObject(scoresByUser, val => val.reduce((a, b) => a + b, 0));
       // => {playerId: finalScore, ...}
->>>>>>> 5f10cd1552c40c42b1519addda128a810b782b80
       const players = this.getAllPlayersId();
       const scoreByUserId = players.map(pId => ({
         userId: pId,
