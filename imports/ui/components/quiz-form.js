@@ -108,7 +108,7 @@ const TagTemplate = ({ tag, actions }) =>
       aria-hidden="true"
       onClick={actions.removeTag(tag._id)}
     >
-      {tag.name}pre
+      {tag.name}
     </span>
   </h3>;
 
