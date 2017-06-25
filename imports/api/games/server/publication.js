@@ -5,11 +5,6 @@ Meteor.publish('games.all', function() {
   return Game.find();
 });
 
-Meteor.publish('games.not-mine', function() {
-  return Game.find({ $not: { 'quiz.owner': this.userId } });
-});
-
-
 Meteor.publish('games.get', function(id) {
   return Game.find(id);
 });

@@ -21,6 +21,13 @@ class Home extends React.Component {
       form.gameCode.value = '';
 
       const maybeGame = Game.find({ code: gameCode }).fetch();
+      const maybeGameUserManage = maybeGame.filter(g => g.quiz.owner === Meteor.userId());
+      const maybeRedirectToGameAsManager = maybeGameUserManage.map((g) => {
+        FlowRouter.go('Game.Main', { code: g.code });
+        return g;
+      });
+      if (maybeRedirectToGameAsManager.length !== 0) return;
+
       const maybeGameUserNotIn = maybeGame.filter(g => !g.isUserRegistered());
       const maybeGameUserIn = [
         ...maybeGameUserNotIn.map((g) => {
@@ -29,7 +36,7 @@ class Home extends React.Component {
         }),
         ...maybeGame.filter(g => g.isUserRegistered()),
       ];
-      const maybeRedirectToGame = maybeGameUserIn.map(g =>
+      const maybeRedirectToGameAsPlayer = maybeGameUserIn.map(g =>
         FlowRouter.go('Game.Main', { code: g.code }),
       );
 
@@ -37,7 +44,11 @@ class Home extends React.Component {
         this.setState({ badGameCode: true });
         setTimeout(() => this.setState({ badGameCode: false }), 3000);
       };
-      return maybeRedirectToGame.length === 0 && notifyUser();
+      return (
+        maybeRedirectToGameAsManager.length === 0 &&
+        maybeRedirectToGameAsPlayer.length === 0 &&
+        notifyUser()
+      );
     };
 
     return (
