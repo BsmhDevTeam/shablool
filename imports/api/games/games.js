@@ -35,7 +35,7 @@ const generateCode = (n) => {
   return Math.floor(rand + lowerBound);
 };
 
-const eventTypes = {
+export const eventTypes = {
   GameInit: 'GameInit',
   PlayerReg: 'PlayerReg',
   GameStarted: 'GameStarted',
