@@ -16,10 +16,16 @@ const Search = ({ results }) =>
     </ul>
   </div>;
 
+const NoResults = () =>
+  <div className="row">
+    <img className="col-md-6" src="/img/no-search-results.png" alt="No Search Results" />
+    <img className="col-md-6" src="/img/no-search-results-text.png" alt="No Search Results" />
+  </div>;
+
 const SearchContainer = ({ loading }) => {
   if (loading) return <Loading />;
-  const results = Quiz.find();
-  return <Search results={results} />;
+  const results = Quiz.find().fetch();
+  return results.length === 0 ? <NoResults /> : <Search results={results} />;
 };
 
 export default createContainer(({ query }) => {

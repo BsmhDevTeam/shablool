@@ -36,7 +36,7 @@ const QuizCard = ({ quiz }) => {
           <div className="col-md-3">
             <img
               className="quiz-panel-img"
-              src="../../img/quiz-default.png"
+              src="/img/quiz-default.png"
               alt="quiz"
             />
           </div>

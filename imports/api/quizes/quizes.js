@@ -96,6 +96,11 @@ export const Question = Class.create({
           param: 5,
           message: 'מעט מידי זמן לשאלה',
         },
+        {
+          type: 'lte',
+          param: 3600,
+          message: 'מה? שעה שאלה??',
+        },
       ],
     },
     createdAt: {

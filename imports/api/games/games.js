@@ -323,7 +323,7 @@ export default Class.create({
         .filter(e => e.questionId === lastQuestionId);
       return playersAnswerEvents;
     },
-    scoreLostById() {
+    scoreListById() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
         .map(({ playerId, answerId, questionId, createdAt }) => ({
@@ -352,7 +352,7 @@ export default Class.create({
       return sortBy(scoreByUserId, 'userScore');
     },
     scoreListByName() {
-      const scoreListById = this.scoreLostById();
+      const scoreListById = this.scoreListById();
       const scoreByUserName = scoreListById.map(o => ({
         userName: Meteor.users.findOne(o.userId).services.github.username,
         userScore: o.userScore,
@@ -367,11 +367,11 @@ export default Class.create({
       return scoreByUserNamesSorted; // => [{userName, score}, ...] - 5 elements
     },
     getScoreByUserId(pId) {
-      const uidAndScore = this.scoreLostById().find(o => o.userId === pId);
+      const uidAndScore = this.scoreListById().find(o => o.userId === pId);
       return uidAndScore.userScore;
     },
     getPlaceByUserId(pId) {
-      const place = this.scoreLostById().findIndex(o => o.userId === pId);
+      const place = this.scoreListById().findIndex(o => o.userId === pId);
       return place + 1;
     },
     getQuestionStartTime(qId) {
@@ -444,7 +444,7 @@ export default Class.create({
       return lastEvent;
     },
     getWinner() {
-      return first(this.scoreList());
+      return first(this.getLeaders());
     },
     isCurrentQuestionEnded() {
       const isEnded =
