@@ -7,7 +7,7 @@ import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
 import GameCardPlayed from '../../components/gameCardPlayed';
 
-const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
+const Main = ({ quizes, gamesPlayed, gamesManaged }) =>
   <div id="quizes">
     <div>
       <div className="card">
@@ -24,10 +24,7 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
               href="#tab1"
               data-toggle="tab"
             >
-              <span
-                className="glyphicon glyphicon-list-alt"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
               <div className="hidden-xs">השאלונים שלי</div>
             </button>
           </div>
@@ -39,10 +36,7 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
               href="#tab2"
               data-toggle="tab"
             >
-              <span
-                className="glyphicon glyphicon-briefcase"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
               <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
@@ -54,10 +48,7 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
               href="#tab3"
               data-toggle="tab"
             >
-              <span
-                className="glyphicon glyphicon-stats"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
               <div className="hidden-xs">משחקים ששיחקתי</div>
             </button>
           </div>
@@ -66,23 +57,19 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
       <div className="">
         <div className="tab-content">
           <div className="tab-pane fade in active" id="tab1">
-            <h3>השאלונים שלי</h3>
             <div className="row">
               <a href="/CreateQuiz" className="add-question">
                 <div className="panel panel-default" id="add-quiz-panel">
                   <div className="panel-body">
-                      <span
-                        className="glphicon glyphicon-plus"
-                        id="add-quiz-plus-icon"
-                      />
-                    </div>
+                    <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
+                  </div>
                 </div>
               </a>
             </div>
             <div className="row">
               {quizes.length
-                  ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
-                  : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
+                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
+                : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
           </div>
 
@@ -93,32 +80,18 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
           <div className="tab-pane fade in" id="tab3">
             <div className="row">
               {gamesPlayed.length
-                  ? gamesPlayed.map(game => (
-                    <GameCardPlayed key={game._id} game={game} />
-                    ))
-                  : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
+                ? gamesPlayed.map(game => <GameCardPlayed key={game._id} game={game} />)
+                : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  );
+  </div>;
 
-const ManagementContainer = ({
-  loading,
-  quizes,
-  gamesPlayed,
-  gamesManaged,
-}) => {
+const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return (
-    <Main
-      quizes={quizes}
-      gamesPlayed={gamesPlayed}
-      gameManaged={gamesManaged}
-    />
-  );
+  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gameManaged={gamesManaged} />;
 };
 
 export default createContainer(() => {
