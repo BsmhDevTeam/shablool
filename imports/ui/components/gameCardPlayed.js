@@ -2,8 +2,9 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
 const GameCardPlayed = ({ game }) => {
-  console.log('game:');
-  console.log(game);
+  const showDate = date => (
+    `${date.getDate()}/${date.getMonth()}/${date.getYear()}`
+  );
   const showStatistics = () => {
 
   };
@@ -27,8 +28,8 @@ const GameCardPlayed = ({ game }) => {
               </span>
             </p>
             <p><strong>{game.getScoreByUserId()} </strong><span>נקודות</span></p>
-            <p><span>מיקום</span><strong>{game.getPlaceByUserId()} </strong></p>
-            <p><span>{game.createdAt}</span></p>
+            <p><span>מיקום </span><strong>{game.getPlaceByUserId()} </strong></p>
+            <p><span>{showDate(game.createdAt)}</span></p>
           </div>
           <div className="col-md-5 game-card-buttons-area">
             <span>

@@ -35,7 +35,7 @@ const generateCode = (n) => {
   return Math.floor(rand + lowerBound);
 };
 
-const eventTypes = {
+export const eventTypes = {
   GameInit: 'GameInit',
   PlayerReg: 'PlayerReg',
   GameStarted: 'GameStarted',
@@ -374,11 +374,11 @@ export default Class.create({
       return scoreByUserNamesSorted; // => [{userName, score}, ...] - 5 elements
     },
     getScoreByUserId(pId) {
-      const uidAndScore = this.scoreListById().find(o => o.userId === pId);
-      return uidAndScore.userScore;
+      const uIdAndScore = this.scoreListById().find(o => o.playerId === pId);
+      return uIdAndScore.userScore;
     },
     getPlaceByUserId(pId) {
-      const place = this.scoreListById().findIndex(o => o.userId === pId);
+      const place = this.scoreListById().findIndex(o => o.playerId === pId);
       return place + 1;
     },
     getQuestionStartTime(qId) {
@@ -466,9 +466,6 @@ export default Class.create({
       );
       return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
     },
-    getEventTypes() {
-      return eventTypes;
-    },
     isLastQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
       return lastQuestionOrder === this.lastQuestionToEnd().order;
@@ -488,7 +485,7 @@ export default Class.create({
       const currentTime = new Date();
       const currentTimeInSeconds = currentTime.getTime() / 1000;
       const timePassed = questionStartEvent.map(
-        e => currentTimeInSeconds - e.createdAt.getTime() / 1000,
+        e => currentTimeInSeconds - (e.createdAt.getTime() / 1000),
       );
       const timeLeft = timePassed.map(
         t => this.quiz.questions.find(q => q._id === questionId).time - t,

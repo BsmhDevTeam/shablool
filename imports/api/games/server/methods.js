@@ -9,6 +9,7 @@ import Game, {
   ShowLeaders,
   GameEnd,
   GameClose,
+  eventTypes,
 } from '../games';
 
 Game.extend({
@@ -65,7 +66,7 @@ Game.extend({
         return true;
       };
       const playerAnswerEventArray = this.gameLog.filter(
-        e => e.nameType === this.getEventTypes().PlayerAnswer,
+        e => e.nameType === eventTypes.PlayerAnswer,
       );
       const playerAlreadyAnswer = playerAnswerEventArray.find(
         e => e.playerId === uId && e.questionId === qId,

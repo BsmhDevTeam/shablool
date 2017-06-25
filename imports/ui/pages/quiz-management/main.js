@@ -2,7 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Quiz from '../../../api/quizes/quizes';
-import Game from '../../../api/games/games';
+import Game, { eventTypes } from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
 import GameCardPlayed from '../../components/gameCardPlayed';
@@ -110,12 +110,8 @@ const ManagementContainer = ({
   gamesManaged,
 }) => {
   if (loading) return <Loading />;
-  console.log('quizes');
-  console.log(quizes);
   console.log('gamesPlayed');
   console.log(gamesPlayed);
-  console.log('gamesManaged');
-  console.log(gamesManaged);
   return (
     <Main
       quizes={quizes}
@@ -138,11 +134,7 @@ export default createContainer(() => {
     !gamesManagedHandle.ready();
   const quizes = Quiz.find().fetch();
   const gamesManaged = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
-  const gamesPlayed = Game.find(g =>
-    g.gameLog
-      .filter(e => e.nameType === Game.getEventTypes().PlayerReg)
-      .find(e => e.playerId === this.userId),
-  ).fetch();
+  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } }).fetch();
   return {
     loading,
     quizes,
