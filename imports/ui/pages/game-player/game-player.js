@@ -9,6 +9,7 @@ import Winner from '../game-shared/winner';
 import Instructions from './instructions.js';
 import AnswerSent from './answer-sent.js';
 import Loading from '../../components/loading';
+import GameClose from '../game-shared/game-close';
 
 const GamePlayer = ({ game }) => {
   const mapEventToPages = {
@@ -18,7 +19,8 @@ const GamePlayer = ({ game }) => {
     PlayerAnswer: () => <AnswerSent />,
     QuestionEnd: () => <QuestionStatistics game={game} />,
     ShowLeaders: () => <Leaders game={game} />,
-    GameEnd: () => <Winner winner={game.getWinner()} />,
+    GameEnd: () => <Winner game={game} />,
+    GameClose: () => <GameClose />,
   };
   const event = game.getGamePage();
   const gameRouter = mapEventToPages[event];

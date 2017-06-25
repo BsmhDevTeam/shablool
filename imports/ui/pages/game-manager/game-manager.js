@@ -8,7 +8,7 @@ import QuestionStatistics from '../game-shared/question-statistics';
 import Winner from '../game-shared/winner';
 import GameLobby from './game-lobby';
 import Loading from '../../components/loading';
-
+import GameClose from '../game-shared/game-close';
 
 const GameManager = ({ game }) => {
   const mapEventToPages = {
@@ -18,7 +18,8 @@ const GameManager = ({ game }) => {
     PlayerAnswer: () => <Question game={game} />,
     QuestionEnd: () => <QuestionStatistics game={game} />,
     ShowLeaders: () => <Leaders game={game} />,
-    GameEnd: () => <Winner winner={game.getWinner()} />,
+    GameEnd: () => <Winner game={game} />,
+    GameClose: () => <GameClose />,
   };
   const event = game.getLastEvent().nameType;
   const gameRouter = mapEventToPages[event];

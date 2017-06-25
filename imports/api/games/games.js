@@ -15,7 +15,7 @@ import {
 import Quiz from '../quizes/quizes.js';
 
 const calculateTimeDelta = (t1, t2) => {
-  const datesDelta = t1.getTime() - t2.getTime(); // TODO: Check if we need the getTime method.
+  const datesDelta = t1.getTime() - t2.getTime();
   const secondsBetweenTime = datesDelta / 1000;
   const secondsBetweenDates = Math.abs(secondsBetweenTime);
   return secondsBetweenDates;
@@ -44,6 +44,7 @@ const eventTypes = {
   QuestionEnd: 'QuestionEnd',
   ShowLeaders: 'ShowLeaders',
   GameEnd: 'GameEnd',
+  GameClose: 'GameClose',
 };
 
 export const GameInit = Class.create({

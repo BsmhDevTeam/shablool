@@ -1,11 +1,14 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import GameNavbar from '../../components/game-navbar';
 
-const Winner = ({ winner }) => {
+const Winner = ({ game }) => {
   const backToHome = () => {
+    const _ = game.quiz.owner === Meteor.userId() ? game.applyMethod('closeGame', []) : null;
     FlowRouter.go('Game.Home');
   };
+
   return (
     <div id="winner">
       <div className="game-background" />
@@ -21,7 +24,7 @@ const Winner = ({ winner }) => {
       </div>
       <div className="row">
         <div className="winner-name">
-          <p>{winner.userName}</p>
+          <p>{game.getWinner().userName}</p>
         </div>
       </div>
       <div className="row">
@@ -34,7 +37,7 @@ const Winner = ({ winner }) => {
       </div>
       <div className="row">
         <div className="winner-score">
-          <p>!with {winner.userScore} points</p>
+          <p>!with {game.getWinner().userScore} points</p>
         </div>
       </div>
     </div>

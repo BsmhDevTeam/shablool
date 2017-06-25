@@ -8,6 +8,7 @@ import Game, {
   PlayerAnswer,
   ShowLeaders,
   GameEnd,
+  GameClose,
 } from '../games';
 
 Game.extend({
@@ -106,6 +107,11 @@ Game.extend({
       return lastQuestionOrder === this.lastQuestionToEnd().order
         ? this.endGame()
         : this.nextQuestion();
+    },
+    closeGame() {
+      const gameClose = new GameClose();
+      this.gameLog = this.gameLog.concat(gameClose);
+      this.save();
     },
   },
 });
