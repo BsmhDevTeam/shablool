@@ -40,7 +40,7 @@ const Answer = ({ answer, index, game }) => {
           onClick={selectAnswer}
         >
           {
-            isRightAnswer
+            isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd
             ? <i className="fa fa-check answer-icon right-answer-icon" />
             : ''
           }
