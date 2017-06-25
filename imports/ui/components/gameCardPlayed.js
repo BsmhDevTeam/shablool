@@ -33,6 +33,8 @@ const GameCardPlayed = ({ game }) => {
           </div>
           <div className="col-md-5 game-card-buttons-area">
             <span>
+              <div className="col-md-4" />
+              <div className="col-md-4" />
               <div className="col-md-4">
                 <a
                   href="javascript:void(0)"
