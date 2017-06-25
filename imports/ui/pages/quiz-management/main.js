@@ -2,7 +2,6 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Quiz from '../../../api/quizes/quizes';
-import Game, { eventTypes } from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
 import GameCardPlayed from '../../components/gameCardPlayed';
@@ -110,8 +109,6 @@ const ManagementContainer = ({
   gamesManaged,
 }) => {
   if (loading) return <Loading />;
-  console.log('gamesPlayed');
-  console.log(gamesPlayed);
   return (
     <Main
       quizes={quizes}
