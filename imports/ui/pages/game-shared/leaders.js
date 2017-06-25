@@ -24,7 +24,7 @@ const Leaders = ({ game }) => {
       <div className="row">
         <table className="table leaders-table">
           <tbody>
-            {game.scoreList().map((object, index) =>
+            {game.getLeaders().map((object, index) =>
               <tr className={index === 0 ? 'leader' : ''}>
                 <td className="to-the-right">
                   {object.userScore}

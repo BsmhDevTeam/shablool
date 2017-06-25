@@ -34,8 +34,8 @@ const Main = ({ quizes }) =>
               href="#tab2"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
-              <div className="hidden-xs">התוצאות שלי</div>
+              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
+              <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
@@ -46,8 +46,8 @@ const Main = ({ quizes }) =>
               href="#tab3"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-user" aria-hidden="true" />
-              <div className="hidden-xs">ניהול קבוצות</div>
+              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
+              <div className="hidden-xs">משחקים ששיחקתי</div>
             </button>
           </div>
         </div>
@@ -88,8 +88,9 @@ const ManagementContainer = ({ loading, quizes }) => {
 };
 
 export default createContainer(() => {
+  const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
-  const loading = !quizesHandle.ready();
+  const loading = !quizesHandle.ready() || !usersHandle.ready();
   const quizes = Quiz.find().fetch();
   return {
     loading,

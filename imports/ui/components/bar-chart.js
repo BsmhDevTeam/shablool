@@ -28,40 +28,28 @@ const AnswerBar = ({ game }) => {
     </g>
   );
 
-  const CustomizedLabel = ({ x, y, fill, value }) => {
-    console.log('x:');
-    console.log(x);
-    console.log('y:');
-    console.log(y);
-    console.log('fill:');
-    console.log(fill);
-    console.log('value:');
-    console.log(value);
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text
-          x={x}
-          y={y}
-          fontSize="16"
-          fontFamily="sans-serif"
-          fill={fill}
-        >
-          {value}
-        </text>
-      </g>
-    );
-  };
+  // const CustomizedLabel = ({ x, y, fill, value }) => (
+  //   <text
+  //     x={x}
+  //     y={y}
+  //     fontSize="20"
+  //     fill={fill}
+  //     textAnchor="middle"
+  //   >
+  //     {value}
+  //   </text>
+  // );
 
   return (
     <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
-      <BarChart data={data}>
+      <BarChart data={data} margin={{ top: 30 }}>
         <XAxis
           dataKey="answerOrder"
           axisLine={false}
           tickLine={false}
           tick={<CustomizedAxisTick />}
         />
-        <Bar dataKey="count" label={<CustomizedLabel />}>
+        <Bar dataKey="count">
           {data.map((entry, index) => {
             const color = colorsJson[entry.answerOrder];
             return <Cell fill={color} key={entry.answerOrder} />;
