@@ -2,6 +2,8 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
 const GameCardPlayed = ({ game }) => {
+  console.log('game:');
+  console.log(game);
   const showStatistics = () => {
 
   };

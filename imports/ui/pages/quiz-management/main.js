@@ -5,8 +5,9 @@ import Quiz from '../../../api/quizes/quizes';
 import Game from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
+import GameCardPlayed from '../../components/gameCardPlayed';
 
-const Main = ({ quizes }) => (
+const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
   <div id="quizes">
     <div>
       <div className="card">
@@ -53,7 +54,10 @@ const Main = ({ quizes }) => (
               href="#tab3"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
+              <span
+                className="glyphicon glyphicon-stats"
+                aria-hidden="true"
+              />
               <div className="hidden-xs">משחקים ששיחקתי</div>
             </button>
           </div>
@@ -67,46 +71,74 @@ const Main = ({ quizes }) => (
               <a href="/CreateQuiz" className="add-question">
                 <div className="panel panel-default" id="add-quiz-panel">
                   <div className="panel-body">
-                    <span
-                      className="glphicon glyphicon-plus"
-                      id="add-quiz-plus-icon"
-                    />
-                  </div>
+                      <span
+                        className="glphicon glyphicon-plus"
+                        id="add-quiz-plus-icon"
+                      />
+                    </div>
                 </div>
               </a>
             </div>
             <div className="row">
               {quizes.length
-                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
-                : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
+                  ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
+                  : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
           </div>
           <div className="tab-pane fade in" id="tab2">
             <h3>כאן יהיו תוצאות המשחקים</h3>
           </div>
           <div className="tab-pane fade in" id="tab3">
-            <h3>כאן ניצור קבוצות</h3>
+            <div className="row">
+              {gamesPlayed.length
+                  ? gamesPlayed.map(game => (
+                    <GameCardPlayed key={game._id} game={game} />
+                    ))
+                  : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-);
+  );
 
-const ManagementContainer = ({ loading, quizes, gamesPlayed, gameManaged }) => {
+const ManagementContainer = ({
+  loading,
+  quizes,
+  gamesPlayed,
+  gamesManaged,
+}) => {
   if (loading) return <Loading />;
-  return <Main quizes={quizes} />;
+  console.log('quizes');
+  console.log(quizes);
+  console.log('gamesPlayed');
+  console.log(gamesPlayed);
+  console.log('gamesManaged');
+  console.log(gamesManaged);
+  return (
+    <Main
+      quizes={quizes}
+      gamesPlayed={gamesPlayed}
+      gameManaged={gamesManaged}
+    />
+  );
 };
 
 export default createContainer(() => {
   const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
+  const gamesManagedHandle = Meteor.subscribe('games.games-managed');
+
   const loading =
-    !quizesHandle.ready() || !usersHandle.ready() || !gamesPlayedHandle.ready();
+    !quizesHandle.ready() ||
+    !usersHandle.ready() ||
+    !gamesPlayedHandle.ready() ||
+    !gamesManagedHandle.ready();
   const quizes = Quiz.find().fetch();
-  const gamesPlayed = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
-  const gameManaged = Game.find(g =>
+  const gamesManaged = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
+  const gamesPlayed = Game.find(g =>
     g.gameLog
       .filter(e => e.nameType === Game.getEventTypes().PlayerReg)
       .find(e => e.playerId === this.userId),
@@ -115,6 +147,6 @@ export default createContainer(() => {
     loading,
     quizes,
     gamesPlayed,
-    gameManaged,
+    gamesManaged,
   };
 }, ManagementContainer);

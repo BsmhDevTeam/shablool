@@ -323,6 +323,12 @@ export default Class.create({
         .filter(e => e.questionId === lastQuestionId);
       return playersAnswerEvents;
     },
+    getAllPlayersId() {
+      const playersRegEvents = this.gameLog
+        .filter(e => e.nameType === eventTypes.PlayerReg);
+      const playersId = playersRegEvents.map(e => e.playerId);
+      return playersId;
+    },
     scoreListById() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
@@ -345,9 +351,10 @@ export default Class.create({
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
       ); // => {playerId: finalScore, ...}
-      const scoreByUserId = pairs(finalScoreByUser).map(a => ({
-        userId: a[0],
-        userScore: a[1],
+      const players = this.getAllPlayersId();
+      const scoreByUserId = players.map(pId => ({
+        userId: pId,
+        userScore: finalScoreByUser[pId] || 0,
       })); // => [{userId: name, userScore: score}, ...]
       return sortBy(scoreByUserId, 'userScore');
     },
