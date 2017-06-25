@@ -107,6 +107,9 @@ class CreateQuiz extends React.Component {
       const form = e.target;
       const tagName = form.tag.value;
 
+      // clear form
+      form.tag.value = '';
+
       // create new tag
       const newTag = {
         _id: uuidV4(),
@@ -116,10 +119,7 @@ class CreateQuiz extends React.Component {
       // update state
       const quiz = this.state.quiz;
       const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      this.setState({ quiz: quiz$ });
-
-      // clear form
-      form.tag.value = '';
+      return quiz.tags.find(t => t.name === tagName) ? 'Nothing' : this.setState({ quiz: quiz$ });
     };
 
     const removeTag = id => () => {
@@ -162,7 +162,11 @@ class CreateQuiz extends React.Component {
       saveQuiz,
     };
 
-    return <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />;
+    return (
+      <div id="create-quiz">
+        <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
+      </div>
+    );
   }
 }
 

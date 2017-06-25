@@ -24,7 +24,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
   };
   const titleValidation = validate && validateTitle(quiz.title);
   return (
-    <div id="create-quiz">
+    <div id="quiz-form">
       <div className="row">
         <div className="col-sm-12">
           <div className="page-header">
