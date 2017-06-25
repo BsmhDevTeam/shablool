@@ -60,7 +60,7 @@ Game.extend({
         .find(e => e.questionId === qId);
 
       const playerAlreadyAnswer = this.gameLog
-        .filter(e => e.nameType === this.getEventTypes().PlayerAnswer)
+        .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .find(e => e.playerId === uId && e.questionId === qId);
 
       const isGameManager = this.quiz.owner === Meteor.userId();

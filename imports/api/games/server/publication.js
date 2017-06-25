@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import Game, { eventTypes } from '../games.js';
 
 Meteor.publish('games.all', function() {
   return Game.find();
