@@ -55,6 +55,16 @@ Game.extend({
       this.save();
     },
     playerAnswer(uId, qId, aId) {
+      const isQuestionClosed = this.gameLog
+        .filter(e => e.nameType === eventTypes.QuestionEnd)
+        .find(e => e.questionId === qId);
+
+      const playerAlreadyAnswer = this.gameLog
+        .filter(e => e.nameType === this.getEventTypes().PlayerAnswer)
+        .find(e => e.playerId === uId && e.questionId === qId);
+
+      const isGameManager = this.quiz.owner === Meteor.userId();
+
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
           playerId: uId,
@@ -65,16 +75,8 @@ Game.extend({
         this.save();
         return true;
       };
-      const playerAnswerEventArray = this.gameLog.filter(
-        e => e.nameType === eventTypes.PlayerAnswer,
-      );
-      const playerAlreadyAnswer = playerAnswerEventArray.find(
-        e => e.playerId === uId && e.questionId === qId,
-      );
-      const _ = !playerAlreadyAnswer && this.quiz.owner !== Meteor.userId()
-        ? addingPlayerAnswerEvent()
-        : false;
-      return _;
+
+      return isQuestionClosed || playerAlreadyAnswer || isGameManager || addingPlayerAnswerEvent();
     },
     nextQuestion() {
       // start question
