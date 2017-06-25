@@ -69,7 +69,7 @@ FlowRouter.route('/EditQuiz/:_id', {
   },
 });
 
-FlowRouter.route('/search/:query', {
+FlowRouter.route('/search/:query?', {
   name: 'Manage.Search',
   triggersEnter: [verifyLogin],
   action(params) {

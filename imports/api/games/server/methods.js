@@ -111,6 +111,7 @@ Game.extend({
     closeGame() {
       const gameClose = new GameClose();
       this.gameLog = this.gameLog.concat(gameClose);
+      this.isOn = false;
       this.save();
     },
   },

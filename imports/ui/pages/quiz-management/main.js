@@ -2,10 +2,11 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import Quiz from '../../../api/quizes/quizes';
+import Game from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
 
-const Main = ({ quizes }) =>
+const Main = ({ quizes }) => (
   <div id="quizes">
     <div>
       <div className="card">
@@ -22,7 +23,10 @@ const Main = ({ quizes }) =>
               href="#tab1"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
+              <span
+                className="glyphicon glyphicon-list-alt"
+                aria-hidden="true"
+              />
               <div className="hidden-xs">השאלונים שלי</div>
             </button>
           </div>
@@ -34,8 +38,11 @@ const Main = ({ quizes }) =>
               href="#tab2"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
-              <div className="hidden-xs">התוצאות שלי</div>
+              <span
+                className="glyphicon glyphicon-briefcase"
+                aria-hidden="true"
+              />
+              <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
@@ -46,8 +53,8 @@ const Main = ({ quizes }) =>
               href="#tab3"
               data-toggle="tab"
             >
-              <span className="glyphicon glyphicon-user" aria-hidden="true" />
-              <div className="hidden-xs">ניהול קבוצות</div>
+              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
+              <div className="hidden-xs">משחקים ששיחקתי</div>
             </button>
           </div>
         </div>
@@ -56,15 +63,18 @@ const Main = ({ quizes }) =>
         <div className="tab-content">
           <div className="tab-pane fade in active" id="tab1">
             <h3>השאלונים שלי</h3>
-              <div className="row">
-                <a href="/CreateQuiz" className="add-question">
-                  <div className="panel panel-default" id="add-quiz-panel">
-                    <div className="panel-body">
-                      <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
-                    </div>
+            <div className="row">
+              <a href="/CreateQuiz" className="add-question">
+                <div className="panel panel-default" id="add-quiz-panel">
+                  <div className="panel-body">
+                    <span
+                      className="glphicon glyphicon-plus"
+                      id="add-quiz-plus-icon"
+                    />
                   </div>
-                </a>
-              </div>
+                </div>
+              </a>
+            </div>
             <div className="row">
               {quizes.length
                 ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
@@ -80,19 +90,31 @@ const Main = ({ quizes }) =>
         </div>
       </div>
     </div>
-  </div>;
+  </div>
+);
 
-const ManagementContainer = ({ loading, quizes }) => {
+const ManagementContainer = ({ loading, quizes, gamesPlayed, gameManaged }) => {
   if (loading) return <Loading />;
   return <Main quizes={quizes} />;
 };
 
 export default createContainer(() => {
+  const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
-  const loading = !quizesHandle.ready();
+  const gamesPlayedHandle = Meteor.subscribe('games.games-played');
+  const loading =
+    !quizesHandle.ready() || !usersHandle.ready() || !gamesPlayedHandle.ready();
   const quizes = Quiz.find().fetch();
+  const gamesPlayed = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
+  const gameManaged = Game.find(g =>
+    g.gameLog
+      .filter(e => e.nameType === Game.getEventTypes().PlayerReg)
+      .find(e => e.playerId === this.userId),
+  ).fetch();
   return {
     loading,
     quizes,
+    gamesPlayed,
+    gameManaged,
   };
 }, ManagementContainer);
