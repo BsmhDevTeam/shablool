@@ -47,7 +47,7 @@ const ManageNavbar = () => {
           <ul className="nav navbar-nav navbar-left">
             <li className="manage-nav-li">
               <a href="/Manage" className="navbar-link-element">
-                <span>ברוך הבא, {Meteor.userId()} </span>
+                <span>ברוך הבא, {Meteor.user().services.github.username} </span>
                 <span className="glyphicon glyphicon-user" />
               </a>
             </li>
