@@ -413,5 +413,19 @@ export default Class.create({
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
       return lastQuestionOrder === this.lastQuestionToEnd().order;
     },
+    getQuestionTimeLeft(questionId) {
+      const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+      const questionStartEvent = this.gameLog.filter(e => e.questionId === questionId);
+      // Check if question already ended
+      // const questionEndEvents = this.gameLog.find(e => e.nameType === eventTypes.QuestionEnd);
+      // const questionEndEvent = this.gameLog.find(e => e.questionId === questionId);
+      // const isQuestionEnded = !!questionEndEvent;
+      // calculate time passed
+      const currentTime = new Date();
+      const currentTimeInSeconds = currentTime.getTime() / 1000;
+      const timePassed = questionStartEvent.map(e => currentTimeInSeconds - (e.createdAt.getTime() / 1000));
+      const timeLeft = timePassed.map(t => this.quiz.questions.find(q => q._id === questionId).time - t);
+      return timeLeft < 0 ? 0 : Math.round(timeLeft);
+    },
   },
 });
