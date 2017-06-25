@@ -9,7 +9,7 @@ const Search = ({ results }) =>
   <div>
     <ul>
       {results.map(quiz =>
-        <div>
+        <div key={quiz._id}>
           <QuizCard quiz={quiz} />
         </div>,
       )}
@@ -28,7 +28,7 @@ const SearchContainer = ({ loading }) => {
   return results.length === 0 ? <NoResults /> : <Search results={results} />;
 };
 
-export default createContainer(({ query }) => {
+export default createContainer(({ query = '' }) => {
   const searchHandle = Meteor.subscribe('quizes.search', query);
   const loading = !searchHandle.ready();
   return {
