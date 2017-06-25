@@ -1,8 +1,10 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { createContainer } from 'meteor/react-meteor-data';
 import Game from '/imports/api/games/games';
 import Quiz from '/imports/api/quizes/quizes';
+import Loading from '../components/loading';
 
 const QuizCard = ({ quiz }) => {
   const forkQuiz = () => {
@@ -42,7 +44,7 @@ const QuizCard = ({ quiz }) => {
             <h5 className="quiz-title">{quiz.title}</h5>
             <p>
               <span className="quiz-owner-span">
-                {`הועלה ע"י ${quiz.owner}`}
+                {`הועלה ע"י ${Meteor.users.findOne(quiz.owner).services.github.username}`}
               </span>
             </p>
             <p><strong>{quiz.questions.length} </strong><span>שאלות</span></p>

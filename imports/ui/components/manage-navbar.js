@@ -1,6 +1,8 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import Loading from '../components/loading';
 
 const ManageNavbar = () => {
   const search = (e) => {
@@ -47,7 +49,7 @@ const ManageNavbar = () => {
           <ul className="nav navbar-nav navbar-left">
             <li className="manage-nav-li">
               <a href="/Manage" className="navbar-link-element">
-                <span>ברוך הבא, {Meteor.userId()} </span>
+                <span>ברוך הבא, {Meteor.user().services.github.username} </span>
                 <span className="glyphicon glyphicon-user" />
               </a>
             </li>
@@ -58,4 +60,15 @@ const ManageNavbar = () => {
   );
 };
 
-export default ManageNavbar;
+const ManageNavbarContainer = ({ loading }) => {
+  if (loading) return <Loading />;
+  return <ManageNavbar />;
+};
+
+export default createContainer(() => {
+  const usersHandle = Meteor.subscribe('users.names');
+  const loading = !usersHandle.ready();
+  return {
+    loading,
+  };
+}, ManageNavbarContainer);
