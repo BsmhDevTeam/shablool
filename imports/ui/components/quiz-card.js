@@ -4,15 +4,12 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Quiz from '/imports/api/quizes/quizes';
 
-const QuizCard = ({ quiz }) => {
+export default({ quiz }) => {
   const forkQuiz = () => {
-    const questions = quiz.questions;
-    const title = quiz.title;
-    const tags = quiz.tags;
     const newQuiz = new Quiz({
-      questions,
-      title,
-      tags,
+      questions: quiz.questions,
+      title: quiz.title,
+      tags: quiz.tags,
       owner: Meteor.userId(),
     });
     newQuiz.create();
@@ -108,9 +105,19 @@ const QuizCard = ({ quiz }) => {
               </span>}
           </div>
         </div>
+        <div className="row">
+          <div className="col-md-12">
+            {quiz.getTags().map(t => <TagTemplate key={t._id} tag={t} />)}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default QuizCard;
+const TagTemplate = ({ tag }) =>
+  <h4 className="pull-right tag">
+    <span className="label label-info" aria-hidden="true">
+      {tag.name}
+    </span>
+  </h4>;

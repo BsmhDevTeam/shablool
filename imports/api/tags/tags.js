@@ -16,7 +16,7 @@ export default Class.create({
         },
         {
           type: 'maxLength',
-          param: 20,
+          param: 40,
         },
       ],
     },

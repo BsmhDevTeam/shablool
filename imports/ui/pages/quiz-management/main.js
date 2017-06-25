@@ -120,6 +120,7 @@ const ManagementContainer = ({
 };
 
 export default createContainer(() => {
+  Meteor.subscribe('tags.all');
   const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
