@@ -416,7 +416,7 @@ export default Class.create({
     },
     getQuestionTimeLeft(questionId) {
       const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
-      const questionStartEvent = this.gameLog.filter(e => e.questionId === questionId);
+      const questionStartEvent = questionStartEvents.filter(e => e.questionId === questionId);
       // Check if question already ended
       // const questionEndEvents = this.gameLog.find(e => e.nameType === eventTypes.QuestionEnd);
       // const questionEndEvent = this.gameLog.find(e => e.questionId === questionId);
