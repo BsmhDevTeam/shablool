@@ -85,9 +85,11 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) => (
                   : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
           </div>
+
           <div className="tab-pane fade in" id="tab2">
             <h3>כאן יהיו תוצאות המשחקים</h3>
           </div>
+
           <div className="tab-pane fade in" id="tab3">
             <div className="row">
               {gamesPlayed.length

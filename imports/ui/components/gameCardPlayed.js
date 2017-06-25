@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 
 const GameCardPlayed = ({ game }) => {
   const showDate = date => (
-    `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+    `${date.getHours()}:${date.getMinutes()} , ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
   );
   const showStatistics = () => {
 
@@ -24,7 +24,7 @@ const GameCardPlayed = ({ game }) => {
             <h5 className="game-title">{game.quiz.title}</h5>
             <p>
               <span className="game-owner-span">
-                {`הועלה ע"י ${Meteor.users.findOne(game.quiz.owner).services.github.username}`}
+                {`נוצר ע"י ${Meteor.users.findOne(game.quiz.owner).services.github.username}`}
               </span>
             </p>
             

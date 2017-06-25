@@ -24,7 +24,7 @@ const calculateTimeDelta = (t1, t2) => {
 const calculateScore = (dt, s, qt) => {
   const portion = s > 0 ? qt - dt : dt;
   const finalScore = portion / (qt * s);
-  return Math.round(finalScore);
+  return Math.ceil(finalScore);
 };
 
 const generateCode = (n) => {
@@ -351,6 +351,8 @@ export default Class.create({
       const finalScoreByUser = mapObject(scoresByUser, (val, key) =>
         val.reduce((a, b) => a + b, 0),
       ); // => {playerId: finalScore, ...}
+      console.log('finalScoreByUser:');
+      console.log(finalScoreByUser);
       const players = this.getAllPlayersId();
       const scoreByUserId = players.map(pId => ({
         userId: pId,
