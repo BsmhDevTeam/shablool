@@ -30,7 +30,8 @@ const SearchContainer = ({ loading }) => {
 
 export default createContainer(({ query = '' }) => {
   const searchHandle = Meteor.subscribe('quizes.search', query);
-  const loading = !searchHandle.ready();
+  const nameHandle = Meteor.subscribe('users.names');
+  const loading = !searchHandle.ready() || !nameHandle.ready();
   return {
     loading,
   };

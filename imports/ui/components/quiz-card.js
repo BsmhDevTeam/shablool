@@ -1,10 +1,8 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { createContainer } from 'meteor/react-meteor-data';
 import Game from '/imports/api/games/games';
 import Quiz from '/imports/api/quizes/quizes';
-import Loading from '../components/loading';
 
 const QuizCard = ({ quiz }) => {
   const forkQuiz = () => {
