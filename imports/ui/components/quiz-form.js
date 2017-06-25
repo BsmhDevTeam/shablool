@@ -3,7 +3,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuestionForm from './question-form.js';
 
-
 // validations
 const validateTitle = (title) => {
   let message;
@@ -43,13 +42,13 @@ const QuizForm = ({ quiz, validate, actions }) => {
           </div>
         </div>
       </div>
-      {quiz.questions.map(q => (
+      {quiz.questions.map(q =>
         <div key={q._id} className="row">
           <div className="col-sm-12">
             <QuestionForm question={q} validate={validate} actions={actions} />
           </div>
-        </div>
-      ))}
+        </div>,
+      )}
       <div className="row">
         <div className="col-sm-12">
           <button className="btn btn-primary btn-lg btn-block" onClick={actions.addQuestion}>
@@ -79,7 +78,11 @@ const QuizForm = ({ quiz, validate, actions }) => {
             <label htmlFor="isPrivate" className="control-label">
               מי יכול למצוא את השאלון
             </label>
-            <select name="isPrivate" className="is-private form-control" onChange={actions.changeQuizPrivacy}>
+            <select
+              name="isPrivate"
+              className="is-private form-control"
+              onChange={actions.changeQuizPrivacy}
+            >
               <option value="false">כולם</option>
               <option value="true">רק אני</option>
             </select>
@@ -98,17 +101,15 @@ const QuizForm = ({ quiz, validate, actions }) => {
   );
 };
 
-const TagTemplate = ({ tag, actions }) => (
-  <h2 className="pull-right">
-    <span className="label label-info">
-      {tag.name}
-      <span
-        className="glyphicon glyphicon-remove clickable"
-        aria-hidden="true"
-        onClick={actions.removeTag(tag._id)}
-      />
+const TagTemplate = ({ tag, actions }) =>
+  <h3 className="pull-right tag">
+    <span
+      className="label label-info clickable"
+      aria-hidden="true"
+      onClick={actions.removeTag(tag._id)}
+    >
+      {tag.name}pre
     </span>
-  </h2>
-);
+  </h3>;
 
 export default QuizForm;
