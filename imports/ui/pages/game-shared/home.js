@@ -32,7 +32,12 @@ class Home extends React.Component {
       const maybeRedirectToGame = maybeGameUserIn.map(g =>
         FlowRouter.go('Game.Main', { code: g.code }),
       );
-      return maybeRedirectToGame.length === 0 && alert('Game Not Found');
+
+      const notifyUser = () => {
+        this.setState({ badGameCode: true });
+        setTimeout(() => this.setState({ badGameCode: false }), 3000);
+      };
+      return maybeRedirectToGame.length === 0 && notifyUser();
     };
 
     return (
@@ -65,6 +70,7 @@ class Home extends React.Component {
             </div>
           </div>
         </div>
+        <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>לא נמצא משחק</div>
         <p id="center-home-massage">
           <a href="/Manage">נהל או צור משחק חדש</a>
         </p>
@@ -79,7 +85,7 @@ const HomeContainer = ({ loading }) => {
 };
 
 export default createContainer(() => {
-  const gameHandle = Meteor.subscribe('games.not-mine');
+  const gameHandle = Meteor.subscribe('games.all');
   const loading = !gameHandle.ready();
   return {
     loading,
