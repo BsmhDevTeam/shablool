@@ -1,7 +1,10 @@
 import React from 'react';
 import ManageNavbar from '../../components/manage-navbar.js';
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
+import Loading from '../../components/loading';
 
-const ManageLayout = ({ main }) => (
+const ManageLayout = ({main}) => (
   <div id="manage">
     <ManageNavbar />
     <div className="container">
@@ -10,4 +13,17 @@ const ManageLayout = ({ main }) => (
   </div>
 );
 
-export default ManageLayout;
+const ManageLayoutContainer = ({ loading, main}) => {
+  if (loading) return <Loading />;
+  return <ManageLayout main={main} />;
+};
+
+export default createContainer(({ main }) => {
+  const nameHandle = Meteor.subscribe('users.my-name');
+  const loading = !nameHandle.ready();
+  return {
+    loading,
+    main,
+  };
+}, ManageLayoutContainer);
+

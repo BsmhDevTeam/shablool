@@ -5,9 +5,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Loading from '../components/loading';
 
 const ManageNavbar = () => {
-  const search = (event) => {
-    event.preventDefault();
-    const query = event.target.query.value;
+  const search = (e) => {
+    e.preventDefault();
+    const query = e.target.query.value;
     FlowRouter.go('Manage.Search', { query });
   };
   return (
@@ -26,7 +26,7 @@ const ManageNavbar = () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand navbar-link-element">צהו"ל</a>
+          <a href="/" className="navbar-brand navbar-link-element">{'שבלול'}</a>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
           <form
