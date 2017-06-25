@@ -29,7 +29,7 @@ const validatePoints = (points) => {
 
 const AnswerForm = ({ answer, index, validate, actions }) => {
   const textValidation = validate && validateText(answer.text);
-  const pointsValidation = validate && validatePoints(answer.time);
+  const pointsValidation = validate && validatePoints(answer.points);
   return (
     <div className="form-group">
       <div className="col-lg-9">

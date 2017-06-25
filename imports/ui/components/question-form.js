@@ -36,57 +36,59 @@ const QuestionForm = ({ question, validate, actions }) => {
     changePoints: actions.changeAnswerPoints(question._id),
   };
   return (
-    <div className="form-horizontal">
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <div className="form-group">
-            <div className="col-lg-8">
-              <div className={`form-group ${textValidation ? 'has-error' : ''}`}>
-                <input
-                  name="text"
-                  value={question.text}
-                  className="form-control input-lg"
-                  placeholder="שאל/י שאלה"
-                  onChange={actions.changeQuestionText(question._id)}
-                />
-                {textValidation
-                  ? <label className="control-label" htmlFor="text">{textValidation}</label>
-                  : ''}
+    <div className="question-form">
+      <div className="form-horizontal">
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <div className="form-group">
+              <div className="col-lg-8">
+                <div className={`form-group ${textValidation ? 'has-error' : ''}`}>
+                  <input
+                    name="text"
+                    value={question.text}
+                    className="form-control input-lg"
+                    placeholder="שאל/י שאלה"
+                    onChange={actions.changeQuestionText(question._id)}
+                  />
+                  {textValidation
+                    ? <label className="control-label" htmlFor="text">{textValidation}</label>
+                    : ''}
+                </div>
               </div>
-            </div>
-            <div className="col-lg-3">
-              <div className={`form-group ${timeValidation ? 'has-error' : ''}`}>
-                <label htmlFor="time" className="control-label col-lg-6">זמן לשאלה:</label>
-                <input
-                  className="form-control input-lg col-lg-6"
-                  value={question.time}
-                  onChange={actions.changeQuestionTime(question._id)}
-                />
-                {timeValidation
-                  ? <label className="control-label" htmlFor="time">{timeValidation}</label>
-                  : ''}
+              <div className="col-lg-3">
+                <div className={`form-group ${timeValidation ? 'has-error' : ''}`}>
+                  <label htmlFor="time" className="control-label col-lg-6">זמן לשאלה:</label>
+                  <input
+                    className="form-control input-lg col-lg-6"
+                    value={question.time}
+                    onChange={actions.changeQuestionTime(question._id)}
+                  />
+                  {timeValidation
+                    ? <label className="control-label" htmlFor="time">{timeValidation}</label>
+                    : ''}
+                </div>
               </div>
-            </div>
-            <div className="col-lg-1">
-              <button
-                className="btn btn-danger btn-lg"
-                onClick={actions.removeQuestion(question._id)}
-              >
-                <span className="glyphicon glyphicon-minus" aria-hidden="true" />
-              </button>
+              <div className="col-lg-1">
+                <button
+                  className="btn btn-danger btn-lg"
+                  onClick={actions.removeQuestion(question._id)}
+                >
+                  <span className="glyphicon glyphicon-minus" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="panel-body">
-          {question.answers.map((a, i) => (
-            <AnswerForm
-              key={a._id}
-              answer={a}
-              index={i + 1}
-              validate={validate}
-              actions={answerActions}
-            />
-          ))}
+          <div className="panel-body">
+            {question.answers.map((a, i) =>
+              <AnswerForm
+                key={a._id}
+                answer={a}
+                index={i + 1}
+                validate={validate}
+                actions={answerActions}
+              />,
+            )}
+          </div>
         </div>
       </div>
     </div>

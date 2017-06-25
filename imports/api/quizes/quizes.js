@@ -4,6 +4,9 @@ import Tag from '../tags/tags.js';
 
 const Quizes = new Mongo.Collection('quizes');
 
+const MIN_POINTS = -1000000;
+const MAX_POINTS = 1000000;
+
 export const Answer = Class.create({
   name: 'Answer',
   fields: {
@@ -34,6 +37,18 @@ export const Answer = Class.create({
     points: {
       type: Number,
       default: 0,
+      validators: [
+        {
+          type: 'gte',
+          param: MIN_POINTS,
+          message: 'כמות הנקדות המינימלית היא מינוס מיליון',
+        },
+        {
+          type: 'lte',
+          param: MAX_POINTS,
+          message: 'כמות הנקדות המקסימלית היא מיליון',
+        },
+      ],
     },
     createdAt: {
       type: Date,
