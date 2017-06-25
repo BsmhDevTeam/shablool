@@ -23,8 +23,8 @@ const calculateTimeDelta = (t1, t2) => {
 
 const calculateScore = (dt, s, qt) => {
   const portion = s > 0 ? qt - dt : dt;
-  const finalScore = portion / (qt * s);
-  return Math.round(finalScore);
+  const finalScore = (portion / qt) * s;
+  return Math.ceil(finalScore);
 };
 
 const generateCode = (n) => {

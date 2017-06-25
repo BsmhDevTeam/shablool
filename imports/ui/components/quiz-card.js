@@ -39,7 +39,7 @@ export default({ quiz }) => {
             <h5 className="quiz-title">{quiz.title}</h5>
             <p>
               <span className="quiz-owner-span">
-                {`הועלה ע"י ${Meteor.users.findOne(quiz.owner).services.github.username}`}
+                {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).services.github.username}`}
               </span>
             </p>
             <p><strong>{quiz.questions.length} </strong><span>שאלות</span></p>
