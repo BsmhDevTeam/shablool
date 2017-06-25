@@ -22,9 +22,8 @@ const NoResults = () =>
     <img className="col-md-6" src="/img/no-search-results-text.png" alt="No Search Results" />
   </div>;
 
-const SearchContainer = ({ loading }) => {
+const SearchContainer = ({ results, loading }) => {
   if (loading) return <Loading />;
-  const results = Quiz.find().fetch();
   return results.length === 0 ? <NoResults /> : <Search results={results} />;
 };
 
@@ -34,5 +33,6 @@ export default createContainer(({ query = '' }) => {
   const loading = !searchHandle.ready() || !nameHandle.ready();
   return {
     loading,
+    results: Quiz.find().fetch(),
   };
 }, SearchContainer);
