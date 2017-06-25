@@ -14,7 +14,7 @@ Meteor.publish('games.get', function(id) {
   return Game.find(id);
 });
 
-Meteor.publish('games.getByCode', function(code) {
+Meteor.publish('games.get-by-code', function(code) {
   return Game.find({ code });
 });
 

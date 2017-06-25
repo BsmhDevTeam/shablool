@@ -18,7 +18,7 @@ const GameRouterContainer = ({ loading, game }) => {
 
 export default createContainer(({ code }) => {
   const usersHandle = Meteor.subscribe('users.names');
-  const gameHandle = Meteor.subscribe('games.getByCode', code);
+  const gameHandle = Meteor.subscribe('games.get-by-code', code);
   const loading = !gameHandle.ready() || !usersHandle.ready();
   const game = Game.findOne();
   return { loading, game };
