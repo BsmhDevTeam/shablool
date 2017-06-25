@@ -208,6 +208,24 @@ export const GameEnd = Class.create({
   },
 });
 
+export const GameClose = Class.create({
+  name: 'GameClose',
+  fields: {
+    nameType: {
+      type: String,
+      default() {
+        return eventTypes.GameClose;
+      },
+    },
+    createdAt: {
+      type: Date,
+      default() {
+        return new Date();
+      },
+    },
+  },
+});
+
 export default Class.create({
   name: 'Game',
   collection: new Mongo.Collection('games'),
