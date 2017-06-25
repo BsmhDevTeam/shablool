@@ -16,12 +16,10 @@ const MainForm = () => {
     const gamesWithRegisteredUser = [
       ...gameWithNoRegisteredUser.map((g) => {
         g.applyMethod('playerRegister', []);
-        console.log(g);
         return g;
       }),
       ...maybeGame.filter(g => g.isUserRegistered()),
     ];
-    console.log(gamesWithRegisteredUser);
     const redirectToGame = gamesWithRegisteredUser.map(g =>
       FlowRouter.go('Game.Main', { code: g.code }),
     );
