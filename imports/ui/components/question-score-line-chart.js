@@ -30,24 +30,6 @@ const QuestionScoreLineChart = ({ game }) => {
       </g>
     );
   };
-  const CustomizedTooltip = ({ payload, active, label }) => {
-    const getMouseXY = (e) => {
-      const x = e.clinetX;
-      const y = e.clientY;
-      console.log('x:');
-      console.log(x);
-      console.log('y:');
-      console.log(y);
-      return active
-      ?
-        <div className="pannel pannle-body">
-          <p>Hello World!</p>
-        </div>
-      : null;
-    };
-    document.onmousemove = getMouseXY;
-    getMouseXY();
-  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
@@ -58,7 +40,7 @@ const QuestionScoreLineChart = ({ game }) => {
         <YAxis tick={<CustomizedYAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Legend verticalAlign="bottom" />
-        <Tooltip content={<CustomizedTooltip />} />
+        <Tooltip />
         <Line
           type="monotone"
           dataKey="playerScore"

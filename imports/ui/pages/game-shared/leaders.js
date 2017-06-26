@@ -24,13 +24,13 @@ const Leaders = ({ game }) => {
       <div className="row">
         <table className="table leaders-table">
           <tbody>
-            {game.getLeaders().map((object, index) =>
-              <tr className={index === 0 ? 'leader' : ''} key={object.userName}>
+            {game.getLeaders().map((leader, index) =>
+              <tr className={index === 0 ? 'leader' : ''} key={leader.userName}>
                 <td className="to-the-right">
-                  {object.userScore}
+                  {leader.userScore}
                 </td>
                 <td>
-                  {object.userName}
+                  {leader.userName}
                 </td>
               </tr>,
             )}
