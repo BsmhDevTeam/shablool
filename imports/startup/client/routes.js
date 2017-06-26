@@ -17,6 +17,7 @@ import Search from '../../ui/pages/quiz-management/search.js';
 import ViewQuiz from '../../ui/pages/quiz-management/view-quiz';
 import Main from '../../ui/pages/quiz-management/main.js';
 import GameRouter from '../../ui/pages/game-shared/game-router';
+import HistoryRouter from '../../ui/pages/game-shared/history-router';
 import NotFound from '../../ui/pages/not-found/not-found';
 
 
@@ -42,6 +43,14 @@ FlowRouter.route('/Game/:code', {
   triggersEnter: [verifyLogin],
   action(params) {
     mount(GameLayout, { main: <GameRouter code={params.code} /> });
+  },
+});
+
+FlowRouter.route('/Manage/History/:code', {
+  name: 'Manage.History',
+  triggersEnter: [verifyLogin],
+  action(params) {
+    mount(GameLayout, { main: <HistoryRouter code={params.code} /> });
   },
 });
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const GameCardPlayed = ({ game }) => {
   const showDate = date => (
     `${date.getHours()}:${date.getMinutes()} , ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
   );
   const showStatistics = () => {
-
+    FlowRouter.go('Manage.History', { code: game.code });
   };
 
   return (
@@ -35,13 +36,13 @@ const GameCardPlayed = ({ game }) => {
               <div className="col-md-4">
                 <div className="star game-card-link">
                   <span className="fa fa-trophy game-card-info-text-icon" />
-                  <span className="game-card-link-text game-card-info-text">מיקום <strong>{game.getPlaceByUserId()}</strong></span>
+                  <span className="game-card-link-text game-card-info-text">מיקום <strong>{game.getPlaceByUserId(Meteor.userId())}</strong></span>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="star game-card-link">
                   <span className="fa fa-calculator game-card-info-text-icon" />
-                  <span className="game-card-link-text game-card-info-text"><strong>{game.getScoreByUserId()} </strong>נקודות</span>
+                  <span className="game-card-link-text game-card-info-text"><strong>{game.getScoreByUserId(Meteor.userId())} </strong>נקודות</span>
                 </div>
               </div>
               <div className="col-md-4">

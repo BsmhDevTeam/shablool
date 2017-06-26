@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import Answers from '../../components/answers';
 import GameNavbar from '../../components/game-navbar';
-import AnswerBar from '../../components/bar-chart';
+import AnswerBar from '../../components/answer-bar-chart';
 
 const QuestionStatistics = ({ game }) => {
   const question = game.lastQuestionToStart();
