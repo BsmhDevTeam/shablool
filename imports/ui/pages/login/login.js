@@ -10,6 +10,7 @@ const Login = () => {
   };
 
   const isAlreadyLoggedIn = Meteor.loggingIn() || Meteor.userId();
+  if (isAlreadyLoggedIn) FlowRouter.go('Game.Home');
 
   return (
     <div id="login">

@@ -1,10 +1,8 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import Loading from '../components/loading';
 
-const ManageNavbar = () => {
+export default () => {
   const search = (e) => {
     e.preventDefault();
     const query = e.target.query.value;
@@ -59,16 +57,3 @@ const ManageNavbar = () => {
     </nav>
   );
 };
-
-const ManageNavbarContainer = ({ loading }) => {
-  if (loading) return <Loading />;
-  return <ManageNavbar />;
-};
-
-export default createContainer(() => {
-  const usersHandle = Meteor.subscribe('users.names');
-  const loading = !usersHandle.ready();
-  return {
-    loading,
-  };
-}, ManageNavbarContainer);

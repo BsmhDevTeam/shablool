@@ -91,7 +91,7 @@ class Home extends React.Component {
 }
 
 const HomeContainer = ({ loading }) => {
-  if (loading) return <Loading />;
+  if (loading) return <Loading color={'white'} />;
   return <Home />;
 };
 

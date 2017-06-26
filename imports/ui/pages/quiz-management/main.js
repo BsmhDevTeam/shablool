@@ -106,6 +106,7 @@ export default createContainer(() => {
     !usersHandle.ready() ||
     !gamesPlayedHandle.ready() ||
     !gamesManagedHandle.ready();
+
   const quizes = Quiz.find().fetch();
   const gamesManaged = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
   const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } }).fetch();
