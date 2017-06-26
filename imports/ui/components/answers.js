@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { eventTypes } from '../../api/games/games';
 
 const glyphIcons = {
   1: 'fa fa-star',
@@ -24,11 +25,8 @@ const Answer = ({ answer, index, game }) => {
       answer._id,
     ]);
   };
-  const isRightAnswer =
-    answer.points > 0 &&
-    game.getLastEvent().nameType === game.getEventTypes().QuestionEnd;
-
-  const calculateOpacity = () => (isRightAnswer ? '' : 'wrong-answer');
+  const isRightAnswer = answer.points > 0;
+  const calculateOpacity = () => (!isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd ? 'wrong-answer' : '');
 
   return (
     <div
@@ -42,7 +40,7 @@ const Answer = ({ answer, index, game }) => {
           onClick={selectAnswer}
         >
           {
-            isRightAnswer
+            isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd
             ? <i className="fa fa-check answer-icon right-answer-icon" />
             : ''
           }

@@ -13,15 +13,11 @@ Meteor.publish('games.get-by-code', function(code) {
   return Game.find({ code });
 });
 
-Meteor.publish('games.games-played', function() {
+Meteor.publish('games.games-managed', function() {
   return Game.find({ 'quiz.owner': this.userId });
 });
 
-Meteor.publish('games.games-managed', function() {
-  return Game.find({
-    $where: () =>
-      Game.gameLog
-        .filter(e => e.nameType === Game.getEventTypes().PlayerReg)
-        .find(e => e.playerId === this.userId),
-  });
+Meteor.publish('games.games-played', function() {
+  const games = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } });
+  return games;
 });

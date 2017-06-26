@@ -5,116 +5,125 @@ import Quiz from '../../../api/quizes/quizes';
 import Game from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
+import GameCardPlayed from '../../components/gameCardPlayed';
+import GameCardManaged from '../../components/gameCardManaged.js';
 
-const Main = ({ quizes }) => (
-  <div id="quizes">
-    <div>
-      <div className="card">
-        <div
-          className="btn-pref btn-group btn-group-justified btn-group-lg"
-          role="group"
-          aria-label="..."
-        >
+const tabNames = {
+  myQuizes: 'my-quizes',
+  gamesManaged: 'games-managed',
+  gamesPlayed: 'games-played',
+};
+
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeTab: tabNames.myQuizes,
+    };
+  }
+
+  render() {
+    const { quizes, gamesManaged, gamesPlayed } = this.props;
+    const activeTab = this.state.activeTab;
+
+    const changeTab = tabName => () => this.setState({ activeTab: tabName });
+    return (
+      <div id="quiz-management-main">
+        <div className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg" role="group">
           <div className="btn-group" role="group">
             <button
-              type="button"
-              id="stars"
-              className="btn btn-primary"
-              href="#tab1"
-              data-toggle="tab"
+              className={`btn ${activeTab === tabNames.myQuizes ? 'btn-primary' : 'btn-default'}`}
+              onClick={changeTab(tabNames.myQuizes)}
             >
-              <span
-                className="glyphicon glyphicon-list-alt"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
               <div className="hidden-xs">השאלונים שלי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              type="button"
-              id="favorites"
-              className="btn btn-default"
-              href="#tab2"
-              data-toggle="tab"
+              className={`btn ${activeTab === tabNames.gamesManaged
+                ? 'btn-primary'
+                : 'btn-default'}`}
+              onClick={changeTab(tabNames.gamesManaged)}
             >
-              <span
-                className="glyphicon glyphicon-briefcase"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
               <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              type="button"
-              id="following"
-              className="btn btn-default"
-              href="#tab3"
-              data-toggle="tab"
+              className={`btn ${activeTab === tabNames.gamesPlayed
+                ? 'btn-primary'
+                : 'btn-default'}`}
+              onClick={changeTab(tabNames.gamesPlayed)}
             >
               <span className="glyphicon glyphicon-stats" aria-hidden="true" />
               <div className="hidden-xs">משחקים ששיחקתי</div>
             </button>
           </div>
         </div>
-      </div>
-      <div className="">
-        <div className="tab-content">
-          <div className="tab-pane fade in active" id="tab1">
-            <h3>השאלונים שלי</h3>
-            <div className="row">
+        <div className="">
+          <div className="tab-content">
+            <div className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}>
               <a href="/CreateQuiz" className="add-question">
                 <div className="panel panel-default" id="add-quiz-panel">
                   <div className="panel-body">
-                    <span
-                      className="glphicon glyphicon-plus"
-                      id="add-quiz-plus-icon"
-                    />
+                    <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
                   </div>
                 </div>
               </a>
-            </div>
-            <div className="row">
               {quizes.length
                 ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
                 : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
             </div>
-          </div>
-          <div className="tab-pane fade in" id="tab2">
-            <h3>כאן יהיו תוצאות המשחקים</h3>
-          </div>
-          <div className="tab-pane fade in" id="tab3">
-            <h3>כאן ניצור קבוצות</h3>
+
+            <div
+              className={`tab-pane fade in ${activeTab === tabNames.gamesManaged ? 'active' : ''}`}
+            >
+              {gamesManaged.length
+                ? gamesManaged.map(game => <GameCardManaged key={game._id} game={game} />)
+                : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
+            </div>
+
+            <div
+              className={`tab-pane fade in ${activeTab === tabNames.gamesPlayed ? 'active' : ''}`}
+            >
+              {gamesPlayed.length
+                ? gamesPlayed.map(game => <GameCardPlayed key={game._id} game={game} />)
+                : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
-const ManagementContainer = ({ loading, quizes, gamesPlayed, gameManaged }) => {
+const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return <Main quizes={quizes} />;
+  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
 export default createContainer(() => {
+  Meteor.subscribe('tags.all');
   const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
+  const gamesManagedHandle = Meteor.subscribe('games.games-managed');
+
   const loading =
-    !quizesHandle.ready() || !usersHandle.ready() || !gamesPlayedHandle.ready();
+    !quizesHandle.ready() ||
+    !usersHandle.ready() ||
+    !gamesPlayedHandle.ready() ||
+    !gamesManagedHandle.ready();
+
   const quizes = Quiz.find().fetch();
-  const gamesPlayed = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
-  const gameManaged = Game.find(g =>
-    g.gameLog
-      .filter(e => e.nameType === Game.getEventTypes().PlayerReg)
-      .find(e => e.playerId === this.userId),
-  ).fetch();
+  const gamesManaged = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
+  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } }).fetch();
   return {
     loading,
     quizes,
     gamesPlayed,
-    gameManaged,
+    gamesManaged,
   };
 }, ManagementContainer);

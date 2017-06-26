@@ -12,7 +12,7 @@ const GameRouter = ({ game }) => {
 };
 
 const GameRouterContainer = ({ loading, game }) => {
-  if (loading) return <Loading />;
+  if (loading) return <Loading color={'white'} />;
   return <GameRouter game={game} />;
 };
 
