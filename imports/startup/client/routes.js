@@ -4,8 +4,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
 
 // Import layouts
-import GameLayout from '../../ui/layouts/game/game.js';
-import ManageLayout from '../../ui/layouts/manage/manage.js';
+import GameLayout from '../../ui/layouts/game.js';
+import ManageLayout from '../../ui/layouts/manage.js';
+import LoginLayout from '../../ui/layouts/login.js';
 
 // Import pages
 import Home from '../../ui/pages/game-shared/home';
@@ -97,14 +98,14 @@ FlowRouter.route('/ViewQuiz/:_id', {
 FlowRouter.route('/Login', {
   name: 'Game.Login',
   action() {
-    mount(GameLayout, { main: <Login /> });
+    mount(LoginLayout, { main: <Login /> });
   },
 });
 
 FlowRouter.route('/LoginError', {
   name: 'Game.LoginError',
   action() {
-    mount(GameLayout, { main: <LoginError /> });
+    mount(LoginLayout, { main: <LoginError /> });
   },
 });
 

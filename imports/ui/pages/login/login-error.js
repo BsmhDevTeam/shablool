@@ -2,14 +2,10 @@ import React from 'react';
 
 const LoginError = () =>
   <div id="login-error">
-    <div className="game-background" />
-    <div className="container">
-      <div className="row">
-        <div className="col-md-4" />
-        <div className="col-md-4">Login Error</div>
-        <div className="col-md-4" />
-      </div>
-    </div>
+    <h1 className="center-block">
+      התחברות נכשלה
+      <i className="fa fa-frown-o" aria-hidden="true" />
+    </h1>
   </div>;
 
 export default LoginError;
