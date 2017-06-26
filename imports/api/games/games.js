@@ -320,6 +320,9 @@ export default Class.create({
     getAllPlayersId() {
       return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
     },
+    getPlayersCount() {
+      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
+    },
     scoreListById() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]

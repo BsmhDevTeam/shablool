@@ -6,6 +6,7 @@ import Game from '../../../api/games/games';
 import QuizCard from '../../components/quiz-card';
 import Loading from '../../components/loading';
 import GameCardPlayed from '../../components/gameCardPlayed';
+import GameCardManaged from '../../components/gameCardManaged.js';
 
 const Main = ({ quizes, gamesPlayed, gamesManaged }) =>
   <div id="quizes">
@@ -57,7 +58,6 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) =>
       <div className="">
         <div className="tab-content">
           <div className="tab-pane fade in active" id="tab1">
-            <div className="row">
               <a href="/CreateQuiz" className="add-question">
                 <div className="panel panel-default" id="add-quiz-panel">
                   <div className="panel-body">
@@ -65,24 +65,21 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) =>
                   </div>
                 </div>
               </a>
-            </div>
-            <div className="row">
               {quizes.length
                 ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
                 : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
-            </div>
           </div>
 
           <div className="tab-pane fade in" id="tab2">
-            <h3>כאן יהיו תוצאות המשחקים</h3>
+            {gamesManaged.length
+              ? gamesManaged.map(game => <GameCardManaged key={game._id} game={game} />)
+              : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
           </div>
 
           <div className="tab-pane fade in" id="tab3">
-            <div className="row">
               {gamesPlayed.length
                 ? gamesPlayed.map(game => <GameCardPlayed key={game._id} game={game} />)
                 : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
-            </div>
           </div>
         </div>
       </div>
@@ -91,7 +88,7 @@ const Main = ({ quizes, gamesPlayed, gamesManaged }) =>
 
 const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gameManaged={gamesManaged} />;
+  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
 export default createContainer(() => {
