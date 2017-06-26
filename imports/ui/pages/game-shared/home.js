@@ -81,10 +81,10 @@ class Home extends React.Component {
             </div>
           </div>
         </div>
-        <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>לא נמצא משחק</div>
         <p id="center-home-massage">
           <a href="/Manage">נהל או צור משחק חדש</a>
         </p>
+        <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>לא נמצא משחק</div>
       </div>
     );
   }
