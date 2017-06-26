@@ -4,6 +4,13 @@ import React from 'react';
 import Quiz from '../../../api/quizes/quizes';
 import Loading from '../../components/loading';
 
+const glyphIcons = {
+  1: 'fa fa-star',
+  2: 'fa fa-square',
+  3: 'fa fa-circle',
+  4: 'fa fa-heart',
+};
+
 const ViewQuiz = ({ quiz }) => (
   <div id="view-quiz">
     <div className="row">
@@ -13,32 +20,46 @@ const ViewQuiz = ({ quiz }) => (
         </div>
       </div>
     </div>
-    {quiz.questions.map(q =>
+    {quiz.questions.map(q => (
       <div key={q._id} className="row">
-        <RenderQuesion question={q} />
-      </div>,
-      )}
+        <RenderQuestion question={q} />
+      </div>
+    ))}
   </div>
-  );
+);
 
-const RenderQuesion = ({ question }) =>
-  <div>
+const RenderQuestion = ({ question }) => (
+  <div id="view-quiz">
     <div className="panel panel-default">
       <div className="panel-heading">
         <h4>{question.text}</h4>
       </div>
       <div className="panel-body">
-        {question.answers.map((answer, index) =>
-          <RenderAnswer key={answer._id} answer={answer} index={index + 1} />,
-        )}
+        <div className="border row">
+          {question.answers.map((answer, index) => (
+            <RenderAnswer key={answer._id} answer={answer} index={index + 1} />
+          ))}
+        </div>
       </div>
     </div>
-  </div>;
+  </div>
+);
 
-const RenderAnswer = ({ answer, index }) =>
-  <div className="row">
-    <p className="fab-margin">{index}. {answer.text}</p>
-  </div>;
+const RenderAnswer = ({ answer, index }) => (
+  <div
+      className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 buttons-col"
+      key={answer.id}
+    >
+      <div className="answer-btn-area">
+        <div
+          className={`well btn-answer-${index} answer-button`}
+        >
+          <i className={`${glyphIcons[answer.order]} answer-icon`} />
+          <h3 className="answer-text">{answer.text}</h3>
+        </div>
+      </div>
+    </div>
+);
 
 const ViewQuizContainer = ({ loading, quizId }) => {
   if (loading) return <Loading />;
