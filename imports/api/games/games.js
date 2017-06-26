@@ -333,6 +333,9 @@ export default Class.create({
         .filter(e => e.nameType === eventTypes.PlayerReg)
         .map(e => e.playerId);
     },
+    getPlayersCount() {
+      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
+    },
     scoreListById() {
       const playersAnswers = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
@@ -520,6 +523,8 @@ export default Class.create({
       return questionAndScore;
     },
     getPlayerQuestionAndTime(pId) {
+      console.log('pId:');
+      console.log(pId);
       const playerAnswerEvents = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
@@ -532,16 +537,14 @@ export default Class.create({
             .createdAt.getTime() /
             1000,
       })); // [{questionOrder: o, time: t}, ...]
+      console.log('questionAndScore:');
+      console.log(questionAndScore);
       return questionAndScore;
     },
     getAvarageScoreForQuestion(qId) {
-      console.log('qId:');
-      console.log(qId);
       const playerAnswerEvents = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
-      console.log('playerAnswerEvents:');
-      console.log(playerAnswerEvents);
       const scores = playerAnswerEvents.map(e =>
         calculateScore(
           calculateTimeDelta(
@@ -597,9 +600,20 @@ export default Class.create({
           this.quiz.questions.find(q => q.order === o.questionOrder)._id,
         ),
       }));
-      console.log('playerAndAvarageScore:');
-      console.log(playerAndAvarageScore);
       return playerAndAvarageScore;
+    },
+    getPlayerTimeAndAvarageTime(pId) {
+      const playerQuestionAndTime = this.getPlayerQuestionAndTime(pId);
+      const playerAndAvarageTime = playerQuestionAndTime.map(o => ({
+        questionOrder: o.questionOrder,
+        playerTime: o.time,
+        avarageTime: this.getAvarageTimeForQuestion(
+          this.quiz.questions.find(q => q.order === o.questionOrder)._id,
+        ),
+      }));
+      console.log('playerAndAvarageTime:');
+      console.log(playerAndAvarageTime);
+      return playerAndAvarageTime;
     },
   },
 });

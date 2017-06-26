@@ -11,7 +11,7 @@ import {
   Line,
 } from 'recharts';
 
-const QuestionScoreLineChart = ({ game }) => {
+const QuestionTimeLineChart = ({ game }) => {
   const CustomizedXAxisTick = ({ x, y, stroke, payload }) => {
     return (
       <g transform={`translate(${x},${y})`}>
@@ -25,49 +25,31 @@ const QuestionScoreLineChart = ({ game }) => {
     return (
       <g transform={`translate(${x},${y})`}>
         <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
-          {Math.abs(payload.value)}{payload.value < 0 ? '-' : ''}
+          {payload.value}
         </text>
       </g>
     );
   };
-  const CustomizedTooltip = ({ payload, active, label }) => {
-    const getMouseXY = (e) => {
-      const x = e.clinetX;
-      const y = e.clientY;
-      console.log('x:');
-      console.log(x);
-      console.log('y:');
-      console.log(y);
-      return active
-      ?
-        <div className="pannel pannle-body">
-          <p>Hello World!</p>
-        </div>
-      : null;
-    };
-    document.onmousemove = getMouseXY;
-    getMouseXY();
-  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
-        data={game.getPlayerScoreAndAvarageScore(Meteor.userId())}
+        data={game.getPlayerTimeAndAvarageTime(Meteor.userId())}
         margin={{ top: 5, right: 35, left: 0, bottom: 5 }}
       >
         <XAxis dataKey="questionOrder" tick={<CustomizedXAxisTick />} />
         <YAxis tick={<CustomizedYAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Legend verticalAlign="bottom" />
-        <Tooltip content={<CustomizedTooltip />} />
+        <Tooltip />
         <Line
           type="monotone"
-          dataKey="playerScore"
+          dataKey="playerTime"
           stroke="#8884d8"
           name="Me"
         />
         <Line
           type="monotone"
-          dataKey="avarageScore"
+          dataKey="avarageTime"
           stroke="#82ca9d"
           name="Class"
         />
@@ -76,4 +58,4 @@ const QuestionScoreLineChart = ({ game }) => {
   );
 };
 
-export default QuestionScoreLineChart;
+export default QuestionTimeLineChart;
