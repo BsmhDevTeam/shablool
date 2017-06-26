@@ -101,6 +101,10 @@ class Main extends React.Component {
 
 const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
+  console.log('gamesManaged:');
+  console.log(gamesManaged);
+  console.log('gamesPlayed:');
+  console.log(gamesPlayed);
   return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
@@ -118,8 +122,8 @@ export default createContainer(() => {
     !gamesManagedHandle.ready();
 
   const quizes = Quiz.find().fetch();
-  const gamesManaged = Game.find(g => g.quiz.owner === Meteor.userId()).fetch();
-  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } }).fetch();
+  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch();
+  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: Meteor.userId() } } }).fetch();
   return {
     loading,
     quizes,

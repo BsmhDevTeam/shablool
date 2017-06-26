@@ -523,8 +523,6 @@ export default Class.create({
       return questionAndScore;
     },
     getPlayerQuestionAndTime(pId) {
-      console.log('pId:');
-      console.log(pId);
       const playerAnswerEvents = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
@@ -537,8 +535,6 @@ export default Class.create({
             .createdAt.getTime() /
             1000,
       })); // [{questionOrder: o, time: t}, ...]
-      console.log('questionAndScore:');
-      console.log(questionAndScore);
       return questionAndScore;
     },
     getAvarageScoreForQuestion(qId) {
@@ -611,8 +607,6 @@ export default Class.create({
           this.quiz.questions.find(q => q.order === o.questionOrder)._id,
         ),
       }));
-      console.log('playerAndAvarageTime:');
-      console.log(playerAndAvarageTime);
       return playerAndAvarageTime;
     },
   },

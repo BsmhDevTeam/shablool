@@ -12,24 +12,20 @@ import {
 } from 'recharts';
 
 const QuestionTimeLineChart = ({ game }) => {
-  const CustomizedXAxisTick = ({ x, y, stroke, payload }) => {
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text textAnchor="middle" fill="#666" dy={16}>
-          question #{payload.value}
-        </text>
-      </g>
-    );
-  };
-  const CustomizedYAxisTick = ({ x, y, stroke, payload }) => {
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
-          {payload.value}
-        </text>
-      </g>
-    );
-  };
+  const CustomizedXAxisTick = ({ x, y, stroke, payload }) => (
+    <g transform={`translate(${x},${y})`}>
+      <text textAnchor="middle" fill="#666" dy={16}>
+        שאלה {payload.value}#
+      </text>
+    </g>
+  );
+  const CustomizedYAxisTick = ({ x, y, stroke, payload }) => (
+    <g transform={`translate(${x},${y})`}>
+      <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
+        {payload.value}
+      </text>
+    </g>
+  );
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
@@ -45,13 +41,13 @@ const QuestionTimeLineChart = ({ game }) => {
           type="monotone"
           dataKey="playerTime"
           stroke="#8884d8"
-          name="Me"
+          name="אני"
         />
         <Line
           type="monotone"
           dataKey="avarageTime"
           stroke="#82ca9d"
-          name="Class"
+          name="ממוצע"
         />
       </LineChart>
     </ResponsiveContainer>
