@@ -56,7 +56,7 @@ class Home extends React.Component {
         <div className="game-background" />
         <div className="row">
           <div id="logo-area">
-            <h1>{'שבלול'}</h1>
+            <img className="logo" src="/img/Logo.svg"/>
           </div>
         </div>
         <div className="row">

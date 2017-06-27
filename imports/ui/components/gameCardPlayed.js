@@ -26,7 +26,7 @@ const GameCardPlayed = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-trophy game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    מיקום <strong>{game.getPlaceByUserId()}</strong>
+                    מיקום <strong>{game.getPlaceByUserId(Meteor.userId())}</strong>
                   </span>
                 </div>
               </div>
@@ -34,7 +34,7 @@ const GameCardPlayed = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-calculator game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    <strong>{game.getScoreByUserId()} </strong>נקודות
+                    <strong>{game.getScoreByUserId(Meteor.userId())} </strong>נקודות
                   </span>
                 </div>
               </div>
