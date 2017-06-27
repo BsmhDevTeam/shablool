@@ -14,19 +14,12 @@ const Login = () => {
 
   return (
     <div id="login">
-      <div className="game-background" />
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4" />
-          <div className="col-md-4">
-            <button className="btn btn-lg btn-warning btn-block" onClick={login}>
-              Login
-              <i className="fa fa-gitlab" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="col-md-4" />
-        </div>
-      </div>
+      <button className="btn btn-lg btn-warning btn-block" onClick={login}>
+        <i className="fa fa-gitlab fa-2x pull-right" aria-hidden="true" />
+        <span style={{ fontSize: 'large', paddingTop: '5px', verticalAlign: 'middle' }}>
+          התחבר
+        </span>
+      </button>
     </div>
   );
 };
