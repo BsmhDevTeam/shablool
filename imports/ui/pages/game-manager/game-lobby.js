@@ -21,7 +21,7 @@ const GameLobby = ({ game }) => {
           </div>
           <div className="col-xl-6 col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div className="logo-area center-txt">
-              <span>{'צהו"ל'}</span>
+              <img className="logo" src="/img/Logo.svg"/>
             </div>
           </div>
           <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
