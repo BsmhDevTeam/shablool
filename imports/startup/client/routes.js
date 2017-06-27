@@ -4,8 +4,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
 
 // Import layouts
-import GameLayout from '../../ui/layouts/game/game.js';
-import ManageLayout from '../../ui/layouts/manage/manage.js';
+import GameLayout from '../../ui/layouts/game.js';
+import ManageLayout from '../../ui/layouts/manage.js';
+import LoginLayout from '../../ui/layouts/login.js';
 
 // Import pages
 import Home from '../../ui/pages/game-shared/home';
@@ -17,6 +18,7 @@ import Search from '../../ui/pages/quiz-management/search.js';
 import ViewQuiz from '../../ui/pages/quiz-management/view-quiz';
 import Main from '../../ui/pages/quiz-management/main.js';
 import GameRouter from '../../ui/pages/game-shared/game-router';
+import HistoryRouter from '../../ui/pages/game-shared/history-router';
 import NotFound from '../../ui/pages/not-found/not-found';
 
 
@@ -42,6 +44,14 @@ FlowRouter.route('/Game/:code', {
   triggersEnter: [verifyLogin],
   action(params) {
     mount(GameLayout, { main: <GameRouter code={params.code} /> });
+  },
+});
+
+FlowRouter.route('/Manage/History/:code', {
+  name: 'Manage.History',
+  triggersEnter: [verifyLogin],
+  action(params) {
+    mount(GameLayout, { main: <HistoryRouter code={params.code} /> });
   },
 });
 
@@ -88,14 +98,14 @@ FlowRouter.route('/ViewQuiz/:_id', {
 FlowRouter.route('/Login', {
   name: 'Game.Login',
   action() {
-    mount(GameLayout, { main: <Login /> });
+    mount(LoginLayout, { main: <Login /> });
   },
 });
 
 FlowRouter.route('/LoginError', {
   name: 'Game.LoginError',
   action() {
-    mount(GameLayout, { main: <LoginError /> });
+    mount(LoginLayout, { main: <LoginError /> });
   },
 });
 
