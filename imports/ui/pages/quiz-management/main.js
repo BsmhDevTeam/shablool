@@ -19,6 +19,8 @@ class Main extends React.Component {
     super(props);
     this.state = {
       activeTab: tabNames.myQuizes,
+      quizDeleted: false,
+      quizForked: false,
     };
   }
 
@@ -27,6 +29,32 @@ class Main extends React.Component {
     const activeTab = this.state.activeTab;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
+    const deleteQuiz = (quiz) => {
+      quiz.applyMethod('delete', []);
+      const notifyUser = () => {
+        this.setState({ quizDeleted: true });
+        setTimeout(() => this.setState({ quizDeleted: false }), 3000);
+      };
+      notifyUser();
+    };
+    const forkQuiz = (quiz) => {
+      const newQuiz = new Quiz({
+        questions: quiz.questions,
+        title: quiz.title,
+        tags: quiz.tags,
+        owner: Meteor.userId(),
+      });
+      newQuiz.applyMethod('create', []);
+      const notifyUser = () => {
+        this.setState({ quizForked: true });
+        setTimeout(() => this.setState({ quizForked: false }), 3000);
+      };
+      notifyUser();
+    };
+    const actions = {
+      deleteQuiz,
+      forkQuiz,
+    };
     return (
       <div id="quiz-management-main">
         <div className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg" role="group">
@@ -73,8 +101,8 @@ class Main extends React.Component {
                 </div>
               </a>
               {quizes.length
-                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} />)
-                : <div>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</div>}
+                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} actions={actions} />)
+                : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
             </div>
 
             <div
@@ -94,6 +122,9 @@ class Main extends React.Component {
             </div>
           </div>
         </div>
+        <div id="snackbar" className={this.state.quizDeleted || this.state.quizForked ? 'show' : ''}>
+          {this.state.quizDeleted ? 'השאלון נמחק בהצלחה' : 'השאלון הועתק בהצלחה'}
+        </div>
       </div>
     );
   }
@@ -101,10 +132,6 @@ class Main extends React.Component {
 
 const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  console.log('gamesManaged:');
-  console.log(gamesManaged);
-  console.log('gamesPlayed:');
-  console.log(gamesPlayed);
   return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 

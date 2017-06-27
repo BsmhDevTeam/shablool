@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import {
   LineChart,
   XAxis,
@@ -11,7 +10,7 @@ import {
   Line,
 } from 'recharts';
 
-const QuestionScoreLineChart = ({ game }) => {
+const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
   const CustomizedXAxisTick = ({ x, y, stroke, payload }) => (
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dy={16}>
@@ -29,23 +28,17 @@ const QuestionScoreLineChart = ({ game }) => {
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
-        data={game.getPlayerScoreAndAvarageScore(Meteor.userId())}
+        data={data}
         margin={{ top: 5, right: 35, left: 0, bottom: 5 }}
       >
-        <XAxis dataKey="questionOrder" tick={<CustomizedXAxisTick />} />
+        <XAxis dataKey={dataKeyX} tick={<CustomizedXAxisTick />} />
         <YAxis tick={<CustomizedYAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Legend verticalAlign="bottom" />
         <Tooltip />
         <Line
           type="monotone"
-          dataKey="playerScore"
-          stroke="#8884d8"
-          name="אני"
-        />
-        <Line
-          type="monotone"
-          dataKey="avarageScore"
+          dataKey={dataKeyY}
           stroke="#82ca9d"
           name="ממוצע"
         />
@@ -54,4 +47,4 @@ const QuestionScoreLineChart = ({ game }) => {
   );
 };
 
-export default QuestionScoreLineChart;
+export default OneLinesChart;

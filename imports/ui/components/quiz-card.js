@@ -4,19 +4,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Quiz from '/imports/api/quizes/quizes';
 
-export default({ quiz }) => {
-  const forkQuiz = () => {
-    const newQuiz = new Quiz({
-      questions: quiz.questions,
-      title: quiz.title,
-      tags: quiz.tags,
-      owner: Meteor.userId(),
-    });
-    newQuiz.create();
-  };
-
+export default ({ quiz, actions }) => {
   const deleteQuiz = () => {
-    quiz.delete();
+    actions.deleteQuiz(quiz);
   };
 
   const initGame = () => {
@@ -83,7 +73,7 @@ export default({ quiz }) => {
                   <a
                     href="javascript:void(0)"
                     className="delete quiz-card-link"
-                    onClick={forkQuiz}
+                    onClick={actions.forkQuiz}
                   >
                     <span className="glyphicon glyphicon-duplicate quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">
@@ -115,9 +105,10 @@ export default({ quiz }) => {
   );
 };
 
-const TagTemplate = ({ tag }) =>
+const TagTemplate = ({ tag }) => (
   <h4 className="pull-right tag">
     <span className="label label-info" aria-hidden="true">
       {tag.name}
     </span>
-  </h4>;
+  </h4>
+);

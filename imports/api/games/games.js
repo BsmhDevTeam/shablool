@@ -587,6 +587,12 @@ export default Class.create({
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndScore;
     },
+    getMaxQuizOrder() {
+      const questionStartEvents = this.gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      return questionStartEvents.length;
+    },
     getPlayerScoreAndAvarageScore(pId) {
       const playerQuestionAndScore = this.getPlayerQuestionAndScore(pId);
       const playerAndAvarageScore = playerQuestionAndScore.map(o => ({

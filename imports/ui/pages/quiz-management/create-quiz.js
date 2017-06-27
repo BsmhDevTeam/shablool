@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes.js';
 import Tag from '../../../api/tags/tags.js';
@@ -141,11 +142,15 @@ class CreateQuiz extends React.Component {
       const quiz = this.state.quiz;
       const tags = quiz.tags.map((t) => {
         const tag = Tag.findOne({ name: t.name });
-        return tag ? tag._id : new Tag(t).create();
+        return tag ? tag._id : new Tag(t).applyMethod('create', []);
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = new Quiz({ ...quiz, questions, tags, owner: Meteor.userId() }, { cast: true });
-      quiz$.create();
+      quiz$.applyMethod('create', [], (err, result) => {
+        console.log(err);
+        console.log(result);
+        result && FlowRouter.go('Manage.Home');
+      });
     };
 
     const actions = {

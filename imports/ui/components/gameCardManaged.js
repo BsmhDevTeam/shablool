@@ -1,8 +1,11 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const GameCardManaged = ({ game }) => {
-  const showStatistics = () => {};
+  const showStatistics = () => {
+    FlowRouter.go('Manage.History', { code: game.code });
+  };
 
   return (
     <div className="panel panel-default game-card">

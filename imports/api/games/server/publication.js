@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import Game from '../games.js';
+import Game, { eventTypes } from '../games.js';
 
 Meteor.publish('games.all', function() {
   return Game.find();
@@ -18,6 +18,15 @@ Meteor.publish('games.games-managed', function() {
 });
 
 Meteor.publish('games.games-played', function() {
-  const games = Game.find({ gameLog: { $elemMatch: { playerId: this.userId } } });
+  const games = Game.find({
+    gameLog: { $elemMatch: { playerId: this.userId } },
+  });
+  return games;
+});
+
+Meteor.publish('games.open', function() {
+  const games = Game.find({
+    gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
+  });
   return games;
 });

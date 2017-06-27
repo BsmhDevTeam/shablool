@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import {
   LineChart,
   XAxis,
@@ -11,41 +10,43 @@ import {
   Line,
 } from 'recharts';
 
-const QuestionTimeLineChart = ({ game }) => {
-  const CustomizedXAxisTick = ({ x, y, stroke, payload }) => (
+const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
+  const CustomizedXAxisTick = ({ x, y, payload }) => (
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dy={16}>
         שאלה {payload.value}#
       </text>
     </g>
   );
-  const CustomizedYAxisTick = ({ x, y, stroke, payload }) => (
-    <g transform={`translate(${x},${y})`}>
-      <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
-        {payload.value}
-      </text>
-    </g>
-  );
+  const CustomizedYAxisTick = ({ x, y, payload }) => {
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
+          {payload.value}
+        </text>
+      </g>
+    );
+  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
-        data={game.getPlayerTimeAndAvarageTime(Meteor.userId())}
+        data={data}
         margin={{ top: 5, right: 35, left: 0, bottom: 5 }}
       >
-        <XAxis dataKey="questionOrder" tick={<CustomizedXAxisTick />} />
+        <XAxis dataKey={dataKeyX} tick={<CustomizedXAxisTick />} />
         <YAxis tick={<CustomizedYAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Legend verticalAlign="bottom" />
         <Tooltip />
         <Line
           type="monotone"
-          dataKey="playerTime"
+          dataKey={dataKeyA}
           stroke="#8884d8"
           name="אני"
         />
         <Line
           type="monotone"
-          dataKey="avarageTime"
+          dataKey={dataKeyB}
           stroke="#82ca9d"
           name="ממוצע"
         />
@@ -54,4 +55,4 @@ const QuestionTimeLineChart = ({ game }) => {
   );
 };
 
-export default QuestionTimeLineChart;
+export default TwoLinesChart;

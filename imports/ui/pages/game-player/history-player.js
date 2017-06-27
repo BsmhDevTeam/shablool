@@ -1,8 +1,7 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import ManageNavbar from '../../components/manage-navbar.js';
-import QuestionScoreLineChart from '../../components/question-score-line-chart';
-import QuestionTimeLineChart from '../../components/question-time-line-chart';
-
+import TwoLinesChart from '../../components/two-lines-chart';
 
 const HistoryPlayer = ({ game }) => (
   <div id="history-player">
@@ -14,7 +13,12 @@ const HistoryPlayer = ({ game }) => (
 
       <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 chart">
         <div className="row">
-          <QuestionScoreLineChart game={game} />
+          <TwoLinesChart
+            data={game.getPlayerScoreAndAvarageScore(Meteor.userId())}
+            dataKeyA="playerScore"
+            dataKeyB="avarageScore"
+            dataKeyX="questionOrder"
+          />
         </div>
       </div>
 
@@ -26,7 +30,12 @@ const HistoryPlayer = ({ game }) => (
 
       <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 chart">
         <div className="row">
-          <QuestionTimeLineChart game={game} />
+          <TwoLinesChart
+            data={game.getPlayerTimeAndAvarageTime(Meteor.userId())}
+            dataKeyA="playerTime"
+            dataKeyB="avarageTime"
+            dataKeyX="questionOrder"
+          />
         </div>
       </div>
 

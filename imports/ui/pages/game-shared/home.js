@@ -14,6 +14,8 @@ class Home extends React.Component {
   }
 
   render() {
+    console.log('badGameCode:');
+    console.log(this.state.badGameCode);
     const enterGame = (e) => {
       e.preventDefault();
       const form = e.target;
@@ -21,7 +23,9 @@ class Home extends React.Component {
       form.gameCode.value = '';
 
       const maybeGame = Game.find({ code: gameCode }).fetch();
-      const maybeGameUserManage = maybeGame.filter(g => g.quiz.owner === Meteor.userId());
+      const maybeGameUserManage = maybeGame.filter(
+        g => g.quiz.owner === Meteor.userId(),
+      );
       const maybeRedirectToGameAsManager = maybeGameUserManage.map((g) => {
         FlowRouter.go('Game.Main', { code: g.code });
         return g;
@@ -44,11 +48,10 @@ class Home extends React.Component {
         this.setState({ badGameCode: true });
         setTimeout(() => this.setState({ badGameCode: false }), 3000);
       };
-      return (
-        maybeRedirectToGameAsManager.length === 0 &&
+
+      maybeRedirectToGameAsManager.length === 0 &&
         maybeRedirectToGameAsPlayer.length === 0 &&
-        notifyUser()
-      );
+        notifyUser();
     };
 
     return (
@@ -73,7 +76,11 @@ class Home extends React.Component {
                   />
                 </div>
                 <div className="row">
-                  <button className="btn btn-primary" type="submit" id="start-game-btn">
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    id="start-game-btn"
+                  >
                     התחל משחק!
                   </button>
                 </div>
@@ -84,7 +91,9 @@ class Home extends React.Component {
         <p id="center-home-massage">
           <a href="/Manage">נהל או צור משחק חדש</a>
         </p>
-        <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>לא נמצא משחק</div>
+        <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>
+          לא נמצא משחק
+        </div>
       </div>
     );
   }
@@ -96,7 +105,7 @@ const HomeContainer = ({ loading }) => {
 };
 
 export default createContainer(() => {
-  const gameHandle = Meteor.subscribe('games.all');
+  const gameHandle = Meteor.subscribe('games.open');
   const loading = !gameHandle.ready();
   return {
     loading,

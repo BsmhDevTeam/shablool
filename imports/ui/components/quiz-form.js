@@ -1,5 +1,4 @@
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuestionForm from './question-form.js';
 
@@ -17,10 +16,6 @@ const validateTitle = (title) => {
 };
 
 const QuizForm = ({ quiz, validate, actions }) => {
-  const createQuiz = (e) => {
-    actions.saveQuiz(e);
-    FlowRouter.go('Manage.Home');
-  };
   const titleValidation = validate && validateTitle(quiz.title);
   return (
     <div id="quiz-form">
@@ -92,7 +87,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
       <hr />
       <div className="row">
         <div className="col-sm-12">
-          <button className="btn btn-success btn-lg col-sm-2 pull-left" onClick={createQuiz}>
+          <button className="btn btn-success btn-lg col-sm-2 pull-left" onClick={actions.saveQuiz}>
             <span className="glyphicon glyphicon-ok" aria-hidden="true" />
           </button>
         </div>

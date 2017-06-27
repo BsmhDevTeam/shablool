@@ -137,11 +137,11 @@ class EditQuiz extends React.Component {
       const quiz = this.state.quiz;
       const tags = quiz.tags.map((t) => {
         const tag = Tag.findOne({ name: t.name });
-        return tag ? tag._id : new Tag(t).create();
+        return tag ? tag._id : new Tag(t).applyMethod('create', []);
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.update({ ...quiz, questions, tags }, { cast: true });
+      quiz$.applyMethod('update', [{ ...quiz, questions, tags }, { cast: true }]);
     };
 
     const actions = {
