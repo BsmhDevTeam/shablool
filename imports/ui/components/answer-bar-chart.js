@@ -28,20 +28,8 @@ const AnswerBar = ({ game }) => {
     </g>
   );
 
-  // const CustomizedLabel = ({ x, y, fill, value }) => (
-  //   <text
-  //     x={x}
-  //     y={y}
-  //     fontSize="20"
-  //     fill={fill}
-  //     textAnchor="middle"
-  //   >
-  //     {value}
-  //   </text>
-  // );
-
   return (
-    <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+    <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <BarChart data={data} margin={{ top: 30 }}>
         <XAxis
           dataKey="answerOrder"

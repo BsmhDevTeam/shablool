@@ -1,10 +1,10 @@
 import React from 'react';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import Leaders from '../game-shared/leaders.js';
 import Question from '../game-shared/question.js';
 import QuestionStatistics from '../game-shared/question-statistics';
 import Winner from '../game-shared/winner';
 import GameLobby from './game-lobby';
-import GameClose from '../game-shared/game-close';
 
 export default ({ game }) => {
   const mapEventToPages = {
@@ -15,7 +15,7 @@ export default ({ game }) => {
     QuestionEnd: () => <QuestionStatistics game={game} />,
     ShowLeaders: () => <Leaders game={game} />,
     GameEnd: () => <Winner game={game} />,
-    GameClose: () => <GameClose />,
+    GameClose: () => FlowRouter.go('Game.Home'),
   };
   const event = game.getLastEvent().nameType;
   const gameRouter = mapEventToPages[event];

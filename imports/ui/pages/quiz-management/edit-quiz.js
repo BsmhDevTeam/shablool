@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import uuidV4 from 'uuid/v4';
@@ -141,7 +142,11 @@ class EditQuiz extends React.Component {
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions, tags }, { cast: true }]);
+      quiz$.applyMethod('update', [{ ...quiz, questions, tags }, { cast: true }], (err, result) => {
+        console.log(err);
+        console.log(result);
+        result && FlowRouter.go('Manage.Home');
+      });
     };
 
     const actions = {

@@ -11,9 +11,11 @@ const glyphIcons = {
 
 const Answers = ({ answers, game }) => (
   <div className="row">
-    {answers.map((answer, index) => (
-      <Answer answer={answer} index={index + 1} game={game} key={answer._id} />
-    ))}
+    <div className="answers-btn-area-to-bottom">
+      {answers.map((answer, index) => (
+        <Answer answer={answer} index={index + 1} game={game} key={answer._id} />
+      ))}
+    </div>
   </div>
 );
 

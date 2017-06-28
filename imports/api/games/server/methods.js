@@ -41,9 +41,10 @@ Game.extend({
       this.gameLog = this.gameLog.concat(questionStarted);
       this.save();
       // Ending question
-      const questionEndToLog = () => {
-        this.questionEnd(firstQuestion._id);
-      };
+      const questionEndToLog = () => (
+          this.isQuestionEndAlready(firstQuestion._id) ||
+          this.questionEnd(firstQuestion._id)
+        );
       Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
       return true;
     },
@@ -53,6 +54,7 @@ Game.extend({
       });
       this.gameLog = this.gameLog.concat(questionEnd);
       this.save();
+      return true;
     },
     playerAnswer(uId, qId, aId) {
       const isQuestionClosed = this.gameLog
@@ -62,6 +64,10 @@ Game.extend({
       const playerAlreadyAnswer = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .find(e => e.playerId === uId && e.questionId === qId);
+
+      const playerRegistered = this.gameLog
+        .filter(e => e.nameType === eventTypes.PlayerReg)
+        .find(e => e.playerId === uId);
 
       const isGameManager = this.quiz.owner === Meteor.userId();
 
@@ -73,10 +79,16 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(playerAnswerEvent);
         this.save();
-        return true;
+        return this.isEveryoneAnswered(qId) && this.questionEnd(qId);
       };
 
-      return isQuestionClosed || playerAlreadyAnswer || isGameManager || addingPlayerAnswerEvent();
+      return (
+        !playerRegistered ||
+        isQuestionClosed ||
+        playerAlreadyAnswer ||
+        isGameManager ||
+        addingPlayerAnswerEvent()
+      );
     },
     nextQuestion() {
       // start question
@@ -88,9 +100,8 @@ Game.extend({
       this.save();
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () => {
-        this.questionEnd(qId);
-      };
+      const questionEndToLog = () =>
+        this.isQuestionEndAlready(qId) || this.questionEnd(qId);
       Meteor.setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
@@ -114,8 +125,13 @@ Game.extend({
     closeGame() {
       const gameClose = new GameClose();
       this.gameLog = this.gameLog.concat(gameClose);
-      this.isOn = false;
       this.save();
+    },
+    isQuestionEndAlready(qId) { // need to be in methods so it will be updated
+      const questionEnd = this.gameLog
+        .filter(e => e.nameType === eventTypes.QuestionEnd)
+        .find(e => e.questionId === qId);
+      return !!questionEnd;
     },
   },
 });

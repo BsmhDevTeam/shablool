@@ -6,7 +6,7 @@ import QuizCard from '../../components/quiz-card.js';
 import Loading from '../../components/loading';
 
 const Search = ({ results }) =>
-  <div>
+  <div id="search">
     <ul>
       {results.map(quiz =>
         <div key={quiz._id}>

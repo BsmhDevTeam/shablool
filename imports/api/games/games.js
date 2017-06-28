@@ -249,12 +249,6 @@ export default Class.create({
         return generateCode(6).toString();
       },
     },
-    isOn: {
-      type: Boolean,
-      default() {
-        return true;
-      },
-    },
     createdAt: {
       type: Date,
       default() {
@@ -334,7 +328,8 @@ export default Class.create({
         .map(e => e.playerId);
     },
     getPlayersCount() {
-      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
+      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg)
+        .length;
     },
     scoreListById() {
       const playersAnswers = this.gameLog
@@ -364,7 +359,7 @@ export default Class.create({
         playerId: pId,
         userScore: finalScoreByUser[pId] || 0,
       })); // => [{playerId: name, userScore: score}, ...]
-      return sortBy(scoreByUserId, 'userScore');
+      return sortBy(scoreByUserId, 'userScore').reverse();
     },
     scoreListByName() {
       const scoreListById = this.scoreListById();
@@ -510,9 +505,9 @@ export default Class.create({
         score: calculateScore(
           calculateTimeDelta(
             e.createdAt,
-              this.gameLog
-                .filter(qse => qse.nameType === eventTypes.QuestionStart)
-                .find(qse => qse.questionId === e.questionId).createdAt,
+            this.gameLog
+              .filter(qse => qse.nameType === eventTypes.QuestionStart)
+              .find(qse => qse.questionId === e.questionId).createdAt,
           ),
           this.quiz.questions
             .find(q => q._id === e.questionId)
@@ -545,9 +540,9 @@ export default Class.create({
         calculateScore(
           calculateTimeDelta(
             e.createdAt,
-              this.gameLog
-                .filter(qse => qse.nameType === eventTypes.QuestionStart)
-                .find(qse => qse.questionId === e.questionId).createdAt,
+            this.gameLog
+              .filter(qse => qse.nameType === eventTypes.QuestionStart)
+              .find(qse => qse.questionId === e.questionId).createdAt,
           ),
           this.quiz.questions
             .find(q => q._id === e.questionId)
@@ -614,6 +609,20 @@ export default Class.create({
         ),
       }));
       return playerAndAvarageTime;
+    },
+    getNumberOfPlayers() {
+      const playersRegEvent = this.gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
+      return playersRegEvent.length;
+    },
+    isEveryoneAnswered(qId) {
+      const playerAnswerEvents = this.gameLog
+        .filter(e => e.nameType === eventTypes.PlayerAnswer)
+        .filter(e => e.questionId === qId);
+      const isEveryoneAnswered =
+        playerAnswerEvents.length === this.getNumberOfPlayers();
+      return isEveryoneAnswered;
     },
   },
 });
