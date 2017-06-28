@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 
 Meteor.publish('users.names', function() {
-  return Meteor.users.find({}, { fields: { 'services.github.username': 1 } });
+  return Meteor.users.find({}, { fields: { 'services.gitlab.username': 1 } });
 });
 
 Meteor.publish('users.my-name', function() {
-  return Meteor.users.find({ _id: this.userId }, { fields: { 'services.github.username': 1 } });
+  return Meteor.users.find({ _id: this.userId }, { fields: { 'services.gitlab.username': 1 } });
 });

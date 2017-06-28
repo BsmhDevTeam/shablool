@@ -58,7 +58,7 @@ class Home extends React.Component {
       <div id="home">
         <div className="game-background" />
         <div className="row">
-          <div id="logo-area">
+          <div className="col-xl-2 col-xl-offset-5 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12" id="logo-area">
             <img className="logo" src="/img/Logo.svg"/>
           </div>
         </div>
