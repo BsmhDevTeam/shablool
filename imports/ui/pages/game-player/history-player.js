@@ -4,7 +4,7 @@ import ManageNavbar from '../../components/manage-navbar.js';
 import TwoLinesChart from '../../components/two-lines-chart';
 
 const HistoryPlayer = ({ game }) => (
-  <div id="history-player">
+  <div id="history">
     <div className="row">
       <ManageNavbar />
     </div>

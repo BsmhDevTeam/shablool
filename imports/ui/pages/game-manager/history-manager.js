@@ -3,7 +3,7 @@ import ManageNavbar from '../../components/manage-navbar.js';
 import OneLinesChart from '../../components/one-line-chart';
 
 const HistoryManager = ({ game }) => (
-  <div id="history-player">
+  <div id="history">
     <div className="row">
       <ManageNavbar />
     </div>
