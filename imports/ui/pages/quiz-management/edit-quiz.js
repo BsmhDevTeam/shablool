@@ -142,7 +142,7 @@ class EditQuiz extends React.Component {
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions, tags }, { cast: true }], (err, result) => {
+      quiz$.applyMethod('update', [{ ...quiz, questions, tags }], (err, result) => {
         console.log(err);
         console.log(result);
         result && FlowRouter.go('Manage.Home');

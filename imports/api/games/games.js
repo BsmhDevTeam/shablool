@@ -364,7 +364,7 @@ export default Class.create({
     scoreListByName() {
       const scoreListById = this.scoreListById();
       const scoreByUserName = scoreListById.map(o => ({
-        userName: Meteor.users.findOne(o.playerId).services.github.username,
+        userName: Meteor.users.findOne(o.playerId).services.gitlab.username,
         userScore: o.userScore,
       })); // => [{userName: name, userScore: score}, ...]
       return scoreByUserName;
@@ -443,7 +443,7 @@ export default Class.create({
     getGamePlayersName() {
       const playersId = this.getGamePlayersId();
       const players = playersId.map(pId => Meteor.users.findOne(pId));
-      const playersName = players.map(p => p.services.github.username);
+      const playersName = players.map(p => p.services.gitlab.username);
       return playersName;
     },
     getLastEvent() {

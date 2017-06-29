@@ -18,7 +18,7 @@ const QuestionStatistics = ({ game }) => {
         <GameNavbar text={question.text} num="" />
       </div>
       {game.quiz.owner === Meteor.userId()
-        ? <a href="javascript:void(0)" className="btn btn-primary" onClick={showLeaders}>
+        ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={showLeaders}>
             לטבלת המובילים
           </a>
         : ''}

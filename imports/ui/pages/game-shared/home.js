@@ -14,8 +14,6 @@ class Home extends React.Component {
   }
 
   render() {
-    console.log('badGameCode:');
-    console.log(this.state.badGameCode);
     const enterGame = (e) => {
       e.preventDefault();
       const form = e.target;

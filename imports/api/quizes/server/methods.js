@@ -6,7 +6,7 @@ Quiz.extend({
       return this.save();
     },
     update(fields) {
-      this.set(fields);
+      this.set(fields, { cast: true });
       this.lastUpdate = new Date();
       return this.save();
     },

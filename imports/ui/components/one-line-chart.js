@@ -24,7 +24,8 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
         {Math.abs(payload.value)}{payload.value < 0 ? '-' : ''}
       </text>
     </g>
-    );
+  );
+
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart

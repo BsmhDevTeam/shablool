@@ -18,7 +18,7 @@ const GameCardPlayed = ({ game }) => {
             <h5 className="game-title">{game.quiz.title}</h5>
             <p>
               <span className="game-owner-span">
-                {`מריץ המשחק: ${Meteor.users.findOne(game.quiz.owner).services.github.username}`}
+                {`מריץ המשחק: ${Meteor.users.findOne(game.quiz.owner).services.gitlab.username}`}
               </span>
             </p>
             <p><span>{game.createdAt.toLocaleString()}</span></p>
