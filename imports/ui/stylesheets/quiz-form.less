@@ -1,20 +1,47 @@
 #quiz-form {
     input.input-title {
-        height: 80px;
+        height: 60px;
         padding: 13px 16px;
-        font-size: 36px;
+        font-size: 26px;
     }
     input.input-title:focus {
         outline:none;
     }
     .question-form {
       .form-horizontal .form-group {
-          margin-left: inherit;
+      margin-left: inherit;
           margin-right: inherit;
-          margin-top: 5px;
+      }
+      .panel-heading {
+          border-bottom: 1px solid #e2e2e2;
+          background-color: #fff;
+      } 
+      .panel-body {
+          .form-group {
+               margin-top: 5px;
+          }
       }
     }
     .tag {
       margin: 10px;
+    }
+    .form-group {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    #add-question-btn-row {
+        margin-bottom: 15px;
+        button {
+            background-color: #fff;
+            border: solid 1px #158cba;
+            color: #158cba;
+        }
+    }
+    #quiz-form-submit {
+        width: 100%;
+        margin-top: 15px;
+    }
+    #submit-panel {
+        padding-bottom: 0;
     }
 }

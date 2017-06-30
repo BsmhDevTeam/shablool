@@ -19,7 +19,7 @@ const Leaders = ({ game }) => {
         </div>
         : ''}
       <div className="row">
-        <GameNavbar text="Leaders" num="" />
+        <GameNavbar text="צמרת הטבלה" num="" />
       </div>
       <div className="row">
         <table className="table leaders-table">

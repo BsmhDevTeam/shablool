@@ -57,7 +57,7 @@ class Main extends React.Component {
     };
     return (
       <div id="quiz-management-main">
-        <div className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg" role="group">
+        <div className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg" id="tabs-area" role="group">
           <div className="btn-group" role="group">
             <button
               className={`btn ${activeTab === tabNames.myQuizes ? 'btn-primary' : 'btn-default'}`}

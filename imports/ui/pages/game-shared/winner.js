@@ -20,7 +20,7 @@ const Winner = ({ game }) => {
         </div>
       </div>
       <div className="row">
-        <GameNavbar text="Winner" num="" />
+        <GameNavbar text="הזוכה הגדול" num="" />
       </div>
       <div className="row">
         <div className="winner-name">

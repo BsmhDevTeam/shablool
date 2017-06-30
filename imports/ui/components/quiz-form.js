@@ -10,7 +10,7 @@ const validateTitle = (title) => {
     {
       fields: ['title'],
     },
-    err => (message = err && err.reason),
+    err => message = err && err.reason,
   );
   return message;
 };
@@ -19,84 +19,96 @@ const QuizForm = ({ quiz, validate, actions }) => {
   const titleValidation = validate && validateTitle(quiz.title);
   return (
     <div id="quiz-form">
+      <h1>צור שאלון</h1>
       <div className="row">
-        <div className="col-sm-12">
-          <div className="page-header">
-            <div className={`form-group ${titleValidation ? 'has-error' : ''}`}>
-              <input
-                name="title"
-                className="input-title form-control"
-                placeholder="כותרת שאלון"
-                value={quiz.title}
-                onChange={actions.changeQuizTitle}
-              />
-              {titleValidation
-                ? <label className="control-label" htmlFor="title">{titleValidation}</label>
-                : ''}
+        <div className="panel panel-default">
+          <div className="panel-body">
+            <div className="">
+              <div
+                className={`form-group ${titleValidation ? 'has-error' : ''}`}
+              >
+                <input
+                  name="title"
+                  className="input-title form-control"
+                  placeholder="כותרת שאלון"
+                  value={quiz.title}
+                  onChange={actions.changeQuizTitle}
+                />
+                {titleValidation
+                  ? <label className="control-label" htmlFor="title">
+                    {titleValidation}
+                  </label>
+                  : ''}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      {quiz.questions.map(q =>
+      {quiz.questions.map(q => (
         <div key={q._id} className="row">
-          <div className="col-sm-12">
-            <QuestionForm question={q} validate={validate} actions={actions} />
-          </div>
-        </div>,
-      )}
-      <div className="row">
-        <div className="col-sm-12">
-          <button className="btn btn-primary btn-lg btn-block" onClick={actions.addQuestion}>
-            <span className="glyphicon glyphicon-plus" aria-hidden="true" />
-          </button>
+          <QuestionForm question={q} validate={validate} actions={actions} />
         </div>
+      ))}
+      <div className="row" id="add-question-btn-row">
+        <button className="btn btn-lg btn-block" onClick={actions.addQuestion}>
+          <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+          <span> הוסף שאלה</span>
+        </button>
       </div>
-      <hr />
       <div className="row">
-        <div className="col-sm-9">
-          <div className="row">
-            <div className="col-lg-4">
-              <form onSubmit={actions.addTag}>
-                <label htmlFor="tag" className="control-label">
-                  הוספת תגיות
-                </label>
-                <input name="tag" className="form-control input-lg" />
-              </form>
+        <div className="panel panel-default">
+          <div className="panel-body" id="submit-panel">
+            <div className="row">
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-4">
+                    <form onSubmit={actions.addTag}>
+                      <label htmlFor="tag" className="control-label">
+                        הוספת תגיות
+                      </label>
+                      <input name="tag" className="form-control input-lg" />
+                    </form>
+                  </div>
+                  <div className="col-md-8">
+                    {quiz.tags.map(t => (
+                      <TagTemplate key={t._id} tag={t} actions={actions} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="form-group-lg">
+                  <label htmlFor="isPrivate" className="control-label">
+                    מי יכול למצוא את השאלון
+                  </label>
+                  <select
+                    name="isPrivate"
+                    className="is-private form-control"
+                    onChange={actions.changeQuizPrivacy}
+                  >
+                    <option value="false">כולם</option>
+                    <option value="true">רק אני</option>
+                  </select>
+                </div>
+              </div>
             </div>
-            <div className="col-lg-8">
-              {quiz.tags.map(t => <TagTemplate key={t._id} tag={t} actions={actions} />)}
+            <div className="row">
+              <button
+                id="quiz-form-submit"
+                className="btn btn-success btn-lg"
+                onClick={actions.saveQuiz}
+              >
+                <span className="glyphicon glyphicon-ok" aria-hidden="true" />
+              </button>
             </div>
           </div>
-        </div>
-        <div className="col-sm-3">
-          <div className="form-group-lg">
-            <label htmlFor="isPrivate" className="control-label">
-              מי יכול למצוא את השאלון
-            </label>
-            <select
-              name="isPrivate"
-              className="is-private form-control"
-              onChange={actions.changeQuizPrivacy}
-            >
-              <option value="false">כולם</option>
-              <option value="true">רק אני</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <hr />
-      <div className="row">
-        <div className="col-sm-12">
-          <button className="btn btn-success btn-lg col-sm-2 pull-left" onClick={actions.saveQuiz}>
-            <span className="glyphicon glyphicon-ok" aria-hidden="true" />
-          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const TagTemplate = ({ tag, actions }) =>
+const TagTemplate = ({ tag, actions }) => (
   <h3 className="pull-right tag">
     <span
       className="label label-info clickable"
@@ -105,6 +117,7 @@ const TagTemplate = ({ tag, actions }) =>
     >
       {tag.name}
     </span>
-  </h3>;
+  </h3>
+);
 
 export default QuizForm;
