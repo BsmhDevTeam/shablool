@@ -8,7 +8,9 @@ export default ({ quiz, actions }) => {
   const deleteQuiz = () => {
     actions.deleteQuiz(quiz);
   };
-
+  const forkQuiz = () => {
+    actions.forkQuiz(quiz);
+  };
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
@@ -73,7 +75,7 @@ export default ({ quiz, actions }) => {
                   <a
                     href="javascript:void(0)"
                     className="delete quiz-card-link"
-                    onClick={actions.forkQuiz}
+                    onClick={forkQuiz}
                   >
                     <span className="glyphicon glyphicon-duplicate quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">
