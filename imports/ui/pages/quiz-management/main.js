@@ -57,32 +57,38 @@ class Main extends React.Component {
     };
     return (
       <div id="quiz-management-main">
-        <div className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg" id="tabs-area" role="group">
+        <div
+          className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg"
+          id="tabs-area"
+          role="group"
+        >
           <div className="btn-group" role="group">
             <button
               className={`btn ${activeTab === tabNames.myQuizes ? 'btn-primary' : 'btn-default'}`}
               onClick={changeTab(tabNames.myQuizes)}
             >
-              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
+              <span
+                className="glyphicon glyphicon-list-alt"
+                aria-hidden="true"
+              />
               <div className="hidden-xs">השאלונים שלי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              className={`btn ${activeTab === tabNames.gamesManaged
-                ? 'btn-primary'
-                : 'btn-default'}`}
+              className={`btn ${activeTab === tabNames.gamesManaged ? 'btn-primary' : 'btn-default'}`}
               onClick={changeTab(tabNames.gamesManaged)}
             >
-              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
+              <span
+                className="glyphicon glyphicon-briefcase"
+                aria-hidden="true"
+              />
               <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              className={`btn ${activeTab === tabNames.gamesPlayed
-                ? 'btn-primary'
-                : 'btn-default'}`}
+              className={`btn ${activeTab === tabNames.gamesPlayed ? 'btn-primary' : 'btn-default'}`}
               onClick={changeTab(tabNames.gamesPlayed)}
             >
               <span className="glyphicon glyphicon-stats" aria-hidden="true" />
@@ -92,16 +98,23 @@ class Main extends React.Component {
         </div>
         <div className="">
           <div className="tab-content">
-            <div className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}>
+            <div
+              className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}
+            >
               <a href="/CreateQuiz" className="add-question">
                 <div className="panel panel-default" id="add-quiz-panel">
                   <div className="panel-body">
-                    <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
+                    <span
+                      className="glphicon glyphicon-plus"
+                      id="add-quiz-plus-icon"
+                    />
                   </div>
                 </div>
               </a>
               {quizes.length
-                ? quizes.map(quiz => <QuizCard key={quiz._id} quiz={quiz} actions={actions} />)
+                ? quizes.map(quiz => (
+                  <QuizCard key={quiz._id} quiz={quiz} actions={actions} />
+                  ))
                 : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
             </div>
 
@@ -109,7 +122,9 @@ class Main extends React.Component {
               className={`tab-pane fade in ${activeTab === tabNames.gamesManaged ? 'active' : ''}`}
             >
               {gamesManaged.length
-                ? gamesManaged.map(game => <GameCardManaged key={game._id} game={game} />)
+                ? gamesManaged.map(game => (
+                  <GameCardManaged key={game._id} game={game} />
+                  ))
                 : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
             </div>
 
@@ -117,22 +132,42 @@ class Main extends React.Component {
               className={`tab-pane fade in ${activeTab === tabNames.gamesPlayed ? 'active' : ''}`}
             >
               {gamesPlayed.length
-                ? gamesPlayed.map(game => <GameCardPlayed key={game._id} game={game} />)
+                ? gamesPlayed.map(game => (
+                  <GameCardPlayed key={game._id} game={game} />
+                  ))
                 : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
             </div>
           </div>
         </div>
-        <div id="snackbar" className={this.state.quizDeleted || this.state.quizForked ? 'show' : ''}>
-          {this.state.quizDeleted ? 'השאלון נמחק בהצלחה' : 'השאלון הועתק בהצלחה'}
+        <div
+          id="snackbar"
+          className={
+            this.state.quizDeleted || this.state.quizForked ? 'show' : ''
+          }
+        >
+          {this.state.quizDeleted
+            ? 'השאלון נמחק בהצלחה'
+            : 'השאלון הועתק בהצלחה'}
         </div>
       </div>
     );
   }
 }
 
-const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
+const ManagementContainer = ({
+  loading,
+  quizes,
+  gamesPlayed,
+  gamesManaged,
+}) => {
   if (loading) return <Loading />;
-  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
+  return (
+    <Main
+      quizes={quizes}
+      gamesPlayed={gamesPlayed}
+      gamesManaged={gamesManaged}
+    />
+  );
 };
 
 export default createContainer(() => {
@@ -149,8 +184,14 @@ export default createContainer(() => {
     !gamesManagedHandle.ready();
 
   const quizes = Quiz.find().fetch();
-  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch();
-  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: Meteor.userId() } } }).fetch();
+  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() })
+    .fetch()
+    .reverse();
+  const gamesPlayed = Game.find({
+    gameLog: { $elemMatch: { playerId: Meteor.userId() } },
+  })
+    .fetch()
+    .reverse();
   return {
     loading,
     quizes,

@@ -4,7 +4,8 @@
   "scripts": {
     "start": "meteor run",
     "lint": "eslint .",
-    "pretest": "npm run lint --silent"
+    "pretest": "npm run lint --silent",
+    "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
