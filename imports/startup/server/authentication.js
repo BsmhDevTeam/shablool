@@ -22,4 +22,4 @@ ServiceConfiguration.configurations.upsert(
   },
 );
 
-// TODO: configure service before PRODUCTION
+// TODO: PRODUCTION - configure service clientId and secret
