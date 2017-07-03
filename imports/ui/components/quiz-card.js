@@ -2,11 +2,10 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
-import Quiz from '/imports/api/quizes/quizes';
 
 export default ({ quiz, actions }) => {
-  const deleteQuiz = () => {
-    actions.deleteQuiz(quiz);
+  const showDeleteAlert = () => {
+    actions.showDeleteAlert(quiz);
   };
   const forkQuiz = () => {
     actions.forkQuiz(quiz);
@@ -43,7 +42,7 @@ export default ({ quiz, actions }) => {
                   <a
                     href="javascript:void(0)"
                     className="delete quiz-card-link"
-                    onClick={deleteQuiz}
+                    onClick={showDeleteAlert}
                   >
                     <span className="glyphicon glyphicon-remove quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text">מחק שאלון</span>

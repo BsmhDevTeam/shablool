@@ -42,6 +42,7 @@ const GameLobby = ({ game }) => {
             : <div className="alert alert-is-primary">מחכה לשחקנים...</div>}
         </div>
       </div>
+      <audio src="/audio.mp3" autoPlay loop />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import SweetAlert from 'sweetalert-react';
+import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuizCard from '../../components/quiz-card.js';
 import Loading from '../../components/loading';
@@ -11,12 +13,17 @@ class Search extends React.Component {
     this.state = {
       quizDeleted: false,
       quizForked: false,
+      showDeleteQuizAlert: false,
+      quizToDelete: null,
     };
   }
   render() {
     const { results } = this.props;
-    const deleteQuiz = (quiz) => {
-      quiz.applyMethod('delete', []);
+    const showDeleteAlert = (quiz) => {
+      this.setState({ quizToDelete: quiz, showDeleteQuizAlert: true });
+    };
+    const deleteQuiz = () => {
+      this.state.quizToDelete.applyMethod('delete', []);
       const notifyUser = () => {
         this.setState({ quizDeleted: true });
         setTimeout(() => this.setState({ quizDeleted: false }), 3000);
@@ -38,7 +45,7 @@ class Search extends React.Component {
       notifyUser();
     };
     const actions = {
-      deleteQuiz,
+      showDeleteAlert,
       forkQuiz,
     };
     return (
@@ -65,6 +72,24 @@ class Search extends React.Component {
             ? 'השאלון נמחק בהצלחה'
             : 'השאלון הועתק בהצלחה'}
         </div>
+        <SweetAlert
+          show={this.state.showDeleteQuizAlert}
+          title="מחיקת שאלון"
+          type="warning"
+          text={this.state.showDeleteQuizAlert ? `האם אתה בטוח שברצונך למחוק את השאלון: ${this.state.quizToDelete.title}?` : ''}
+          showCancelButton
+          confirmButtonText="מחק!"
+          cancelButtonText="בטל"
+          onConfirm={() => {
+            deleteQuiz();
+            this.setState({ quizToDelete: null, showDeleteQuizAlert: false });
+          }}
+          onCancel={() => {
+            this.setState({ quizToDelete: null, showDeleteQuizAlert: false });
+          }}
+          onEscapeKey={() => this.setState({ showDeleteQuizAlert: false })}
+          onOutsideClick={() => this.setState({ showDeleteQuizAlert: false })}
+        />
       </div>
     );
   }

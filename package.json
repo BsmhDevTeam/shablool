@@ -19,6 +19,7 @@
     "react-dom": "^15.6.1",
     "react-mounter": "^1.2.0",
     "recharts": "^1.0.0-alpha.1",
+    "sweetalert-react": "^0.4.10",
     "underscore": "^1.8.3",
     "uuid": "^3.0.1"
   },
