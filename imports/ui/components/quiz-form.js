@@ -19,7 +19,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
   const titleValidation = validate && validateTitle(quiz.title);
   return (
     <div id="quiz-form">
-      <h1>צור שאלון</h1>
+      <h1>צור שאלון חדש</h1>
       <div className="row">
         <div className="panel panel-default">
           <div className="panel-body">
@@ -95,7 +95,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
             <div className="row">
               <button
                 id="quiz-form-submit"
-                className="btn btn-success btn-lg"
+                className="btn btn-success btn-lg btn-block"
                 onClick={actions.saveQuiz}
               >
                 <span className="glyphicon glyphicon-ok" aria-hidden="true" />
