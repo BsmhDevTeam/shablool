@@ -10,3 +10,5 @@ const config = {
 };
 
 const Gitlab = new CustomOAuth('gitlab', config);
+
+// TODO: PRODUCTION - change gitlab url

@@ -1,0 +1,14 @@
+# docker-compose.yml
+
+app:
+  image: yourname/app
+  ports:
+    - "80:3000"
+  links:
+    - mongo
+  environment:
+    - ROOT_URL=http://example.com
+    - MONGO_URL=mongodb://mongo:27017/meteor
+
+mongo:
+  image: mongo:latest --storageEngine=wiredTiger
