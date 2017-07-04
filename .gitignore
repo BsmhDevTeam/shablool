@@ -1,2 +1,4 @@
 node_modules/
 .idea/
+settings.json
+docker-compose.yml
