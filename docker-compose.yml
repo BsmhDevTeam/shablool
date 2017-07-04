@@ -12,3 +12,5 @@ app:
 
 mongo:
   image: mongo:latest --storageEngine=wiredTiger
+  volumes:
+    - /path/on/host:/data/db
