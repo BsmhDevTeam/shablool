@@ -1,0 +1,132 @@
+#question {
+	padding-top: 100px;
+	.navabr-message-area {
+		font-size: 30px;
+		padding: 10px;
+	}
+	.question-background {
+		z-index: -1;
+		position: fixed;
+		height: 100%;
+		width: 100%;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		background-color: #f1f1f1;
+	}
+	.answer-icon {
+		font-size: 24px;
+		padding: 5px;
+	}
+	.answer-button {
+		width: 100%;
+		height: 100%;
+		text-align: right;
+	}
+	.answer-btn-area {
+		padding-bottom: 10px;			
+		height: 88px;
+	}
+	.answers-btn-area-to-bottom {
+		position: absolute;
+		bottom: 0;
+		right: 100px;
+		left: 100px;
+	}
+	.buttons-col {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.btn h3 {
+		color:#fff;
+		display: inline;
+	}
+	.btn-answer-1 {
+		color: #fff;
+		background-color: #1668cb;
+    	border-color: #1668cb;
+	}
+	.btn-answer-2 {
+		color: #fff;
+		background-color: #e21c3f;
+		border-color: #e21c3f;
+	}
+	.btn-answer-3 {
+		color: #fff;
+		background-color: #2b8d12;
+		border-color: #2b8d12;
+	}
+	.btn-answer-4 {
+		color: #fff;
+		background-color: #d59c04;
+		border-color: #d59c04;
+	}
+	.count-down-timer-num {
+		width: 88px;
+		height: 88px;
+		border-radius: 50%;
+		font-size: 40px;
+		color: #fff;
+		line-height: 88px;
+		text-align: center;
+		background: #864ebd;
+		margin: auto;
+	}
+	.answer-count {
+		font-size: 40px;
+		font-weight: bold;
+		font-family: "answer-count-font";
+		margin-bottom: 0;
+		text-align: center;
+	}
+	#answer-count-number {
+		font-size: 65px;
+	}
+	.question-image {
+		height: 300px;
+		width: 300px;
+		padding-bottom: 5px;
+		padding-top: 5px;
+		margin: auto;
+		display: block;
+	}
+	.padding-top {
+		padding-top: 100px;
+	}
+	.wrong-answer {
+		opacity: 0.5;
+	}
+	.right-answer-icon {
+		float: left;
+	}
+	svg text {
+      font-family: FontAwesome;
+      font-size: 20px;
+    }
+	.show-leaders-btn {
+		position: fixed;
+		z-index: 1;
+	}
+	@media(min-height: 850px){
+		.answer-btn-area {
+			height: 160px;
+			.answer-icon {
+				font-size: 36px;
+			}
+			h3 {
+				font-size: 36px;
+			}
+		}
+		.recharts-surface {
+			height: 400px!important;
+		}
+		.recharts-wrapper {
+			height: 400px!important;
+		}
+		.question-image {
+			height: 380px;
+			width: 380px;
+		}
+	}
+}

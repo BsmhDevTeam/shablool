@@ -1,0 +1,100 @@
+#quiz-management-main {
+  .tab-btns {
+    margin-bottom: 20px;
+  }
+
+  .table-filter {
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+  }
+
+  .table-filter tbody tr:hover {
+    cursor: pointer;
+    background-color: #eee;
+  }
+
+  .table-filter tbody tr td {
+    padding: 10px;
+    vertical-align: middle;
+    border-top-color: #eee;
+  }
+
+  .table-filter .star {
+    color: #ccc;
+    text-align: center;
+    display: block;
+  }
+
+  .table-filter .star:hover {
+    color: #ccc;
+  }
+
+  .table-filter .edit {
+    color: #ccc;
+    text-align: center;
+    display: block;
+  }
+
+  .table-filter .edit:hover {
+    color: #ccc;
+  }
+
+  a.add-question {
+    text-decoration: none;
+    &:hover {
+      .panel-body {
+        background-color: #eee;
+      }
+    }
+  }
+
+  #add-quiz-panel {
+    height: 120px;
+    border: none;
+    box-shadow: none;
+    .panel-body {
+      border-style: dashed;
+      border-radius: 3px;
+      border-color: #cbb;
+      border-width: 2px;
+    }
+    #add-quiz-plus-icon {
+      font-size: 60px;
+      text-align: center;
+      display: block;
+      margin: auto;
+      color: gray;
+    }
+  }
+  #tabs-area {
+    position: fixed;
+    right: 0;
+    left: 0;
+    width: 100%;
+    top: 52px;
+    z-index: 1;
+    .btn {
+      margin: 0;
+      border-width: 1px;
+      &:hover {
+        margin: 0;
+        border-width: 1px;
+      }
+    }
+    .btn-default {
+      background-color: #fff;
+      color: #127ba3;
+      border-color: #127ba3;
+      &:hover {
+        background-color: #fff;
+        color: #127ba3;
+        border-color: #127ba3;
+      }
+      &:focus {
+        background-color: #fff;
+        color: #127ba3;
+        border-color: #127ba3;
+      }
+    }
+  }
+}
