@@ -6,7 +6,12 @@ Meteor.publish('quizes.my-quizes', function() {
 });
 
 Meteor.publish('quizes.get', function(id) {
-  return Quiz.find(id);
+  return Quiz.find({
+    $and: [
+      { _id: id },
+      { $or: [{ owner: this.userId }, { private: false }] },
+    ],
+  });
 });
 
 Meteor.publish('quizes.search', function(query) {

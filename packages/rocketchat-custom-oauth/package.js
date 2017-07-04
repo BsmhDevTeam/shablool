@@ -3,7 +3,7 @@ Package.describe({
   summary: 'Custom OAuth flow',
   version: '1.0.0',
   git: 'https://github.com/RocketChat/Rocket.Chat/tree/master/packages/rocketchat-custom-oauth',
-  documentation: 'README.md'
+  documentation: 'README.md',
 });
 
 Package.onUse(function(api) {
@@ -24,4 +24,3 @@ Package.onUse(function(api) {
   api.mainModule('custom_oauth_server.js', 'server');
   api.export('CustomOAuth');
 });
-

@@ -1,0 +1,10 @@
+{
+  "gitlabUrl": "{https://some.gitlab.com}",
+  "auth": {
+    "gitlab": {
+      "clientId": "{your.clientId.on.gitlab}",
+      "secret": "{your.secret.on.gitlab}",
+      "loginStyle": "popup"
+    }
+  }
+}

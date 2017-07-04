@@ -1,13 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import Game, { eventTypes } from '../games.js';
 
-Meteor.publish('games.all', function() {
-  return Game.find();
-});
-
-Meteor.publish('games.get', function(id) {
-  return Game.find(id);
-});
 
 Meteor.publish('games.get-by-code', function(code) {
   return Game.find({ code });
@@ -25,8 +18,11 @@ Meteor.publish('games.games-played', function() {
 });
 
 Meteor.publish('games.open', function() {
-  const games = Game.find({
-    gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
-  });
+  const games = Game.find(
+    {
+      gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
+    },
+    { fields: { code: 1 } },
+  );
   return games;
 });
