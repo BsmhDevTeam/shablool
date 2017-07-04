@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const GameCardManaged = ({ game }) => {
@@ -59,6 +60,10 @@ const GameCardManaged = ({ game }) => {
       </div>
     </div>
   );
+};
+
+GameCardManaged.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default GameCardManaged;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ManageNavbar from '../../components/manage-navbar.js';
 import OneLinesChart from '../../components/one-line-chart';
 
@@ -40,5 +41,9 @@ const HistoryManager = ({ game }) => (
     </div>
   </div>
 );
+
+HistoryManager.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default HistoryManager;

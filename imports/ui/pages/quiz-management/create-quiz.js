@@ -146,11 +146,9 @@ class CreateQuiz extends React.Component {
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = new Quiz({ ...quiz, questions, tags, owner: Meteor.userId() }, { cast: true });
-      quiz$.applyMethod('create', [], (err, result) => {
-        console.log(err);
-        console.log(result);
-        result && FlowRouter.go('Manage.Home');
-      });
+      quiz$.applyMethod('create', [], (err, result) => (
+        result && FlowRouter.go('Manage.Home')
+      ));
     };
 
     const actions = {

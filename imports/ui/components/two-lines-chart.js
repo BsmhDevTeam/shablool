@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   LineChart,
   XAxis,
@@ -18,16 +19,25 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
       </text>
     </g>
   );
-  const CustomizedYAxisTick = ({ x, y, payload }) => {
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
-          {payload.value}
-        </text>
-      </g>
-    );
+  CustomizedXAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.nyumber.isRequired,
+    payload: PropTypes.instanceOf(Object).isRequired,
   };
-  const CustomizedTolltip = ({ payload, label, active }) => active
+
+  const CustomizedYAxisTick = ({ x, y, payload }) => (
+    <g transform={`translate(${x},${y})`}>
+      <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
+        {payload.value}
+      </text>
+    </g>
+  );
+  CustomizedYAxisTick.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.nyumber.isRequired,
+    payload: PropTypes.instanceOf(Object).isRequired,
+  };
+  const CustomizedTolltip = ({ payload, label, active }) => (active
       ? <div className="panel panel-body">
         <div className="tooltip-area">
           <p>שאלה #{label}</p>
@@ -39,8 +49,13 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
           </p>
         </div>
       </div>
-      : null;
-
+      : null
+      );
+  CustomizedTolltip.propTypes = {
+    label: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
+    payload: PropTypes.instanceOf(Object).isRequired,
+  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart
@@ -67,6 +82,13 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
       </LineChart>
     </ResponsiveContainer>
   );
+};
+
+TwoLinesChart.propTypes = {
+  data: PropTypes.instanceOf(Object).isRequired,
+  dataKeyA: PropTypes.string.isRequired,
+  dataKeyB: PropTypes.string.isRequired,
+  dataKeyX: PropTypes.string.isRequired,
 };
 
 export default TwoLinesChart;

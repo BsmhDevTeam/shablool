@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class CountdownTimer extends React.Component {
   constructor(props) {
@@ -26,5 +27,9 @@ class CountdownTimer extends React.Component {
     return <p className="count-down-timer-num">{this.state.secondsRemaining}</p>;
   }
 }
+
+CountdownTimer.propTypes = {
+  secondsRemaining: PropTypes.number.isRequired,
+};
 
 export default CountdownTimer;

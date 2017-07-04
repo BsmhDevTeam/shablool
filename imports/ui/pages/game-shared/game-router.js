@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import Game from '/imports/api/games/games';
 import GameManager from '../game-manager/game-manager';
 import GamePlayer from '../game-player/game-player';
@@ -11,9 +12,18 @@ const GameRouter = ({ game }) => {
   return isManager ? <GameManager game={game} /> : <GamePlayer game={game} />;
 };
 
+GameRouter.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
+
 const GameRouterContainer = ({ loading, game }) => {
   if (loading) return <Loading color={'white'} />;
   return <GameRouter game={game} />;
+};
+
+GameRouterContainer.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(({ code }) => {

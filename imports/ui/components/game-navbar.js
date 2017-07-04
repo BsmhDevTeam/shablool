@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const GameNavbar = ({text, num}) => (
+const GameNavbar = ({ text, num }) => (
   <nav className="navbar navbar-default navbar-fixed-top navbar-game">
     <div className="container-fluid navabr-message-area">
       <div className="navbar-bis-header">
@@ -14,5 +15,10 @@ const GameNavbar = ({text, num}) => (
     </div>
   </nav>
 );
+
+GameNavbar.propTypes = {
+  text: PropTypes.instanceOf(Object).isRequired,
+  num: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+};
 
 export default GameNavbar;

@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 import Quiz from '../quizes.js';
 
 Meteor.publish('quizes.my-quizes', function() {
@@ -6,10 +7,17 @@ Meteor.publish('quizes.my-quizes', function() {
 });
 
 Meteor.publish('quizes.get', function(id) {
-  return Quiz.find(id);
+  check(id, String);
+  return Quiz.find({
+    $and: [
+      { _id: id },
+      { $or: [{ owner: this.userId }, { private: false }] },
+    ],
+  });
 });
 
 Meteor.publish('quizes.search', function(query) {
+  check(query, String);
   return Quiz.find({
     $and: [
       { title: { $regex: query, $options: 'i' } },

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GameNavbar from '../../components/game-navbar';
 
 const GameLobby = ({ game }) => {
@@ -21,7 +22,7 @@ const GameLobby = ({ game }) => {
           </div>
           <div className="col-xl-6 col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <div className="logo-area center-txt">
-              <img className="logo" src="/img/Logo.svg"/>
+              <img className="logo" src="/img/Logo.svg" alt="logo" />
             </div>
           </div>
           <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -47,6 +48,10 @@ const GameLobby = ({ game }) => {
   );
 };
 
+GameLobby.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
+
 const PlayersLobby = ({ name }) => (
   <div className="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-xs-4">
     <li>
@@ -54,5 +59,9 @@ const PlayersLobby = ({ name }) => (
     </li>
   </div>
 );
+
+PlayersLobby.propTypes = {
+  name: PropTypes.string.isRequired,
+};
 
 export default GameLobby;

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import PropTypes from 'prop-types';
 import GameNavbar from '../../components/game-navbar';
 
 const Leaders = ({ game }) => {
@@ -39,6 +40,10 @@ const Leaders = ({ game }) => {
       </div>
     </div>
   );
+};
+
+Leaders.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default Leaders;

@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
+import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes';
 import Tag from '../../../api/tags/tags.js';
@@ -25,7 +26,11 @@ const newQuestion = () => {
 };
 
 const normalizeTagName = str =>
-  [str].map(s => s.trim()).map(s => s.toLocaleLowerCase()).map(s => s.replace(/\s+/g, '-')).pop();
+  [str]
+    .map(s => s.trim())
+    .map(s => s.toLocaleLowerCase())
+    .map(s => s.replace(/\s+/g, '-'))
+    .pop();
 
 // React Page
 class EditQuiz extends React.Component {
@@ -78,7 +83,9 @@ class EditQuiz extends React.Component {
       // update state
       const quiz = this.state.quiz;
       const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      return quiz.tags.find(t => t.name === tagName) ? 'Nothing' : this.setState({ quiz: quiz$ });
+      return quiz.tags.find(t => t.name === tagName)
+        ? 'Nothing'
+        : this.setState({ quiz: quiz$ });
     };
 
     const removeTag = id => () => {
@@ -90,7 +97,9 @@ class EditQuiz extends React.Component {
     const changeQuestionText = id => (e) => {
       const quiz = this.state.quiz;
       const text$ = e.target.value;
-      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, text: text$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== id ? q : { ...q, text: text$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -98,7 +107,9 @@ class EditQuiz extends React.Component {
     const changeQuestionTime = id => (e) => {
       const quiz = this.state.quiz;
       const time$ = e.target.value;
-      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, time: time$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== id ? q : { ...q, time: time$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -109,7 +120,9 @@ class EditQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, text: text$ }));
-      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -120,7 +133,9 @@ class EditQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, points: points$ }));
-      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
+      const questions$ = quiz.questions.map(
+        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
+      );
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -142,9 +157,13 @@ class EditQuiz extends React.Component {
       });
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions, tags }], (err, result) => {
-        result && FlowRouter.go('Manage.Home');
-      });
+      quiz$.applyMethod(
+        'update',
+        [{ ...quiz, questions, tags }],
+        (err, result) => (
+          result && FlowRouter.go('Manage.Home')
+        ),
+      );
     };
 
     const actions = {
@@ -163,16 +182,28 @@ class EditQuiz extends React.Component {
 
     return (
       <div id="edit-quiz">
-        <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
+        <QuizForm
+          quiz={this.state.quiz}
+          validate={this.state.validate}
+          actions={actions}
+        />
       </div>
     );
   }
 }
 
+EditQuiz.propTypes = {
+  quiz: PropTypes.instanceOf(Object).isRequired,
+};
+
 const EditQuizContainer = ({ loading }) => {
   if (loading) return <Loading />;
   const quiz = Quiz.findOne();
   return <EditQuiz quiz={{ ...quiz, tags: quiz.getTags().fetch() }} />;
+};
+
+EditQuizContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(({ id }) => {

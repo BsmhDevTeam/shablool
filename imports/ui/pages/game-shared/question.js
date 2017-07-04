@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Answers from '../../components/answers';
 import GameNavbar from '../../components/game-navbar';
 import CountdownTimer from '../../components/count-down-timer';
@@ -29,6 +30,10 @@ const Question = ({ game }) => {
       <Answers answers={question.answers} game={game} />
     </div>
   );
+};
+
+Question.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default Question;

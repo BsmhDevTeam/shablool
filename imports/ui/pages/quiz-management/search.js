@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes.js';
@@ -95,9 +96,18 @@ class Search extends React.Component {
   }
 }
 
+Search.propTypes = {
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const SearchContainer = ({ results, loading }) => {
   if (loading) return <Loading />;
   return <Search results={results} />;
+};
+
+SearchContainer.propTypes = {
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(({ query = '' }) => {

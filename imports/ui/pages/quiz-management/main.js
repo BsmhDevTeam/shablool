@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '../../../api/quizes/quizes';
@@ -179,6 +180,12 @@ class Main extends React.Component {
   }
 }
 
+Main.propTypes = {
+  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const ManagementContainer = ({
   loading,
   quizes,
@@ -193,6 +200,13 @@ const ManagementContainer = ({
       gamesManaged={gamesManaged}
     />
   );
+};
+
+ManagementContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default createContainer(() => {

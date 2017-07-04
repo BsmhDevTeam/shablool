@@ -1,9 +1,10 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 
-export default ({ quiz, actions }) => {
+const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {
     actions.showDeleteAlert(quiz);
   };
@@ -106,6 +107,11 @@ export default ({ quiz, actions }) => {
   );
 };
 
+QuizCard.propTypes = {
+  quiz: PropTypes.instanceOf(Object).isRequired,
+  actions: PropTypes.instanceOf(Object).isRequired,
+};
+
 const TagTemplate = ({ tag }) => (
   <h4 className="pull-right tag">
     <span className="label label-info" aria-hidden="true">
@@ -113,3 +119,9 @@ const TagTemplate = ({ tag }) => (
     </span>
   </h4>
 );
+
+TagTemplate.propTypes = {
+  tag: PropTypes.instanceOf(Object).isRequired,
+};
+
+export default QuizCard;

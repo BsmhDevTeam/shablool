@@ -24,7 +24,7 @@ export default () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand navbar-link-element"><img className="small-logo" src="/img/SmallLogoWhite.svg" /></a>
+          <a href="/" className="navbar-brand navbar-link-element"><img className="small-logo" src="/img/SmallLogoWhite.svg" alt="logo" /></a>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
           <form
