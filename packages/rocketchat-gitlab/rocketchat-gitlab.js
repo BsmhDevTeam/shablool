@@ -1,6 +1,6 @@
 /* global CustomOAuth */
 const config = {
-  serverURL: 'https://gitlab.com',
+  serverURL: 'https://joe.idf',
   identityPath: '/api/v3/user',
   scope: 'api',
   addAutopublishFields: {
