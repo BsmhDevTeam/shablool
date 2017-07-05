@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import Game from '/imports/api/games/games';
 import HistoryManager from '../game-manager/history-manager';
 import HistoryPlayer from '../game-player/history-player';
@@ -11,9 +12,18 @@ const HistoryRouter = ({ game }) => {
   return isManager ? <HistoryManager game={game} /> : <HistoryPlayer game={game} />;
 };
 
+HistoryRouter.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
+
 const HistoryRouterContainer = ({ loading, game }) => {
   if (loading) return <Loading color={'white'} />;
   return <HistoryRouter game={game} />;
+};
+
+HistoryRouterContainer.propTypes = {
+  game: PropTypes.instanceOf(Object),
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(({ code }) => {

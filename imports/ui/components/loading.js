@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Loading = ({ color = 'grey' }) =>
   <div id="loading">
@@ -11,5 +12,13 @@ const Loading = ({ color = 'grey' }) =>
       </div>
     </div>
   </div>;
+
+Loading.propTypes = {
+  color: PropTypes.string,
+};
+
+Loading.defaultProps = {
+  color: 'grey',
+};
 
 export default Loading;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Loading from '../../components/loading.js';
@@ -57,7 +58,7 @@ class Home extends React.Component {
         <div className="game-background" />
         <div className="row">
           <div className="col-xl-2 col-xl-offset-5 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12" id="logo-area">
-            <img className="logo" src="/img/Logo.svg"/>
+            <img className="logo" src="/img/Logo.svg" alt="logo" />
           </div>
         </div>
         <div className="row">
@@ -100,6 +101,10 @@ class Home extends React.Component {
 const HomeContainer = ({ loading }) => {
   if (loading) return <Loading color={'white'} />;
   return <Home />;
+};
+
+HomeContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(() => {

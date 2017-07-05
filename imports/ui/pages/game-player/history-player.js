@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import ManageNavbar from '../../components/manage-navbar.js';
 import TwoLinesChart from '../../components/two-lines-chart';
 
@@ -43,5 +44,9 @@ const HistoryPlayer = ({ game }) => (
     </div>
   </div>
 );
+
+HistoryPlayer.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default HistoryPlayer;

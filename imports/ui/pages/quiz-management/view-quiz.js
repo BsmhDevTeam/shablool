@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import React from 'react';
 import Quiz from '../../../api/quizes/quizes';
 import Loading from '../../components/loading';
@@ -28,6 +29,10 @@ const ViewQuiz = ({ quiz }) => (
   </div>
 );
 
+ViewQuiz.propTypes = {
+  quiz: PropTypes.instanceOf(Object).isRequired,
+};
+
 const RenderQuestion = ({ question }) => (
   <div id="view-quiz">
     <div className="panel panel-default">
@@ -45,26 +50,38 @@ const RenderQuestion = ({ question }) => (
   </div>
 );
 
+RenderQuestion.propTypes = {
+  question: PropTypes.instanceOf(Object).isRequired,
+};
+
 const RenderAnswer = ({ answer, index }) => (
   <div
-      className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 buttons-col"
-      key={answer.id}
-    >
-      <div className="answer-btn-area">
-        <div
-          className={`well btn-answer-${index} answer-button`}
-        >
-          <i className={`${glyphIcons[answer.order]} answer-icon`} />
-          <h3 className="answer-text">{answer.text}</h3>
-        </div>
+    className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 buttons-col"
+    key={answer.id}
+  >
+    <div className="answer-btn-area">
+      <div className={`well btn-answer-${index} answer-button`}>
+        <i className={`${glyphIcons[answer.order]} answer-icon`} />
+        <h3 className="answer-text">{answer.text}</h3>
       </div>
     </div>
+  </div>
 );
+
+RenderAnswer.propTypes = {
+  answer: PropTypes.instanceOf(Object).isRequired,
+  index: PropTypes.number.isRequired,
+};
 
 const ViewQuizContainer = ({ loading, quizId }) => {
   if (loading) return <Loading />;
   const quiz = Quiz.findOne(quizId);
   return <ViewQuiz quiz={{ ...quiz }} />;
+};
+
+ViewQuizContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  quizId: PropTypes.string.isRequired,
 };
 
 export default createContainer(({ id }) => {

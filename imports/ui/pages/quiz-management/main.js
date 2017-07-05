@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '../../../api/quizes/quizes';
@@ -108,19 +109,23 @@ class Main extends React.Component {
             <div
               className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}
             >
-              <a href="/CreateQuiz" className="add-question">
-                <div className="panel panel-default" id="add-quiz-panel">
-                  <div className="panel-body">
-                    <span
-                      className="glphicon glyphicon-plus"
-                      id="add-quiz-plus-icon"
-                    />
+              <div className="row">
+                <a href="/CreateQuiz" className="add-question">
+                  <div className="panel panel-default" id="add-quiz-panel">
+                    <div className="panel-body">
+                      <span
+                        className="glphicon glyphicon-plus"
+                        id="add-quiz-plus-icon"
+                      />
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
               {quizes.length
                 ? quizes.map(quiz => (
-                  <QuizCard key={quiz._id} quiz={quiz} actions={actions} />
+                  <div className="row" key={quiz._id}>
+                    <QuizCard quiz={quiz} actions={actions} />
+                  </div>
                   ))
                 : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
             </div>
@@ -130,7 +135,9 @@ class Main extends React.Component {
             >
               {gamesManaged.length
                 ? gamesManaged.map(game => (
-                  <GameCardManaged key={game._id} game={game} />
+                  <div className="row" key={game._id}>
+                    <GameCardManaged game={game} />
+                  </div>
                   ))
                 : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
             </div>
@@ -140,7 +147,9 @@ class Main extends React.Component {
             >
               {gamesPlayed.length
                 ? gamesPlayed.map(game => (
-                  <GameCardPlayed key={game._id} game={game} />
+                  <div className="row" key={game._id}>
+                    <GameCardPlayed game={game} />
+                  </div>
                   ))
                 : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
             </div>
@@ -179,6 +188,12 @@ class Main extends React.Component {
   }
 }
 
+Main.propTypes = {
+  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const ManagementContainer = ({
   loading,
   quizes,
@@ -193,6 +208,13 @@ const ManagementContainer = ({
       gamesManaged={gamesManaged}
     />
   );
+};
+
+ManagementContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default createContainer(() => {

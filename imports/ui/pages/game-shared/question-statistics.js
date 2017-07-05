@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Answers from '../../components/answers';
 import GameNavbar from '../../components/game-navbar';
 import AnswerBar from '../../components/answer-bar-chart';
@@ -39,6 +40,10 @@ const QuestionStatistics = ({ game }) => {
       <Answers answers={question.answers} game={game} />
     </div>
   );
+};
+
+QuestionStatistics.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default QuestionStatistics;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   LineChart,
   XAxis,
@@ -11,21 +12,33 @@ import {
 } from 'recharts';
 
 const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
-  const CustomizedXAxisTick = ({ x, y, stroke, payload }) => (
+  const CustomizedXAxisTick = ({ x, y, payload }) => (
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dy={16}>
         שאלה #{payload.value}
       </text>
     </g>
   );
-  const CustomizedYAxisTick = ({ x, y, stroke, payload }) => (
+  CustomizedXAxisTick.propTypes = {
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
+  };
+
+  const CustomizedYAxisTick = ({ x, y, payload }) => (
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
         {Math.abs(payload.value)}{payload.value < 0 ? '-' : ''}
       </text>
     </g>
   );
-  const CustomizedTolltip = ({ payload, label, active }) => active
+  CustomizedYAxisTick.propTypes = {
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
+  };
+
+  const CustomizedTolltip = ({ payload, label, active }) => (active
       ? <div className="panel panel-body">
         <div className="tooltip-area">
           <p>שאלה #{label}</p>
@@ -34,8 +47,13 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
           </p>
         </div>
       </div>
-      : null;
+      : null);
 
+  CustomizedTolltip.propTypes = {
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    active: PropTypes.bool,
+    payload: PropTypes.instanceOf(Object),
+  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart data={data} margin={{ top: 5, right: 35, left: 0, bottom: 5 }}>
@@ -53,6 +71,12 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
       </LineChart>
     </ResponsiveContainer>
   );
+};
+
+OneLinesChart.propTypes = {
+  data: PropTypes.instanceOf(Object).isRequired,
+  dataKeyX: PropTypes.string.isRequired,
+  dataKeyY: PropTypes.string.isRequired,
 };
 
 export default OneLinesChart;

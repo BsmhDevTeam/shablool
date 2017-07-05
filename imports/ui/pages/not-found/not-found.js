@@ -4,7 +4,7 @@ const NotFound = () => (
   <div id="not-found">
     <div className="game-background" />
     <div className="row">
-     <img className="logo" src="/img/Logo.svg"/>
+      <img className="logo" src="/img/Logo.svg" alt="logo" />
     </div>
     <div className="row">
       <div className="not-found-title">

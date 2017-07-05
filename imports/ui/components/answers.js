@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import { eventTypes } from '../../api/games/games';
 
 const glyphIcons = {
@@ -18,6 +19,11 @@ const Answers = ({ answers, game }) => (
     </div>
   </div>
 );
+
+Answers.propTypes = {
+  answers: PropTypes.arrayOf(Object).isRequired,
+  game: PropTypes.instanceOf(Object).isRequired,
+};
 
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
@@ -52,6 +58,12 @@ const Answer = ({ answer, index, game }) => {
       </div>
     </div>
   );
+};
+
+Answer.propTypes = {
+  answer: PropTypes.instanceOf(Object).isRequired,
+  game: PropTypes.instanceOf(Object).isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default Answers;

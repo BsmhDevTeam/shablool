@@ -31,8 +31,8 @@
 	.answers-btn-area-to-bottom {
 		position: absolute;
 		bottom: 0;
-		right: 100px;
-		left: 100px;
+		right: 0;
+		left: 0;
 	}
 	.buttons-col {
 		padding-left: 5px;
@@ -110,7 +110,7 @@
 	}
 	@media(min-height: 850px){
 		.answer-btn-area {
-			height: 160px;
+			height: 175px;
 			.answer-icon {
 				font-size: 36px;
 			}
@@ -119,14 +119,22 @@
 			}
 		}
 		.recharts-surface {
-			height: 400px!important;
+			height: 440px!important;
 		}
 		.recharts-wrapper {
-			height: 400px!important;
+			height: 440px!important;
 		}
 		.question-image {
 			height: 380px;
 			width: 380px;
+		}
+	}
+	@media(max-height: 600px){
+		.recharts-surface {
+			height: 300px !important;
+		}
+		.recharts-wrapper {
+			height: 300px !important;
 		}
 	}
 }

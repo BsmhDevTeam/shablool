@@ -1,5 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import GameNavbar from '../../components/game-navbar';
 
@@ -42,6 +43,10 @@ const Winner = ({ game }) => {
       </div>
     </div>
   );
+};
+
+Winner.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default Winner;

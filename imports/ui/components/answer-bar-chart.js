@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BarChart, XAxis, Bar, ResponsiveContainer, Cell } from 'recharts';
 
 const glyphIconsJson = {
@@ -18,7 +19,7 @@ const colorsJson = {
 const AnswerBar = ({ game }) => {
   const data = game.answersGroupCount();
 
-  const CustomizedAxisTick = ({ x, y, stroke, payload }) => (
+  const CustomizedAxisTick = ({ x, y, payload }) => (
     <g transform={`translate(${x + 9.5},${y + 15})`}>
       <text
         dangerouslySetInnerHTML={{
@@ -27,7 +28,11 @@ const AnswerBar = ({ game }) => {
       />
     </g>
   );
-
+  CustomizedAxisTick.propTypes = {
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
+  };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <BarChart data={data} margin={{ top: 30 }}>
@@ -46,6 +51,10 @@ const AnswerBar = ({ game }) => {
       </BarChart>
     </ResponsiveContainer>
   );
+};
+
+AnswerBar.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default AnswerBar;

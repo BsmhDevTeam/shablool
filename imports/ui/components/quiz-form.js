@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuestionForm from './question-form.js';
 
@@ -112,6 +113,12 @@ const QuizForm = ({ quiz, validate, actions }) => {
   );
 };
 
+QuizForm.propTypes = {
+  quiz: PropTypes.instanceOf(Object).isRequired,
+  validate: PropTypes.bool.isRequired,
+  actions: PropTypes.instanceOf(Object).isRequired,
+};
+
 const TagTemplate = ({ tag, actions }) => (
   <h3 className="pull-right tag">
     <span
@@ -123,5 +130,10 @@ const TagTemplate = ({ tag, actions }) => (
     </span>
   </h3>
 );
+
+TagTemplate.propTypes = {
+  tag: PropTypes.instanceOf(Object).isRequired,
+  actions: PropTypes.instanceOf(Object).isRequired,
+};
 
 export default QuizForm;

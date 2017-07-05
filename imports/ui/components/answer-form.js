@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Answer } from '/imports/api/quizes/quizes.js';
 
 // validations
@@ -62,6 +63,13 @@ const AnswerForm = ({ answer, index, validate, actions }) => {
       </div>
     </div>
   );
+};
+
+AnswerForm.propTypes = {
+  answer: PropTypes.instanceOf(Object).isRequired,
+  index: PropTypes.number.isRequired,
+  validate: PropTypes.bool.isRequired,
+  actions: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default AnswerForm;

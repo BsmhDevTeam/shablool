@@ -29,7 +29,10 @@ Game.extend({
       return !this.isUserRegistered() && registerPlayer();
     },
     startGame() {
-      // Starting game
+      const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
+      const isPlayerRegister = !!playerRegister.length;
+      const start = () => {
+        // Starting game
       const gameStarted = new GameStarted();
       this.gameLog = this.gameLog.concat(gameStarted);
       this.save();
@@ -47,6 +50,8 @@ Game.extend({
         );
       Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
       return true;
+      }
+      return isPlayerRegister ? start() : false;
     },
     questionEnd(qId) {
       const questionEnd = new QuestionEnd({
