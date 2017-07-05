@@ -49,36 +49,47 @@ class Search extends React.Component {
       showDeleteAlert,
       forkQuiz,
     };
-    return (
-      results.length === 0
+    return results.length === 0
       ? <div className="row">
-        <img className="col-md-6" src="/img/no-search-results.png" alt="No Search Results" />
-        <img className="col-md-6" src="/img/no-search-results-text.png" alt="No Search Results" />
+        <img
+          className="col-md-6"
+          src="/img/no-search-results.png"
+          alt="No Search Results"
+        />
+        <img
+          className="col-md-6"
+          src="/img/no-search-results-text.png"
+          alt="No Search Results"
+        />
       </div>
       : <div id="search">
-        <h1>תוצאות חיפוש עבור <strong>{ query }</strong></h1>
-        <ul>
-          {results.map(quiz =>
-            <div key={quiz._id}>
+        <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
+        {results.map(quiz => (
+          <div key={quiz._id}>
+            <div className="row">
               <QuizCard quiz={quiz} actions={actions} />
-            </div>,
-          )}
-        </ul>
+            </div>
+          </div>
+          ))}
         <div
           id="snackbar"
           className={
-            this.state.quizDeleted || this.state.quizForked ? 'show' : ''
-          }
+              this.state.quizDeleted || this.state.quizForked ? 'show' : ''
+            }
         >
           {this.state.quizDeleted
-            ? 'השאלון נמחק בהצלחה'
-            : 'השאלון הועתק בהצלחה'}
+              ? 'השאלון נמחק בהצלחה'
+              : 'השאלון הועתק בהצלחה'}
         </div>
         <SweetAlert
           show={this.state.showDeleteQuizAlert}
           title="מחיקת שאלון"
           type="warning"
-          text={this.state.showDeleteQuizAlert ? `האם אתה בטוח שברצונך למחוק את השאלון: ${this.state.quizToDelete.title}?` : ''}
+          text={
+              this.state.showDeleteQuizAlert
+                ? `האם אתה בטוח שברצונך למחוק את השאלון: ${this.state.quizToDelete.title}?`
+                : ''
+            }
           showCancelButton
           confirmButtonText="מחק!"
           cancelButtonText="בטל"
@@ -92,8 +103,7 @@ class Search extends React.Component {
           onEscapeKey={() => this.setState({ showDeleteQuizAlert: false })}
           onOutsideClick={() => this.setState({ showDeleteQuizAlert: false })}
         />
-      </div>
-    );
+      </div>;
   }
 }
 

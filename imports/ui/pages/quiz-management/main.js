@@ -109,19 +109,23 @@ class Main extends React.Component {
             <div
               className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}
             >
-              <a href="/CreateQuiz" className="add-question">
-                <div className="panel panel-default" id="add-quiz-panel">
-                  <div className="panel-body">
-                    <span
-                      className="glphicon glyphicon-plus"
-                      id="add-quiz-plus-icon"
-                    />
+              <div className="row">
+                <a href="/CreateQuiz" className="add-question">
+                  <div className="panel panel-default" id="add-quiz-panel">
+                    <div className="panel-body">
+                      <span
+                        className="glphicon glyphicon-plus"
+                        id="add-quiz-plus-icon"
+                      />
+                    </div>
                   </div>
-                </div>
-              </a>
+                </a>
+              </div>
               {quizes.length
                 ? quizes.map(quiz => (
-                  <QuizCard key={quiz._id} quiz={quiz} actions={actions} />
+                  <div className="row">
+                    <QuizCard key={quiz._id} quiz={quiz} actions={actions} />
+                  </div>
                   ))
                 : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
             </div>
@@ -131,7 +135,9 @@ class Main extends React.Component {
             >
               {gamesManaged.length
                 ? gamesManaged.map(game => (
-                  <GameCardManaged key={game._id} game={game} />
+                  <div className="row">
+                    <GameCardManaged key={game._id} game={game} />
+                  </div>
                   ))
                 : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
             </div>
@@ -141,7 +147,9 @@ class Main extends React.Component {
             >
               {gamesPlayed.length
                 ? gamesPlayed.map(game => (
-                  <GameCardPlayed key={game._id} game={game} />
+                  <div className="row">
+                    <GameCardPlayed key={game._id} game={game} />
+                  </div>
                   ))
                 : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
             </div>

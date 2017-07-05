@@ -8,7 +8,11 @@ const ManageLayout = ({ main }) =>
   <div id="manage-layout">
     <ManageNavbar />
     <div className="container">
-      {main}
+      <div className="row">
+        <div className="col-xs-12 col-sm-12 col-md-10 col-md-offset-1 col-lg-10 col-lg-offset-1 col-xl-8-col-xs-offset-2">
+          {main}
+        </div>
+      </div>
     </div>
   </div>;
 
