@@ -1,7 +1,7 @@
 # docker-compose.example.yml
 
 app:
-  image: lidorcg/shablul
+  image: ${yourname}/${yourapp}
   ports:
     - "80:3000"
   links:
@@ -9,7 +9,7 @@ app:
   environment:
     - ROOT_URL=${http://your.domain.com}
     - MONGO_URL=mongodb://mongo:27017/meteor
-    - METEOR_SETTINGS="$(cat settings.json)"
+    - METEOR_SETTINGS=${your.settings.json}
 
 mongo:
   image: mongo:latest
