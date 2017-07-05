@@ -22,8 +22,6 @@ class Home extends React.Component {
       form.gameCode.value = '';
 
       const maybeGame = Game.find({ code: gameCode }).fetch();
-      console.log('maybeGame:');
-      console.log(maybeGame);
       const maybeGameUserManage = maybeGame.filter(
         g => g.quiz.owner === Meteor.userId(),
       );

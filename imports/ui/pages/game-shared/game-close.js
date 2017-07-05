@@ -10,7 +10,7 @@ const GameClose = () => {
       <div className="game-background" />
       <div>
         <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={backToHome}>
-            לטבלת המובילים
+            לדף הבית
         </a>
       </div>
       <div className="row">
