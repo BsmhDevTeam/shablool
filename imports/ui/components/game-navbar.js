@@ -17,7 +17,7 @@ const GameNavbar = ({ text, num }) => (
 );
 
 GameNavbar.propTypes = {
-  text: PropTypes.instanceOf(Object).isRequired,
+  text: PropTypes.string.isRequired,
   num: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 

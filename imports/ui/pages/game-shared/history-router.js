@@ -22,7 +22,7 @@ const HistoryRouterContainer = ({ loading, game }) => {
 };
 
 HistoryRouterContainer.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired,
+  game: PropTypes.instanceOf(Object),
   loading: PropTypes.bool.isRequired,
 };
 

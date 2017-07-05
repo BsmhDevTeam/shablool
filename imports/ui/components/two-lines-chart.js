@@ -20,9 +20,9 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
     </g>
   );
   CustomizedXAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.nyumber.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
   };
 
   const CustomizedYAxisTick = ({ x, y, payload }) => (
@@ -33,28 +33,29 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
     </g>
   );
   CustomizedYAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.nyumber.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
   };
   const CustomizedTolltip = ({ payload, label, active }) => (active
       ? <div className="panel panel-body">
         <div className="tooltip-area">
           <p>שאלה #{label}</p>
           <p style={{ color: payload[0].color }}>
-              אני: {payload[0].payload.score || (payload[0].payload.time).toFixed(3)}
+              אני: {payload[0].payload.playerScore || (payload[0].payload.playerTime).toFixed(3)}
           </p>
           <p style={{ color: payload[1].color }}>
-              ממוצע: {payload[1].payload.score || (payload[1].payload.time).toFixed(3)}
+              ממוצע: {payload[1].payload.playerScore || (payload[1].payload.playerTime).toFixed(3)}
           </p>
         </div>
       </div>
       : null
       );
+
   CustomizedTolltip.propTypes = {
-    label: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    active: PropTypes.bool,
+    payload: PropTypes.instanceOf(Object),
   };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
