@@ -1,0 +1,19 @@
+# docker-compose.example.yml
+
+app:
+  image: lidorcg/shablul
+  ports:
+    - "80:3000"
+  links:
+    - mongo
+  environment:
+    - ROOT_URL=${http://your.domain.com}
+    - MONGO_URL=mongodb://mongo:27017/meteor
+    - METEOR_SETTINGS="$(cat settings.json)"
+
+mongo:
+  image: mongo:latest
+  command:
+    - --storageEngine=wiredTiger
+  volumes:
+    - ${/path/to/some/folder}:/data/db

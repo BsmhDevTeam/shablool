@@ -51,10 +51,12 @@ const QuizForm = ({ quiz, validate, actions }) => {
         </div>
       ))}
       <div className="row" id="add-question-btn-row">
-        <button className="btn btn-lg btn-block" onClick={actions.addQuestion}>
-          <span className="glyphicon glyphicon-plus" aria-hidden="true" />
-          <span> הוסף שאלה</span>
-        </button>
+        <div className="flatly classic-padding-bottom">
+          <button className="btn btn-lg btn-block" onClick={actions.addQuestion}>
+            <span className="glyphicon glyphicon-plus" aria-hidden="true" />
+            <span> הוסף שאלה</span>
+          </button>
+        </div>
       </div>
       <div className="row">
         <div className="panel panel-default">
@@ -94,13 +96,15 @@ const QuizForm = ({ quiz, validate, actions }) => {
               </div>
             </div>
             <div className="row">
-              <button
-                id="quiz-form-submit"
-                className="btn btn-success btn-lg btn-block"
-                onClick={actions.saveQuiz}
-              >
-                <span className="glyphicon glyphicon-ok" aria-hidden="true" />
-              </button>
+              <div className="flatly classic-padding-top">
+                <button
+                  id="quiz-form-submit"
+                  className="btn btn-success btn-lg btn-block"
+                  onClick={actions.saveQuiz}
+                >
+                  <span className="glyphicon glyphicon-ok" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

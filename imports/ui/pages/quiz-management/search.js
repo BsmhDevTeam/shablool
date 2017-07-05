@@ -19,7 +19,7 @@ class Search extends React.Component {
     };
   }
   render() {
-    const { results } = this.props;
+    const { results, query } = this.props;
     const showDeleteAlert = (quiz) => {
       this.setState({ quizToDelete: quiz, showDeleteQuizAlert: true });
     };
@@ -56,6 +56,7 @@ class Search extends React.Component {
         <img className="col-md-6" src="/img/no-search-results-text.png" alt="No Search Results" />
       </div>
       : <div id="search">
+        <h1>תוצאות חיפוש עבור <strong>{ query }</strong></h1>
         <ul>
           {results.map(quiz =>
             <div key={quiz._id}>
@@ -98,16 +99,18 @@ class Search extends React.Component {
 
 Search.propTypes = {
   results: PropTypes.arrayOf(PropTypes.object).isRequired,
+  query: PropTypes.string.isRequired,
 };
 
-const SearchContainer = ({ results, loading }) => {
+const SearchContainer = ({ results, loading, query }) => {
   if (loading) return <Loading />;
-  return <Search results={results} />;
+  return <Search results={results} query={query} />;
 };
 
 SearchContainer.propTypes = {
   results: PropTypes.arrayOf(PropTypes.object).isRequired,
   loading: PropTypes.bool.isRequired,
+  query: PropTypes.string.isRequired,
 };
 
 export default createContainer(({ query = '' }) => {
@@ -119,5 +122,6 @@ export default createContainer(({ query = '' }) => {
   return {
     loading,
     results,
+    query,
   };
 }, SearchContainer);

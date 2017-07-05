@@ -24,21 +24,14 @@ export default () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand navbar-link-element"><img className="small-logo" src="/img/SmallLogoWhite.svg" alt="logo" /></a>
+          <a href="/" className="navbar-brand navbar-link-element">
+            <img className="small-logo" src="/img/SmallLogoWhite.svg" alt="Shablul" />
+          </a>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
-          <form
-            className="js-search navbar-form navbar-right"
-            role="search"
-            onSubmit={search}
-          >
+          <form className="js-search navbar-form navbar-right" role="search" onSubmit={search}>
             <div className="form-group">
-              <input
-                className="form-control"
-                placeholder="חפש שאלון"
-                name="query"
-                type="text"
-              />
+              <input className="form-control" placeholder="חפש שאלון" name="query" type="text" />
             </div>
             <button type="submit" className="btn btn-default">
               <span className="glyphicon glyphicon-search" />
@@ -47,7 +40,9 @@ export default () => {
           <ul className="nav navbar-nav navbar-left">
             <li className="manage-nav-li">
               <a href="/Manage" className="navbar-link-element">
-                <span>ברוך הבא, {Meteor.user().services.gitlab.username} </span>
+                <span>
+                  ברוך הבא, {Meteor.user().services.gitlab.username}{' '}
+                </span>
                 <span className="glyphicon glyphicon-user" />
               </a>
             </li>

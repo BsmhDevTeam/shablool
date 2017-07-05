@@ -24,7 +24,7 @@ export const Answer = Class.create({
         {
           type: 'maxLength',
           param: 30,
-          message: 'תשובה ארוכה מידי',
+          message: 'תשובה ארוכה מדי',
         },
         {
           type: 'regexp',
@@ -94,7 +94,7 @@ export const Question = Class.create({
         {
           type: 'gte',
           param: 5,
-          message: 'מעט מידי זמן לשאלה',
+          message: 'מעט מדי זמן לשאלה',
         },
         {
           type: 'lte',
