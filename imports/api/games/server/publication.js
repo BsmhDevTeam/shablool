@@ -32,7 +32,7 @@ Meteor.publish('games.open', function() {
     {
       gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
     },
-    { fields: { code: 1 } },
+    { fields: { code: 1 , 'quiz.owner': 1 } },
   );
   return games;
 });

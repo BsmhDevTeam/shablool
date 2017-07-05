@@ -22,7 +22,7 @@ const GameRouterContainer = ({ loading, game }) => {
 };
 
 GameRouterContainer.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired,
+  game: PropTypes.instanceOf(Object),
   loading: PropTypes.bool.isRequired,
 };
 

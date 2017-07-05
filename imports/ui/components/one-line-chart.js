@@ -20,9 +20,9 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
     </g>
   );
   CustomizedXAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.nyumber.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
   };
 
   const CustomizedYAxisTick = ({ x, y, payload }) => (
@@ -33,9 +33,9 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
     </g>
   );
   CustomizedYAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.nyumber.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
   };
 
   const CustomizedTolltip = ({ payload, label, active }) => (active
@@ -48,10 +48,11 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
         </div>
       </div>
       : null);
+
   CustomizedTolltip.propTypes = {
-    label: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    active: PropTypes.bool,
+    payload: PropTypes.instanceOf(Object),
   };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>

@@ -29,9 +29,9 @@ const AnswerBar = ({ game }) => {
     </g>
   );
   CustomizedAxisTick.propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.nyumber.isRequired,
-    payload: PropTypes.instanceOf(Object).isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    payload: PropTypes.instanceOf(Object),
   };
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
