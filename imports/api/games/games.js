@@ -266,6 +266,12 @@ export default Class.create({
   meteorMethods: {},
 
   helpers: {
+    isManager(pId) {
+      return pId === this.quiz.owner;
+    },
+    amIManager() {
+      return Meteor.userId() === this.quiz.owner;
+    },
     getGamePage() {
       return reduceRight(
         this.gameLog,
