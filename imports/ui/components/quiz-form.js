@@ -88,6 +88,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
                     name="isPrivate"
                     className="is-private form-control"
                     onChange={actions.changeQuizPrivacy}
+                    value={quiz.private}
                   >
                     <option value="false">כולם</option>
                     <option value="true">רק אני</option>
