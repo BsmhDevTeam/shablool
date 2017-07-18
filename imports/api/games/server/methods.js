@@ -26,7 +26,7 @@ Game.extend({
         this.save();
         return true;
       };
-      return !this.isUserRegistered() && registerPlayer();
+      return !this.isUserRegistered() && !this.amIManager() && registerPlayer();
     },
     startGame() {
       const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
@@ -62,6 +62,10 @@ Game.extend({
       return true;
     },
     playerAnswer(uId, qId, aId) {
+      const isQuestionStarted = this.gameLog
+        .filter(e => e.nameType === eventTypes.QuestionStart)
+        .find(e => e.questionId === qId);
+
       const isQuestionClosed = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionEnd)
         .find(e => e.questionId === qId);
@@ -89,6 +93,7 @@ Game.extend({
 
       return (
         !playerRegistered ||
+        !isQuestionStarted ||
         isQuestionClosed ||
         playerAlreadyAnswer ||
         isGameManager ||

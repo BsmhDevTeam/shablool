@@ -1,17 +1,26 @@
-import { Meteor } from 'meteor/meteor';
-import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
-import { expect } from 'chai';
-import uuidV4 from 'uuid/v4';
+// import { assert } from 'meteor/practicalmeteor:chai';
+// import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
+// import './publication.js';
+// import Quiz from '../quizes.js';
 
-if (Meteor.isServer) {
-  describe('publication', function() {
-    it('should publish 10 documents', function(done) {
-      const collector = new PublicationCollector({ userId: uuidV4() });
+// describe('quiz publication', function () {
+//     beforeEach(function () {
+//         Quiz.remove({});
+//         new Quiz({
+//             title: 'test quiz',
+//             questions: [],
+//             tags: ['tag'],
+//             owner: this.userId,
+//         }).save();
+//     });
 
-      collector.collect('publications', (collections) => {
-        chai.assert.equal(collections.quizes.length, 10);
-        done();
-    });
-  });
-});
-}
+//     describe('quizes.my-quizes', function () {
+//         it('sends my quizes', function (done) {
+//             const collector = new PublicationCollector();
+//             collector.collect('quizes.my-quizes', (collections) => {
+//                 assert.equal(collections.tags.length, 1);
+//                 done();
+//             });
+//         });
+//     });
+// });

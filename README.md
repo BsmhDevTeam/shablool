@@ -1,4 +1,4 @@
-# Shablul
+# Shablool
 
 An open-source [Kahoot](https://kahoot.com)-like project written with meteor and react.
 
