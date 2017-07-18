@@ -18,7 +18,7 @@ const Question = ({ game }) => {
           <CountdownTimer secondsRemaining={game.getQuestionTimeLeft(question._id)} />
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-          <img className="question-image" src="/img/quiz-default.png" alt="defaultImg" />
+          <img className="question-image" src={`/img/${question.image}`} alt="defaultImg" />
         </div>
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <p className="answer-count" id="answer-count-number">

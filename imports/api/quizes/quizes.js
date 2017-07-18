@@ -23,7 +23,7 @@ export const Answer = Class.create({
         },
         {
           type: 'maxLength',
-          param: 30,
+          param: 61,
           message: 'תשובה ארוכה מדי',
         },
         {
@@ -88,6 +88,12 @@ export const Question = Class.create({
     },
     answers: [Answer],
     order: Number,
+    image: {
+      type: String,
+      default() {
+        return 'default.png';
+      },
+    },
     time: {
       type: Number,
       validators: [
@@ -138,6 +144,12 @@ export default Class.create({
       ],
     },
     questions: [Question],
+    image: {
+      type: String,
+      default() {
+        return 'default.png';
+      },
+    },
     tags: {
       type: [String],
       default() {

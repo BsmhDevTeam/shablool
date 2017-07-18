@@ -101,7 +101,7 @@ const QuizForm = ({ quiz, validate, actions }) => {
                 <button
                   id="quiz-form-submit"
                   className="btn btn-success btn-lg btn-block"
-                  onClick={actions.saveQuiz}
+                  onClick={actions.uploadImages}
                 >
                   <span className="glyphicon glyphicon-ok" aria-hidden="true" />
                 </button>

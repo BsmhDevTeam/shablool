@@ -80,15 +80,25 @@ const QuestionForm = ({ question, validate, actions }) => {
             </div>
           </div>
           <div className="panel-body">
-            {question.answers.map((a, i) =>
-              <AnswerForm
-                key={a._id}
-                answer={a}
-                index={i + 1}
-                validate={validate}
-                actions={answerActions}
-              />,
-            )}
+            <div className="row">
+              <div className="col-md-9">
+                {question.answers.map((a, i) =>
+                  <AnswerForm
+                    key={a._id}
+                    answer={a}
+                    index={i + 1}
+                    validate={validate}
+                    actions={answerActions}
+                  />,
+                )}
+              </div>
+              <div className="col-md-3">
+                <div className="upload-area">
+                  <span className="glyphicon glyphicon-upload" />
+                  <input type="file" onChange={actions.addQuestionImage(question._id)} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
