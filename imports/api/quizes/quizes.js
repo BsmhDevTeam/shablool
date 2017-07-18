@@ -23,7 +23,7 @@ export const Answer = Class.create({
         },
         {
           type: 'maxLength',
-          param: 30,
+          param: 60,
           message: 'תשובה ארוכה מדי',
         },
         {
