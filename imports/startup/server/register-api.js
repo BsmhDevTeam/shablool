@@ -7,4 +7,3 @@ import '../../api/games/server/methods';
 import '../../api/users/server/publications';
 import '../../api/users/server/methods';
 import '../../api/images/server/publication';
-import '../../api/images/server/methods';
