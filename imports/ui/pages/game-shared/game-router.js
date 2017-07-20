@@ -22,14 +22,15 @@ const GameRouterContainer = ({ loading, game }) => {
 };
 
 GameRouterContainer.propTypes = {
-  game: PropTypes.instanceOf(Object),
+  game: PropTypes.instanceOf(Object).isRequired,
   loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(({ code }) => {
+  const imagesHandle = Meteor.subscribe('images.all');
   const usersHandle = Meteor.subscribe('users.names');
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready() || !usersHandle.ready();
+  const loading = !imagesHandle.ready() || !gameHandle.ready() || !usersHandle.ready();
   const game = Game.findOne();
   return { loading, game };
 }, GameRouterContainer);

@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
+import Image from '../../api/images/images';
 
 const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {
@@ -16,6 +17,7 @@ const QuizCard = ({ quiz, actions }) => {
     game.applyMethod('initGame', []);
     FlowRouter.go('Game.Main', { code: game.code });
   };
+  const quizImage = Image.findOne({ _id: quiz.image });
   return (
     <div className="panel panel-default quiz-card" id={`quiz-card-${quiz._id}`}>
       <div className="panel-body">
@@ -23,7 +25,7 @@ const QuizCard = ({ quiz, actions }) => {
           <div className="col-md-3">
             <img
               className="quiz-panel-img"
-              src={`/img/${quiz.image}`}
+              src={quiz.image === 'no-image' ? '/img/default.png' : quizImage.link()}
               alt="quiz"
             />
           </div>

@@ -91,7 +91,7 @@ export const Question = Class.create({
     image: {
       type: String,
       default() {
-        return 'default.png';
+        return 'no-image';
       },
     },
     time: {
@@ -147,7 +147,7 @@ export default Class.create({
     image: {
       type: String,
       default() {
-        return 'default.png';
+        return 'no-image';
       },
     },
     tags: {

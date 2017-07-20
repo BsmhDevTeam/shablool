@@ -95,7 +95,7 @@ const QuestionForm = ({ question, validate, actions }) => {
               <div className="col-md-3">
                 <div className="upload-area">
                   <span className="glyphicon glyphicon-upload" />
-                  <input type="file" onChange={actions.addQuestionImage(question._id)} />
+                  <input type="file" onChange={actions.changeQuestionImage(question._id)} />
                 </div>
               </div>
             </div>

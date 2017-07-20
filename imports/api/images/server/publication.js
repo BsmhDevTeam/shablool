@@ -8,5 +8,5 @@ Meteor.publish('images.all', function() {
 
 Meteor.publish('images.get.', function(id) {
   check(id, String);
-  return Image.find({ _id: id });
+  return Image.find({ _id: id }).cursor;
 });

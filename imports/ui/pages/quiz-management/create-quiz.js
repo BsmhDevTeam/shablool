@@ -2,6 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes.js';
 import Tag from '../../../api/tags/tags.js';
@@ -26,11 +27,7 @@ const newQuestion = () => {
 };
 
 const normalizeTagName = str =>
-  [str]
-    .map(s => s.trim())
-    .map(s => s.toLocaleLowerCase())
-    .map(s => s.replace(/\s+/g, '-'))
-    .pop();
+  [str].map(s => s.trim()).map(s => s.toLocaleLowerCase()).map(s => s.replace(/\s+/g, '-')).pop();
 
 // React Page
 class CreateQuiz extends React.Component {
@@ -76,9 +73,7 @@ class CreateQuiz extends React.Component {
     const changeQuestionText = id => (e) => {
       const quiz = this.state.quiz;
       const text$ = e.target.value;
-      const questions$ = quiz.questions.map(
-        q => (q._id !== id ? q : { ...q, text: text$ }),
-      );
+      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, text: text$ }));
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -86,9 +81,7 @@ class CreateQuiz extends React.Component {
     const changeQuestionTime = id => (e) => {
       const quiz = this.state.quiz;
       const time$ = e.target.value;
-      const questions$ = quiz.questions.map(
-        q => (q._id !== id ? q : { ...q, time: time$ }),
-      );
+      const questions$ = quiz.questions.map(q => (q._id !== id ? q : { ...q, time: time$ }));
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -99,9 +92,7 @@ class CreateQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, text: text$ }));
-      const questions$ = quiz.questions.map(
-        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
-      );
+      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -112,9 +103,7 @@ class CreateQuiz extends React.Component {
       const answers$ = quiz.questions
         .find(q => q._id === qId)
         .answers.map(a => (a._id !== aId ? a : { ...a, points: points$ }));
-      const questions$ = quiz.questions.map(
-        q => (q._id !== qId ? q : { ...q, answers: answers$ }),
-      );
+      const questions$ = quiz.questions.map(q => (q._id !== qId ? q : { ...q, answers: answers$ }));
       const quiz$ = { ...quiz, questions: questions$ };
       this.setState({ quiz: quiz$ });
     };
@@ -138,9 +127,7 @@ class CreateQuiz extends React.Component {
       // update state
       const quiz = this.state.quiz;
       const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      return quiz.tags.find(t => t.name === tagName)
-        ? 'Nothing'
-        : this.setState({ quiz: quiz$ });
+      return quiz.tags.find(t => t.name === tagName) ? 'Nothing' : this.setState({ quiz: quiz$ });
     };
 
     const removeTag = id => () => {
@@ -157,14 +144,8 @@ class CreateQuiz extends React.Component {
 
     const getThis = () => this;
 
-    const addQuizImage = (e) => {};
-
-    const removeQuizImage = () => {};
-
-    const addQuestionImage = qId => (e) => {
-      if (e.currentTarget.files && e.currentTarget.files[0]) {
-        // We upload only one file, in case
-        // multiple files were selected
+    const changeQuizImage = (e) => {
+      const uploadFile = () => {
         const upload = Image.insert(
           {
             file: e.currentTarget.files[0],
@@ -178,37 +159,79 @@ class CreateQuiz extends React.Component {
         });
 
         upload.on('end', function(error, fileObj) {
-          if (error) {
-            console.log('fileObj:', fileObj);
-            console.log('Error during upload: ' + error);
-          } else {
+          const endUpload = () => {
             const quiz = getThis().state.quiz;
-            console.log('currentUpload: ', getThis().state.currentUpload.config.fileId + this.file.extensionWithDot);
+            const quiz$ = { ...quiz, image: fileObj._id };
+            getThis().setState({ quiz: quiz$ });
+          };
+          !error ? endUpload() : null;
+          getThis().setState({
+            currentUpload: false,
+            uploadsCounter: getThis().state.uploadsCounter - 1,
+          });
+        });
+
+        const uploadAndQuizId = {
+          upload,
+          qId: this.state.quiz._id,
+        };
+
+        const uploads$ = this.state.uploads
+          .filter(u => u.qId !== this.state.quiz._id)
+          .concat(uploadAndQuizId);
+        this.setState({ uploads: uploads$ });
+      };
+      const cancelUpload = () => {
+        const uploads$ = this.state.uploads.filter(u => u.qId !== this.state.quiz._id);
+        this.setState({ uploads: uploads$ });
+      };
+      return e.currentTarget.files && e.currentTarget.files[0] ? uploadFile() : cancelUpload();
+    };
+
+    const changeQuestionImage = qId => (e) => {
+      const uploadFile = () => {
+        const upload = Image.insert(
+          {
+            file: e.currentTarget.files[0],
+            streams: 'dynamic',
+            chunkSize: 'dynamic',
+          },
+          false,
+        );
+        upload.on('start', function() {
+          getThis().setState({ currentUpload: this });
+        });
+
+        upload.on('end', function(error, fileObj) {
+          const endUpload = () => {
+            const quiz = getThis().state.quiz;
             const questions$ = quiz.questions.map(
-              q =>
-                (q._id !== qId ? q : { ...q, image: getThis().state.currentUpload.config.fileId + this.file.extensionWithDot }),
+              q => (q._id !== qId ? q : { ...q, image: fileObj._id }),
             );
             const quiz$ = { ...quiz, questions: questions$ };
             getThis().setState({ quiz: quiz$ });
-          }
-          getThis().setState({ currentUpload: false,
-            uploadsCounter: (getThis().state.uploadsCounter - 1) });
+          };
+          !error ? endUpload() : null;
+          getThis().setState({
+            currentUpload: false,
+            uploadsCounter: getThis().state.uploadsCounter - 1,
+          });
         });
+
         const uploadAndQuesionId = {
           upload,
           qId,
         };
-        console.log('upload: ', upload);
-        
+
         const uploads$ = this.state.uploads.filter(u => u.qId !== qId).concat(uploadAndQuesionId);
         this.setState({ uploads: uploads$ });
-      } else {
+      };
+      const cancelUpload = () => {
         const uploads$ = this.state.uploads.filter(u => u.qId !== qId);
         this.setState({ uploads: uploads$ });
-      }
+      };
+      return e.currentTarget.files && e.currentTarget.files[0] ? uploadFile() : cancelUpload();
     };
-
-    const removeQuesionImage = qId => () => {};
 
     const saveQuiz = () => {
       const quiz = this.state.quiz;
@@ -216,16 +239,10 @@ class CreateQuiz extends React.Component {
         const tag = Tag.findOne({ name: t.name });
         return tag ? tag._id : new Tag(t).applyMethod('create', []);
       });
+
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
-      const quiz$ = new Quiz(
-        { ...quiz, questions, tags, owner: Meteor.userId() },
-        { cast: true },
-      );
-      quiz$.applyMethod('create', [], (err, result) => {
-        console.log('result:\n', result);
-        console.log('error:\n', err);
-        return result && FlowRouter.go('Manage.Home');
-      });
+      const quiz$ = new Quiz({ ...quiz, questions, tags, owner: Meteor.userId() }, { cast: true });
+      quiz$.applyMethod('create', [], (err, result) => result && FlowRouter.go('Manage.Home'));
     };
 
     const uploadImages = (e) => {
@@ -235,7 +252,6 @@ class CreateQuiz extends React.Component {
       this.state.uploads.map(u => u.upload.start());
     };
 
-    console.log('uploads counter: ', this.state.uploadsCounter);
     this.state.uploadsCounter === 0 ? saveQuiz() : null;
 
     const actions = {
@@ -250,17 +266,13 @@ class CreateQuiz extends React.Component {
       addTag,
       removeTag,
       uploadImages,
-
-      addQuestionImage,
+      changeQuizImage,
+      changeQuestionImage,
     };
 
     return (
       <div id="create-quiz">
-        <QuizForm
-          quiz={this.state.quiz}
-          validate={this.state.validate}
-          actions={actions}
-        />
+        <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
       </div>
     );
   }
@@ -269,6 +281,10 @@ class CreateQuiz extends React.Component {
 const CreateQuizContainer = ({ loading }) => {
   if (loading) return <Loading />;
   return <CreateQuiz />;
+};
+
+CreateQuizContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
 };
 
 export default createContainer(() => {

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import Answers from '../../components/answers';
 import GameNavbar from '../../components/game-navbar';
 import CountdownTimer from '../../components/count-down-timer';
+import Image from '../../../api/images/images';
 
 const Question = ({ game }) => {
   const question = game.lastQuestionToStart();
-
+  const questionImage = Image.findOne({ _id: question.image });
   return (
     <div id="question">
       <div className="question-background" />
@@ -18,7 +19,7 @@ const Question = ({ game }) => {
           <CountdownTimer secondsRemaining={game.getQuestionTimeLeft(question._id)} />
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-          <img className="question-image" src={`/img/${question.image}`} alt="defaultImg" />
+          <img className="question-image" src={question.img === 'no-image' ? '/img/default.png' : questionImage.link()} alt="defaultImg" />
         </div>
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <p className="answer-count" id="answer-count-number">

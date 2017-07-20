@@ -1,9 +1,7 @@
 import { FilesCollection } from 'meteor/ostrio:files';
 
 const Image = new FilesCollection({
-  config: {
-    storagePath: 'C:\Users\Toval\Workspace\shablool-data',
-  },
+  storagePath: 'C:/Users/Toval/Workspace/shablool-data',
   collectionName: 'images',
   allowClientCode: false, // Disallow remove files from Client
   onBeforeUpload(file) {
