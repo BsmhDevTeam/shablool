@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Answers from '../../components/answers';
@@ -8,12 +9,22 @@ import Image from '../../../api/images/images';
 const Question = ({ game }) => {
   const question = game.lastQuestionToStart();
   const questionImage = Image.findOne({ _id: question.image });
+
+  const skipQuestion = () => {
+    game.applyMethod('skipQuestion', [question._id]);
+  };
+
   return (
     <div id="question">
       <div className="question-background" />
       <div className="row">
         <GameNavbar text={question.text} num="" />
       </div>
+      {game.quiz.owner === Meteor.userId()
+        ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={skipQuestion}>
+            עבור שאלה
+          </a>
+        : ''}
       <div className="row">
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <CountdownTimer secondsRemaining={game.getQuestionTimeLeft(question._id)} />

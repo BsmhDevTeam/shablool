@@ -33,24 +33,24 @@ Game.extend({
       const isPlayerRegister = !!playerRegister.length;
       const start = () => {
         // Starting game
-      const gameStarted = new GameStarted();
-      this.gameLog = this.gameLog.concat(gameStarted);
-      this.save();
-      // Starting first question
-      const firstQuestion = this.quiz.questions.find(q => q.order === 1);
-      const questionStarted = new QuestionStart({
-        questionId: firstQuestion._id,
-      });
-      this.gameLog = this.gameLog.concat(questionStarted);
-      this.save();
-      // Ending question
-      const questionEndToLog = () => (
-          this.isQuestionEndAlready(firstQuestion._id) ||
-          this.questionEnd(firstQuestion._id)
-        );
-      Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
-      return true;
-      }
+        const gameStarted = new GameStarted();
+        this.gameLog = this.gameLog.concat(gameStarted);
+        this.save();
+        // Starting first question
+        const firstQuestion = this.quiz.questions.find(q => q.order === 1);
+        const questionStarted = new QuestionStart({
+          questionId: firstQuestion._id,
+        });
+        this.gameLog = this.gameLog.concat(questionStarted);
+        this.save();
+        // Ending question
+        const questionEndToLog = () => (
+            this.isQuestionEndAlready(firstQuestion._id) ||
+            this.questionEnd(firstQuestion._id)
+          );
+        Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
+        return true;
+      };
       return isPlayerRegister ? start() : false;
     },
     questionEnd(qId) {
@@ -58,6 +58,15 @@ Game.extend({
         questionId: qId,
       });
       this.gameLog = this.gameLog.concat(questionEnd);
+      this.save();
+      return true;
+    },
+    skipQuestion(qId) {
+      const questionEnd = new QuestionEnd({
+        questionId: qId,
+      });
+      const showLeaders = new ShowLeaders();
+      this.gameLog = this.gameLog.concat([questionEnd, showLeaders]);
       this.save();
       return true;
     },
