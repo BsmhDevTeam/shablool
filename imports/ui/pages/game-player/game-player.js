@@ -11,6 +11,7 @@ export default ({ game }) => {
   const mapEventToPages = {
     GameInit: () => null,
     PlayerReg: () => <Instructions />,
+    GameStarted: () => <Instructions />,
     QuestionStart: () => <Question game={game} />,
     PlayerAnswer: () => <AnswerSent />,
     QuestionEnd: () => <QuestionStatistics game={game} />,
