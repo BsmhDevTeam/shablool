@@ -381,8 +381,8 @@ describe('games methods', function() {
       const newGameFromDB = Game.findOne({ _id: id });
       newGameFromDB.playerRegister();
       newGameFromDB.startGame();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
-      newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a2Id');
+      newGameFromDB.playerAnswer('qId', 'a1Id');
+      newGameFromDB.playerAnswer('qId', 'a2Id');
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
@@ -439,7 +439,7 @@ describe('games methods', function() {
       newGameFromDB.startGame();
       newGameFromDB.gameLog.concat([new QuestionEnd({ questionId: 'qId' })]);
       newGameFromDB.save();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
+      newGameFromDB.playerAnswer('qId', 'a1Id');
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
@@ -493,7 +493,7 @@ describe('games methods', function() {
       const id = newGame.initGame();
       const newGameFromDB = Game.findOne({ _id: id });
       newGameFromDB.playerRegister();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
+      newGameFromDB.playerAnswer('qId', 'a1Id');
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
@@ -582,7 +582,7 @@ describe('games methods', function() {
       const newGameFromDB = Game.findOne({ _id: id });
       newGameFromDB.playerRegister();
       newGameFromDB.startGame();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'q1Id', 'a11Id');
+      newGameFromDB.playerAnswer('q1Id', 'a11Id');
       newGameFromDB.nextQuestion();
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog
@@ -782,7 +782,7 @@ describe('games methods', function() {
       const newGameFromDB = Game.findOne({ _id: id });
       newGameFromDB.playerRegister();
       newGameFromDB.startGame();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'q1Id', 'a11Id');
+      newGameFromDB.playerAnswer('q1Id', 'a11Id');
       newGameFromDB.endGameOrNextQuestion();
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog
@@ -870,11 +870,11 @@ describe('games methods', function() {
       const newGameFromDB = Game.findOne({ _id: id });
       newGameFromDB.playerRegister();
       newGameFromDB.startGame();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'q1Id', 'a11Id');
+      newGameFromDB.playerAnswer('q1Id', 'a11Id');
       newGameFromDB.questionEnd('q1Id');
       newGameFromDB.showLeaders();
       newGameFromDB.endGameOrNextQuestion();
-      newGameFromDB.playerAnswer(Meteor.userId(), 'q2Id', 'a21Id');
+      newGameFromDB.playerAnswer('q2Id', 'a21Id');
       newGameFromDB.endGameOrNextQuestion();
       const newGamePlayerAnswer = Game.findOne({ _id: id });
       const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(

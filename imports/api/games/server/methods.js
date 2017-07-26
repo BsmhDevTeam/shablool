@@ -76,7 +76,7 @@ Game.extend({
       this.save();
       return true;
     },
-    playerAnswer(uId, qId, aId) {
+    playerAnswer(qId, aId) {
       const isQuestionStarted = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
@@ -87,17 +87,17 @@ Game.extend({
 
       const playerAlreadyAnswer = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
-        .find(e => e.playerId === uId && e.questionId === qId);
+        .find(e => e.playerId === Meteor.userId() && e.questionId === qId);
 
       const playerRegistered = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerReg)
-        .find(e => e.playerId === uId);
+        .find(e => e.playerId === Meteor.userId());
 
       const isGameManager = this.quiz.owner === Meteor.userId();
 
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
-          playerId: uId,
+          playerId: Meteor.userId(),
           questionId: qId,
           answerId: aId,
         });
