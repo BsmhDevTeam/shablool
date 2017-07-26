@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
-import GameNavbar from "../../components/game-navbar";
+import React from 'react';
+import PropTypes from 'prop-types';
+import GameNavbar from '../../components/game-navbar';
 
 class GameLobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showNoPlayerAlert: false
+      showNoPlayerAlert: false,
     };
   }
   render() {
@@ -16,10 +16,10 @@ class GameLobby extends React.Component {
       const showAlert = () => {
         this.setState({ showNoPlayerAlert: true });
         setTimeout(() => this.setState({ showNoPlayerAlert: false }), 3000);
-      }
-      game.applyMethod("startGame", [])
-        ? null
-        : showAlert();
+      };
+      game.applyMethod('startGame', [], (err, result) => {
+        result ? null : showAlert();
+      });
     };
     return (
       <div className="game-lobby">
@@ -29,7 +29,9 @@ class GameLobby extends React.Component {
           <div className="row">
             <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <div className="player-count-area center-txt">
-                <i className="count-num">{players.length}</i>
+                <i className="count-num">
+                  {players.length}
+                </i>
                 <br />
                 <i className="count-txt">שחקנים</i>
               </div>
@@ -41,27 +43,24 @@ class GameLobby extends React.Component {
             </div>
             <div className="col-xl-3 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <div className="next-button-area center-txt">
-                <button className="btn" onClick={startGame}>התחל</button>
+                <button className="btn" onClick={startGame}>
+                  התחל
+                </button>
               </div>
             </div>
           </div>
           <div className="row">
             {players
               ? <div className="lobby-players-names-area">
-                  <ul>
-                    {players.map(player => (
-                      <PlayersLobby key={player} name={player} />
-                    ))}
-                  </ul>
-                </div>
+                <ul>
+                  {players.map(player => <PlayersLobby key={player} name={player} />)}
+                </ul>
+              </div>
               : <div className="alert alert-is-primary">מחכה לשחקנים...</div>}
           </div>
         </div>
         <audio src="/audio.mp3" autoPlay loop />
-        <div
-          id="snackbar"
-          className={this.state.showNoPlayerAlert ? "show" : ""}
-        >
+        <div id="snackbar" className={this.state.showNoPlayerAlert ? 'show' : ''}>
           לא ניתן להתחיל משחק בלי שחקנים
         </div>
       </div>
@@ -70,19 +69,20 @@ class GameLobby extends React.Component {
 }
 
 GameLobby.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired
+  game: PropTypes.instanceOf(Object).isRequired,
 };
 
-const PlayersLobby = ({ name }) => (
+const PlayersLobby = ({ name }) =>
   <div className="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-xs-4">
     <li>
-      <span className="player-name">{name}</span>
+      <span className="player-name">
+        {name}
+      </span>
     </li>
-  </div>
-);
+  </div>;
 
 PlayersLobby.propTypes = {
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
 };
 
 export default GameLobby;
