@@ -10,6 +10,7 @@ export default ({ game }) => {
   const mapEventToPages = {
     GameInit: () => <GameLobby game={game} />,
     PlayerReg: () => <GameLobby game={game} />,
+    GameStarted: () => <GameLobby game={game} />,
     QuestionStart: () => <Question game={game} />,
     PlayerAnswer: () => <Question game={game} />,
     QuestionEnd: () => <QuestionStatistics game={game} />,
