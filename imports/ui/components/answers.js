@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { eventTypes } from '../../api/games/games';
 
@@ -26,7 +25,7 @@ Answers.propTypes = {
 
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
-    game.applyMethod('playerAnswer', [Meteor.userId(), game.lastQuestionToStartId(), answer._id]);
+    game.applyMethod('playerAnswer', [game.lastQuestionToStartId(), answer._id]);
   };
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>
