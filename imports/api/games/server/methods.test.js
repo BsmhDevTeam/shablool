@@ -241,8 +241,8 @@ describe('games methods', function () {
             const newGameFromDB = Game.findOne({ _id: id });
             newGameFromDB.playerRegister();
             newGameFromDB.startGame();
-            newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
-            newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a2Id');
+            newGameFromDB.playerAnswer('qId', 'a1Id');
+            newGameFromDB.playerAnswer('qId', 'a2Id');
             const newGamePlayerAnswer = Game.findOne({ _id: id });
             const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
             assert.equal(playerAnswerEvents.length, 1);
@@ -294,7 +294,7 @@ describe('games methods', function () {
             newGameFromDB.startGame();
             newGameFromDB.gameLog.concat([new QuestionEnd({ questionId: 'qId' })]);
             newGameFromDB.save();
-            newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
+            newGameFromDB.playerAnswer('qId', 'a1Id');
             const newGamePlayerAnswer = Game.findOne({ _id: id });
             const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
             assert.equal(playerAnswerEvents.length, 0);
@@ -343,7 +343,7 @@ describe('games methods', function () {
             const id = newGame.initGame();
             const newGameFromDB = Game.findOne({ _id: id });
             newGameFromDB.playerRegister();
-            newGameFromDB.playerAnswer(Meteor.userId(), 'qId', 'a1Id');
+            newGameFromDB.playerAnswer('qId', 'a1Id');
             const newGamePlayerAnswer = Game.findOne({ _id: id });
             const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
             assert.equal(playerAnswerEvents.length, 0);
@@ -428,7 +428,7 @@ describe('games methods', function () {
             newGameFromDB.playerRegister();
             newGameFromDB.playerRegister();
             newGameFromDB.startGame();
-            newGameFromDB.playerAnswer(Meteor.userId(), 'q1Id', 'a1Id');
+            newGameFromDB.playerAnswer('q1Id', 'a1Id');
             newGameFromDB.nextQuestion();
             const newGamePlayerAnswer = Game.findOne({ _id: id });
             const playerAnswerEvents = newGamePlayerAnswer.gameLog
