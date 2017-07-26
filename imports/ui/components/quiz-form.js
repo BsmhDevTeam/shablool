@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuestionForm from './question-form.js';
 
@@ -20,7 +21,6 @@ const QuizForm = ({ quiz, validate, actions }) => {
   const titleValidation = validate && validateTitle(quiz.title);
   return (
     <div id="quiz-form">
-      <h1>צור שאלון חדש</h1>
       <div className="row">
         <div className="panel panel-default">
           <div className="panel-body">
@@ -62,9 +62,27 @@ const QuizForm = ({ quiz, validate, actions }) => {
         <div className="panel panel-default">
           <div className="panel-body" id="submit-panel">
             <div className="row">
-              <div className="col-md-9">
+              <div className="col-md-6">
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-12">
+                    <div className="form-group-lg">
+                      <label htmlFor="isPrivate" className="control-label">
+                        מי יכול למצוא את השאלון
+                      </label>
+                      <select
+                        name="isPrivate"
+                        className="is-private form-control"
+                        onChange={actions.changeQuizPrivacy}
+                        value={quiz.private}
+                      >
+                        <option value="false">כולם</option>
+                        <option value="true">רק אני</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-12">
                     <form onSubmit={actions.addTag}>
                       <label htmlFor="tag" className="control-label">
                         הוספת תגיות
@@ -72,27 +90,23 @@ const QuizForm = ({ quiz, validate, actions }) => {
                       <input name="tag" className="form-control input-lg" />
                     </form>
                   </div>
-                  <div className="col-md-8">
+                </div>
+                <div className="row">
+                  <div className="">
                     {quiz.tags.map(t => (
                       <TagTemplate key={t._id} tag={t} actions={actions} />
                     ))}
                   </div>
                 </div>
               </div>
-              <div className="col-md-3">
-                <div className="form-group-lg">
-                  <label htmlFor="isPrivate" className="control-label">
-                    מי יכול למצוא את השאלון
-                  </label>
-                  <select
-                    name="isPrivate"
-                    className="is-private form-control"
-                    onChange={actions.changeQuizPrivacy}
-                    value={quiz.private}
+              <div className="col-md-6">
+                <div className="dropzone">
+                  <Dropzone
+                    accept="image/jpeg, image/png, image/jpg"
+                    onDrop={files => actions.changeQuizImage(files)}
                   >
-                    <option value="false">כולם</option>
-                    <option value="true">רק אני</option>
-                  </select>
+                    <p>גרור תמונה או תלחץ על מנת לבחור אחת</p>
+                  </Dropzone>
                 </div>
               </div>
             </div>

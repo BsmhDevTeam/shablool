@@ -143,7 +143,16 @@ export default Class.create({
         },
       ],
     },
-    questions: [Question],
+    questions: {
+      type: [Question],
+      validators: [
+        {
+          type: 'minLength',
+          param: 1,
+          message: 'אתה לא יכול ליצור שאלון בלי שאלות',
+        },
+      ],
+    },
     image: {
       type: String,
       default() {

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
 import { Question } from '/imports/api/quizes/quizes.js';
 import AnswerForm from './answer-form.js';
 
@@ -94,8 +95,14 @@ const QuestionForm = ({ question, validate, actions }) => {
               </div>
               <div className="col-md-3">
                 <div className="upload-area">
-                  <span className="glyphicon glyphicon-upload" />
-                  <input type="file" onChange={actions.changeQuestionImage(question._id)} />
+                  <div className="dropzone">
+                    <Dropzone
+                      accept="image/jpeg, image/png, image/jpg"
+                      onDrop={files => actions.changeQuestionImage(question._id, files)}
+                    >
+                      <p>גרור תמונה או תלחץ על מנת לבחור אחת</p>
+                    </Dropzone>
+                  </div>
                 </div>
               </div>
             </div>

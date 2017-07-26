@@ -45,10 +45,16 @@ Game.extend({
         this.save();
         // Ending question
         const questionEndToLog = () => (
-            this.isQuestionEndAlready(firstQuestion._id) ||
-            this.questionEnd(firstQuestion._id)
-          );
+          this.isQuestionEndAlready(firstQuestion._id) ||
+          this.questionEnd(firstQuestion._id)
+        );
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
+        // Closing Game
+        const closeGameToLog = () => (
+          this.isGameCloseAlready() ||
+          this.closeGame()
+        );
+        Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return true;
       };
       return isPlayerRegister ? start() : false;
@@ -151,6 +157,11 @@ Game.extend({
         .filter(e => e.nameType === eventTypes.QuestionEnd)
         .find(e => e.questionId === qId);
       return !!questionEnd;
+    },
+    isGameCloseAlready() { // need to be in methods so it will be updated
+      const gameClose = this.gameLog
+        .find(e => e.nameType === eventTypes.GameClose);
+      return !!gameClose;
     },
   },
 });

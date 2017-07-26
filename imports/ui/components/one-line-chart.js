@@ -54,6 +54,7 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
     active: PropTypes.bool,
     payload: PropTypes.instanceOf(Object),
   };
+
   return (
     <ResponsiveContainer width="100%" aspect={5.0 / 3.0}>
       <LineChart data={data} margin={{ top: 5, right: 35, left: 0, bottom: 5 }}>

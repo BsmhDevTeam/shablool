@@ -144,11 +144,12 @@ class CreateQuiz extends React.Component {
 
     const getThis = () => this;
 
-    const changeQuizImage = (e) => {
+    const changeQuizImage = (images) => {
+      console.log('image: ', images[0]);
       const uploadFile = () => {
         const upload = Image.insert(
           {
-            file: e.currentTarget.files[0],
+            file: images[0],
             streams: 'dynamic',
             chunkSize: 'dynamic',
           },
@@ -185,14 +186,14 @@ class CreateQuiz extends React.Component {
         const uploads$ = this.state.uploads.filter(u => u.qId !== this.state.quiz._id);
         this.setState({ uploads: uploads$ });
       };
-      return e.currentTarget.files && e.currentTarget.files[0] ? uploadFile() : cancelUpload();
+      return images && images[0] ? uploadFile() : cancelUpload();
     };
 
-    const changeQuestionImage = qId => (e) => {
+    const changeQuestionImage = (qId, images) => {
       const uploadFile = () => {
         const upload = Image.insert(
           {
-            file: e.currentTarget.files[0],
+            file: images[0],
             streams: 'dynamic',
             chunkSize: 'dynamic',
           },
@@ -230,7 +231,7 @@ class CreateQuiz extends React.Component {
         const uploads$ = this.state.uploads.filter(u => u.qId !== qId);
         this.setState({ uploads: uploads$ });
       };
-      return e.currentTarget.files && e.currentTarget.files[0] ? uploadFile() : cancelUpload();
+      return images && images[0] ? uploadFile() : cancelUpload();
     };
 
     const saveQuiz = () => {
@@ -272,6 +273,7 @@ class CreateQuiz extends React.Component {
 
     return (
       <div id="create-quiz">
+        <h1>צור שאלון חדש</h1>
         <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
       </div>
     );

@@ -1,8 +1,9 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
+import uuidV4 from 'uuid/v4';
 import { assert } from 'meteor/practicalmeteor:chai';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import './publication.js';
-import Quiz from '../quizes.js';
+import Quiz, { Question, Answer } from '../quizes.js';
 
 describe('quizes publication', function() {
   beforeEach(function() {
@@ -10,7 +11,40 @@ describe('quizes publication', function() {
     new Quiz({
       _id: 'quiz1',
       title: 'title1',
-      questions: [],
+      questions: [
+        new Question({
+          _id: uuidV4(),
+          text: 'WhatsUp ?!',
+          order: 1,
+          time: 10,
+          answers: [
+            new Answer({
+              _id: uuidV4(),
+              text: 'good',
+              order: 1,
+              points: 10,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'bad',
+              order: 2,
+              points: 0,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'Awsome',
+              order: 3,
+              points: 100,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: '...',
+              order: 4,
+              points: 0,
+            }),
+          ],
+        }),
+      ],
       tags: ['tag1'],
       owner: 'me',
       private: true,
@@ -18,7 +52,40 @@ describe('quizes publication', function() {
     new Quiz({
       _id: 'quiz2',
       title: 'title2',
-      questions: [],
+      questions: [
+        new Question({
+          _id: uuidV4(),
+          text: 'WhatsUp ?!',
+          order: 1,
+          time: 10,
+          answers: [
+            new Answer({
+              _id: uuidV4(),
+              text: 'good',
+              order: 1,
+              points: 10,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'bad',
+              order: 2,
+              points: 0,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'Awsome',
+              order: 3,
+              points: 100,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: '...',
+              order: 4,
+              points: 0,
+            }),
+          ],
+        }),
+      ],
       tags: ['tag2'],
       owner: 'me',
       private: false,
@@ -26,7 +93,40 @@ describe('quizes publication', function() {
     new Quiz({
       _id: 'quiz3',
       title: 'title3',
-      questions: [],
+      questions: [
+        new Question({
+          _id: uuidV4(),
+          text: 'WhatsUp ?!',
+          order: 1,
+          time: 10,
+          answers: [
+            new Answer({
+              _id: uuidV4(),
+              text: 'good',
+              order: 1,
+              points: 10,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'bad',
+              order: 2,
+              points: 0,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'Awsome',
+              order: 3,
+              points: 100,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: '...',
+              order: 4,
+              points: 0,
+            }),
+          ],
+        }),
+      ],
       tags: ['tag2'],
       owner: 'owner',
       private: false,
@@ -34,7 +134,40 @@ describe('quizes publication', function() {
     new Quiz({
       _id: 'quiz4',
       title: 'title4',
-      questions: [],
+      questions: [
+        new Question({
+          _id: uuidV4(),
+          text: 'WhatsUp ?!',
+          order: 1,
+          time: 10,
+          answers: [
+            new Answer({
+              _id: uuidV4(),
+              text: 'good',
+              order: 1,
+              points: 10,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'bad',
+              order: 2,
+              points: 0,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: 'Awsome',
+              order: 3,
+              points: 100,
+            }),
+            new Answer({
+              _id: uuidV4(),
+              text: '...',
+              order: 4,
+              points: 0,
+            }),
+          ],
+        }),
+      ],
       tags: ['tag3'],
       owner: 'owner',
       private: true,
