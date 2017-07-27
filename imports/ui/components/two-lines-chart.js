@@ -15,7 +15,7 @@ const TwoLinesChart = ({ data, dataKeyA, dataKeyB, dataKeyX }) => {
   const CustomizedXAxisTick = ({ x, y, payload }) => (
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dy={16}>
-        שאלה #{payload.value}
+        {payload.value}
       </text>
     </g>
   );

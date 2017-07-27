@@ -7,6 +7,7 @@ import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes';
 import Tag from '../../../api/tags/tags.js';
 import QuizForm from '../../components/quiz-form.js';
+import Image from '../../../api/images/images';
 import Loading from '../../components/loading';
 
 // Utilities
@@ -22,6 +23,7 @@ const newQuestion = () => {
     text: '',
     time: 30,
     answers,
+    image: 'no-image',
   };
 };
 
@@ -38,6 +40,9 @@ class EditQuiz extends React.Component {
     super(props);
     this.state = {
       quiz: props.quiz,
+      currentUpload: false,
+      uploads: [],
+      uploadsCounter: false,
       validate: false,
     };
   }
@@ -146,25 +151,117 @@ class EditQuiz extends React.Component {
       this.setState({ quiz: quiz$ });
     };
 
-    const saveQuiz = (e) => {
-      e.preventDefault();
-      if (!this.state.validate) this.setState({ validate: true });
-      // Save Quiz
+    const getThis = () => this;
+
+    const changeQuizImage = (images) => {
+      const uploadFile = () => {
+        const upload = Image.insert(
+          {
+            file: images[0],
+            streams: 'dynamic',
+            chunkSize: 'dynamic',
+          },
+          false,
+        );
+        upload.on('start', function() {
+          getThis().setState({ currentUpload: this });
+        });
+
+        upload.on('end', function(error, fileObj) {
+          const endUpload = () => {
+            const quiz = getThis().state.quiz;
+            const quiz$ = { ...quiz, image: fileObj._id };
+            getThis().setState({ quiz: quiz$ });
+          };
+          !error ? endUpload() : null;
+          getThis().setState({
+            currentUpload: false,
+            uploadsCounter: getThis().state.uploadsCounter - 1,
+          });
+        });
+
+        const uploadAndQuizId = {
+          upload,
+          qId: this.state.quiz._id,
+        };
+
+        const uploads$ = this.state.uploads
+          .filter(u => u.qId !== this.state.quiz._id)
+          .concat(uploadAndQuizId);
+        this.setState({ uploads: uploads$ });
+      };
+      const cancelUpload = () => {
+        const uploads$ = this.state.uploads.filter(u => u.qId !== this.state.quiz._id);
+        this.setState({ uploads: uploads$ });
+      };
+      return images && images[0] ? uploadFile() : cancelUpload();
+    };
+
+    const changeQuestionImage = (qId, images) => {
+      const uploadFile = () => {
+        const upload = Image.insert(
+          {
+            file: images[0],
+            streams: 'dynamic',
+            chunkSize: 'dynamic',
+          },
+          false,
+        );
+        upload.on('start', function() {
+          getThis().setState({ currentUpload: this });
+        });
+
+        upload.on('end', function(error, fileObj) {
+          const endUpload = () => {
+            const quiz = getThis().state.quiz;
+            const questions$ = quiz.questions.map(
+              q => (q._id !== qId ? q : { ...q, image: fileObj._id }),
+            );
+            const quiz$ = { ...quiz, questions: questions$ };
+            getThis().setState({ quiz: quiz$ });
+          };
+          !error ? endUpload() : null;
+          getThis().setState({
+            currentUpload: false,
+            uploadsCounter: getThis().state.uploadsCounter - 1,
+          });
+        });
+
+        const uploadAndQuesionId = {
+          upload,
+          qId,
+        };
+
+        const uploads$ = this.state.uploads.filter(u => u.qId !== qId).concat(uploadAndQuesionId);
+        this.setState({ uploads: uploads$ });
+      };
+      const cancelUpload = () => {
+        const uploads$ = this.state.uploads.filter(u => u.qId !== qId);
+        this.setState({ uploads: uploads$ });
+      };
+      return images && images[0] ? uploadFile() : cancelUpload();
+    };
+
+    const saveQuiz = () => {
       const quiz = this.state.quiz;
       const tags = quiz.tags.map((t) => {
         const tag = Tag.findOne({ name: t.name });
         return tag ? tag._id : new Tag(t).applyMethod('create', []);
       });
+
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod(
-        'update',
-        [{ ...quiz, questions, tags }],
-        (err, result) => (
-          result && FlowRouter.go('Manage.Home')
-        ),
-      );
+      quiz$.applyMethod('update', [{ ...quiz, questions, tags }], (err, result) => result && FlowRouter.go('Manage.Home'));
     };
+
+    const uploadImages = (e) => {
+      e.preventDefault();
+      if (!this.state.validate) this.setState({ validate: true });
+      this.setState({ uploadsCounter: this.state.uploads.length });
+      this.state.uploads.map(u => u.upload.start());
+    };
+
+    this.state.uploadsCounter === 0 ? saveQuiz() : null;
 
     const actions = {
       changeQuizTitle,
@@ -177,11 +274,14 @@ class EditQuiz extends React.Component {
       addTag,
       removeTag,
       changeQuizPrivacy,
-      saveQuiz,
+      uploadImages,
+      changeQuizImage,
+      changeQuestionImage,
     };
 
     return (
       <div id="edit-quiz">
+        <h1>ערוך שאלון</h1>
         <QuizForm
           quiz={this.state.quiz}
           validate={this.state.validate}
@@ -209,7 +309,8 @@ EditQuizContainer.propTypes = {
 export default createContainer(({ id }) => {
   Meteor.subscribe('tags.all');
   const quizHandle = Meteor.subscribe('quizes.get', id);
-  const loading = !quizHandle.ready();
+  const imagesHandle = Meteor.subscribe('images.all');
+  const loading = !imagesHandle.ready() && !quizHandle.ready();
   return {
     loading,
   };

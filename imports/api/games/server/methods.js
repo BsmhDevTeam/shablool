@@ -33,24 +33,30 @@ Game.extend({
       const isPlayerRegister = !!playerRegister.length;
       const start = () => {
         // Starting game
-      const gameStarted = new GameStarted();
-      this.gameLog = this.gameLog.concat(gameStarted);
-      this.save();
-      // Starting first question
-      const firstQuestion = this.quiz.questions.find(q => q.order === 1);
-      const questionStarted = new QuestionStart({
-        questionId: firstQuestion._id,
-      });
-      this.gameLog = this.gameLog.concat(questionStarted);
-      this.save();
-      // Ending question
-      const questionEndToLog = () => (
+        const gameStarted = new GameStarted();
+        this.gameLog = this.gameLog.concat(gameStarted);
+        this.save();
+        // Starting first question
+        const firstQuestion = this.quiz.questions.find(q => q.order === 1);
+        const questionStarted = new QuestionStart({
+          questionId: firstQuestion._id,
+        });
+        this.gameLog = this.gameLog.concat(questionStarted);
+        this.save();
+        // Ending question
+        const questionEndToLog = () => (
           this.isQuestionEndAlready(firstQuestion._id) ||
           this.questionEnd(firstQuestion._id)
         );
-      Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
-      return true;
-      }
+        Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
+        // Closing Game
+        const closeGameToLog = () => (
+          this.isGameCloseAlready() ||
+          this.closeGame()
+        );
+        Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
+        return true;
+      };
       return isPlayerRegister ? start() : false;
     },
     questionEnd(qId) {
@@ -61,7 +67,16 @@ Game.extend({
       this.save();
       return true;
     },
-    playerAnswer(uId, qId, aId) {
+    skipQuestion(qId) {
+      const questionEnd = new QuestionEnd({
+        questionId: qId,
+      });
+      const showLeaders = new ShowLeaders();
+      this.gameLog = this.gameLog.concat([questionEnd, showLeaders]);
+      this.save();
+      return true;
+    },
+    playerAnswer(qId, aId) {
       const isQuestionStarted = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
@@ -72,17 +87,17 @@ Game.extend({
 
       const playerAlreadyAnswer = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
-        .find(e => e.playerId === uId && e.questionId === qId);
+        .find(e => e.playerId === Meteor.userId() && e.questionId === qId);
 
       const playerRegistered = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerReg)
-        .find(e => e.playerId === uId);
+        .find(e => e.playerId === Meteor.userId());
 
       const isGameManager = this.quiz.owner === Meteor.userId();
 
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
-          playerId: uId,
+          playerId: Meteor.userId(),
           questionId: qId,
           answerId: aId,
         });
@@ -142,6 +157,11 @@ Game.extend({
         .filter(e => e.nameType === eventTypes.QuestionEnd)
         .find(e => e.questionId === qId);
       return !!questionEnd;
+    },
+    isGameCloseAlready() { // need to be in methods so it will be updated
+      const gameClose = this.gameLog
+        .find(e => e.nameType === eventTypes.GameClose);
+      return !!gameClose;
     },
   },
 });

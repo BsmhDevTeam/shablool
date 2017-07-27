@@ -84,12 +84,15 @@
 		font-size: 65px;
 	}
 	.question-image {
-		height: 300px;
-		width: 300px;
+		max-height: 100%;
+		max-width: 100%;
 		padding-bottom: 5px;
 		padding-top: 5px;
 		margin: auto;
 		display: block;
+	}
+	.question-image-area {
+		height: 300px;
 	}
 	.padding-top {
 		padding-top: 100px;
@@ -121,9 +124,12 @@
 		.recharts-wrapper {
 			height: 440px!important;
 		}
-		.question-image {
+		.question-image-area {
 			height: 380px;
-			width: 380px;
+		}
+		.question-image {
+			max-height: 100%;
+			max-width: 100%;
 		}
 	}
 	@media(max-height: 600px){

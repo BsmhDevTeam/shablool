@@ -14,6 +14,9 @@ const HistoryPlayer = ({ game }) => (
 
       <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 chart">
         <div className="row">
+          <div className="row">
+            <h3 className="chart-title">ניקוד</h3>
+          </div>
           <TwoLinesChart
             data={game.getPlayerScoreAndAvarageScore(Meteor.userId())}
             dataKeyA="playerScore"
@@ -31,6 +34,9 @@ const HistoryPlayer = ({ game }) => (
 
       <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 chart">
         <div className="row">
+          <div className="row">
+            <h3 className="chart-title">זמן</h3>
+          </div>
           <TwoLinesChart
             data={game.getPlayerTimeAndAvarageTime(Meteor.userId())}
             dataKeyA="playerTime"

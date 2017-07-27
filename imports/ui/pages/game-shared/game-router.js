@@ -26,10 +26,15 @@ GameRouterContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
+GameRouterContainer.defaultProps = {
+  game: new Game(),
+};
+
 export default createContainer(({ code }) => {
+  const imagesHandle = Meteor.subscribe('images.all');
   const usersHandle = Meteor.subscribe('users.names');
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready() || !usersHandle.ready();
+  const loading = !imagesHandle.ready() || !gameHandle.ready() || !usersHandle.ready();
   const game = Game.findOne();
   return { loading, game };
 }, GameRouterContainer);
