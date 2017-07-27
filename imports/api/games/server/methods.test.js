@@ -334,7 +334,7 @@ describe('games methods', function() {
   });
 
   describe('playerAnswer', function() {
-    it('player try to answer on the same quesion more than once', function() {
+    it('player try to answer on the same question more than once', function() {
       const newGame = new Game({
         quiz: new Quiz({
           title: 'test quiz',

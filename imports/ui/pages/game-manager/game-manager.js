@@ -20,7 +20,5 @@ export default ({ game }) => {
   };
   const event = game.getLastEvent().nameType;
   const gameRouter = mapEventToPages[event];
-  console.log('event: ', event);
-  console.log('gameRouter: ', gameRouter);
   return gameRouter();
 };

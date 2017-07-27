@@ -23,6 +23,7 @@ const newQuestion = () => {
     text: '',
     time: 30,
     answers,
+    image: 'no-image',
   };
 };
 
@@ -40,6 +41,7 @@ class CreateQuiz extends React.Component {
         tags: [],
         owner: Meteor.userId(),
         private: false,
+        image: 'no-image',
       },
       currentUpload: false,
       uploads: [],
@@ -145,7 +147,6 @@ class CreateQuiz extends React.Component {
     const getThis = () => this;
 
     const changeQuizImage = (images) => {
-      console.log('image: ', images[0]);
       const uploadFile = () => {
         const upload = Image.insert(
           {
@@ -219,12 +220,12 @@ class CreateQuiz extends React.Component {
           });
         });
 
-        const uploadAndQuesionId = {
+        const uploadAndQuestionId = {
           upload,
           qId,
         };
 
-        const uploads$ = this.state.uploads.filter(u => u.qId !== qId).concat(uploadAndQuesionId);
+        const uploads$ = this.state.uploads.filter(u => u.qId !== qId).concat(uploadAndQuestionId);
         this.setState({ uploads: uploads$ });
       };
       const cancelUpload = () => {

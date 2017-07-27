@@ -23,11 +23,13 @@ const QuizCard = ({ quiz, actions }) => {
       <div className="panel-body">
         <div className="row">
           <div className="col-md-3">
-            <img
-              className="quiz-panel-img"
-              src={quiz.image === 'no-image' ? '/img/default.png' : quizImage.link()}
-              alt="quiz"
-            />
+            <div className="quiz-panel-img-area">
+              <img
+                className="quiz-panel-img"
+                src={quiz.image === 'no-image' ? '/img/default.png' : quizImage.link()}
+                alt="quiz"
+              />
+            </div>
           </div>
           <div className="col-md-4">
             <h5 className="quiz-title">{quiz.title}</h5>

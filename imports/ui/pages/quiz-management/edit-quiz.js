@@ -7,6 +7,7 @@ import uuidV4 from 'uuid/v4';
 import Quiz from '../../../api/quizes/quizes';
 import Tag from '../../../api/tags/tags.js';
 import QuizForm from '../../components/quiz-form.js';
+import Image from '../../../api/images/images';
 import Loading from '../../components/loading';
 
 // Utilities
@@ -22,6 +23,7 @@ const newQuestion = () => {
     text: '',
     time: 30,
     answers,
+    image: 'no-image',
   };
 };
 
@@ -307,7 +309,8 @@ EditQuizContainer.propTypes = {
 export default createContainer(({ id }) => {
   Meteor.subscribe('tags.all');
   const quizHandle = Meteor.subscribe('quizes.get', id);
-  const loading = !quizHandle.ready();
+  const imagesHandle = Meteor.subscribe('images.all');
+  const loading = !imagesHandle.ready() && !quizHandle.ready();
   return {
     loading,
   };
