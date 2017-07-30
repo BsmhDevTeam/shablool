@@ -125,7 +125,8 @@ Game.extend({
       this.save();
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () => this.isQuestionEndAlready(qId) || this.questionEnd(qId);
+      const questionEndToLog = () =>
+        this.isQuestionEndAlready(qId) || this.questionEnd(qId);
       Meteor.setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
@@ -151,8 +152,7 @@ Game.extend({
       this.gameLog = this.gameLog.concat(gameClose);
       this.save();
     },
-    isQuestionEndAlready(qId) {
-      // need to be in methods so it will be updated
+    isQuestionEndAlready(qId) { // need to be in methods so it will be updated
       const questionEnd = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionEnd)
         .find(e => e.questionId === qId);
