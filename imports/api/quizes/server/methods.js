@@ -13,5 +13,9 @@ Quiz.extend({
     delete() {
       return this.remove();
     },
+    removeImage() {
+      this.image = 'no-image';
+      return this.save();
+    },
   },
 });

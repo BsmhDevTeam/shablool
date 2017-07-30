@@ -25,7 +25,10 @@ Answers.propTypes = {
 
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
-    game.applyMethod('playerAnswer', [game.lastQuestionToStartId(), answer._id]);
+    game.applyMethod('playerAnswer', [
+      game.lastQuestionToStartId(),
+      answer._id,
+    ]);
   };
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>
