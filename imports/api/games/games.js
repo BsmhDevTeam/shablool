@@ -280,7 +280,7 @@ export default Class.create({
       );
     },
     isUserRegistered() {
-      const isUserExist = this.getGamePlayersId().find(user => user === Meteor.userId());
+      const isUserExist = this.getPlayersId().find(user => user === Meteor.userId());
       return !!isUserExist;
     },
     answersGroupCount() {
@@ -407,20 +407,11 @@ export default Class.create({
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
-    getGamePlayersId() {
-      const playerEvent = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
-      const playersId = playerEvent.map(e => e.playerId);
-      return playersId;
-    },
-    getGamePlayersName() {
-      const playersIds = this.getGamePlayersId();
-      console.log('ids: ', playersIds);
-      const allUsers = Meteor.users.find().fetch();
-      const playersNames = Meteor.users.find(
-        { _id: { $in: playersIds } },
-        { fields: { 'services.gitlab.username': 1 } },
-      ).map(p => p.services.gitlab.username);
-      console.log('users list: ', playersNames);
+    getPlayersName() {
+      const playersIds = this.getPlayersId();
+      const playersNames = Meteor.users
+        .find({ _id: { $in: playersIds } }, { fields: { 'services.gitlab.username': 1 } })
+        .map(p => p.services.gitlab.username);
       return playersNames;
     },
     getLastEvent() {
@@ -489,16 +480,17 @@ export default Class.create({
       const playerAnswerEvents = this.gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
-      const questionAndScore = playerAnswerEvents.map(e => ({
+      const questionAndTime = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time:
           e.createdAt.getTime() / 1000 -
           this.gameLog
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
-            .createdAt.getTime() / 1000,
+            .createdAt.getTime() /
+            1000,
       })); // [{questionOrder: o, time: t}, ...]
-      return questionAndScore;
+      return questionAndTime;
     },
     getAvarageScoreForQuestion(qId) {
       const playerAnswerEvents = this.gameLog

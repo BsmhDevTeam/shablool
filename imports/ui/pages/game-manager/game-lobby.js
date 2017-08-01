@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 import GameNavbar from '../../components/game-navbar';
@@ -12,10 +11,7 @@ class GameLobby extends React.Component {
   }
   render() {
     const { game } = this.props;
-    const players = Meteor.users.find(
-        { _id: { $in: game.getPlayersId() } },
-        { fields: { 'services.gitlab.username': 1 } },
-      ).map(p => p.services.gitlab.username);
+    const players = game.getPlayersName();
     console.log(players);
     const startGame = () => {
       const showAlert = () => {

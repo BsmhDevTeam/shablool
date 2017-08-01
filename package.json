@@ -16,7 +16,7 @@
     "react": "^15.6.1",
     "react-addons-pure-render-mixin": "^15.5.2",
     "react-dom": "^15.6.1",
-    "react-dropzone": "^3.13.3",
+    "react-dropzone": "^3.13.4",
     "react-file-drag-and-drop": "^0.1.6",
     "react-mounter": "^1.2.0",
     "recharts": "^1.0.0-alpha.1",
@@ -36,8 +36,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.0.1",
-    "eslint-plugin-react": "^6.10.3",
-    "mocha": "^3.4.2"
+    "eslint-plugin-react": "^6.10.3"
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"
