@@ -27,12 +27,12 @@ GameRouterContainer.propTypes = {
 };
 
 GameRouterContainer.defaultProps = {
-  game: new Game(),
+  game: undefined,
 };
 
 export default createContainer(({ code }) => {
   const imagesHandle = Meteor.subscribe('images.all');
-  const usersHandle = Meteor.subscribe('users.names');
+  const usersHandle = Meteor.subscribe('users.name.by-game', code);
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
   const loading = !imagesHandle.ready() || !gameHandle.ready() || !usersHandle.ready();
   const game = Game.findOne();

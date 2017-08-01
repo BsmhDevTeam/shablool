@@ -3,8 +3,9 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import { sinon } from 'meteor/practicalmeteor:sinon';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
+import { eventTypes } from '/imports/startup/both/constants';
 import Quiz, { Question, Answer } from '../../quizes/quizes';
-import Game, { GameInit, eventTypes, QuestionEnd } from '../games.js';
+import Game, { GameInit, QuestionEnd } from '../games.js';
 import './methods';
 
 describe('games methods', function() {

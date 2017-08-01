@@ -1,12 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import Game, { eventTypes } from '../games.js';
+import { eventTypes } from '/imports/startup/both/constants';
+import Game from '../games.js';
 
-Meteor.publish('games.get-by-code', function(code) {
-  check(code, String);
-  return Game.find({ code });
-});
-
+// Manager publications :
 Meteor.publish('games.games-managed', function() {
   const userId = this.userId;
   return Game.find({
@@ -17,6 +14,7 @@ Meteor.publish('games.games-managed', function() {
   });
 });
 
+// Player publications :
 Meteor.publish('games.games-played', function() {
   const games = Game.find({
     $and: [
@@ -27,12 +25,18 @@ Meteor.publish('games.games-played', function() {
   return games;
 });
 
+// Both :
+Meteor.publish('games.get-by-code', function(code) {
+  check(code, String);
+  return Game.find({ code });
+});
+
 Meteor.publish('games.open', function() {
   const games = Game.find(
     {
       gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
     },
-    { fields: { code: 1 , 'quiz.owner': 1 } },
+    { fields: { code: 1, 'quiz.owner': 1 } },
   );
   return games;
 });

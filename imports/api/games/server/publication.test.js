@@ -3,7 +3,7 @@ import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import './publication.js';
-import Game, { GameInit, eventTypes, QuestionEnd, GameClose, PlayerReg } from '../games.js';
+import Game, { GameInit, GameClose, PlayerReg } from '../games.js';
 import Quiz, { Question, Answer } from '../../quizes/quizes.js';
 
 describe('games publication', function() {

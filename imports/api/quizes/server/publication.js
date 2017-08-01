@@ -2,10 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import Quiz from '../quizes.js';
 
+// Owner publications :
 Meteor.publish('quizes.my-quizes', function() {
   return Quiz.find({ owner: this.userId });
 });
 
+// Public/Owner publications :
 Meteor.publish('quizes.get', function(id) {
   check(id, String);
   return Quiz.find({

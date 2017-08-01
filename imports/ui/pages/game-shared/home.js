@@ -1,10 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
-import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import Game from '/imports/api/games/games';
-import Loading from '../../components/loading.js';
+import { joinGameResult } from '/imports/startup/both/constants';
 
 class Home extends React.Component {
   constructor(props) {
@@ -21,36 +18,35 @@ class Home extends React.Component {
       const gameCode = form.gameCode.value;
       form.gameCode.value = '';
 
-      const maybeGame = Game.find({ code: gameCode }).fetch();
-      const maybeGameUserManage = maybeGame.filter(
-        g => g.quiz.owner === Meteor.userId(),
-      );
-      const maybeRedirectToGameAsManager = maybeGameUserManage.map((g) => {
-        FlowRouter.go('Game.Main', { code: g.code });
-        return g;
-      });
-      if (maybeRedirectToGameAsManager.length !== 0) return;
-
-      const maybeGameUserNotIn = maybeGame.filter(g => !g.isUserRegistered());
-      const maybeGameUserIn = [
-        ...maybeGameUserNotIn.map((g) => {
-          g.applyMethod('playerRegister', []);
-          return g;
-        }),
-        ...maybeGame.filter(g => g.isUserRegistered()),
-      ];
-      const maybeRedirectToGameAsPlayer = maybeGameUserIn.map(g =>
-        FlowRouter.go('Game.Main', { code: g.code }),
-      );
-
       const notifyUser = () => {
         this.setState({ badGameCode: true });
         setTimeout(() => this.setState({ badGameCode: false }), 3000);
       };
 
-      maybeRedirectToGameAsManager.length === 0 &&
-        maybeRedirectToGameAsPlayer.length === 0 &&
-        notifyUser();
+      Meteor.call('joinGame', {
+        code: gameCode,
+      }, (err, res) => {
+        if (err) {
+          console.log(err);
+        } else {
+          switch (res) {
+            case joinGameResult.noGame:
+              notifyUser();
+              break;
+            case joinGameResult.alreadyRegistered:
+              FlowRouter.go('Game.Main', { code: gameCode });
+              break;
+            case joinGameResult.isManager:
+              FlowRouter.go('Game.Main', { code: gameCode });
+              break;
+            case joinGameResult.regSucc:
+              FlowRouter.go('Game.Main', { code: gameCode });
+              break;
+            default:
+              break;
+          }
+        }
+      });
     };
 
     return (
@@ -98,19 +94,4 @@ class Home extends React.Component {
   }
 }
 
-const HomeContainer = ({ loading }) => {
-  if (loading) return <Loading color={'white'} />;
-  return <Home />;
-};
-
-HomeContainer.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
-
-export default createContainer(() => {
-  const gameHandle = Meteor.subscribe('games.open');
-  const loading = !gameHandle.ready();
-  return {
-    loading,
-  };
-}, HomeContainer);
+export default Home;

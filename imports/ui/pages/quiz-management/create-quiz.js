@@ -4,7 +4,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
-import Quiz from '../../../api/quizes/quizes.js';
+import Quiz, { Question, Answer } from '../../../api/quizes/quizes.js';
 import Tag from '../../../api/tags/tags.js';
 import QuizForm from '../../components/quiz-form.js';
 import Image from '../../../api/images/images';
@@ -12,19 +12,9 @@ import Loading from '../../components/loading.js';
 
 // Utilities
 const newQuestion = () => {
-  const answers = [1, 2, 3, 4].map(i => ({
-    _id: uuidV4(),
-    text: '',
-    order: i,
-    points: 0,
-  }));
-  return {
-    _id: uuidV4(),
-    text: '',
-    time: 30,
-    answers,
-    image: 'no-image',
-  };
+  const answers = [1, 2, 3, 4].map(i => (new Answer({ _id: uuidV4(), order: i })));
+  const question = new Question({ _id: uuidV4(), answers });
+  return question;
 };
 
 const normalizeTagName = str =>

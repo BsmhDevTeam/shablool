@@ -1,16 +1,18 @@
 import { Meteor } from 'meteor/meteor';
 import { max } from 'underscore';
+import { check } from 'meteor/check';
+import { joinGameResult, eventTypes } from '/imports/startup/both/constants';
 import Game, {
   PlayerReg,
-  GameStarted,
+  GameStart,
   QuestionStart,
   QuestionEnd,
   PlayerAnswer,
   ShowLeaders,
   GameEnd,
   GameClose,
-  eventTypes,
 } from '../games';
+
 
 Game.extend({
   meteorMethods: {
@@ -24,17 +26,19 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(newReg);
         this.save();
-        return true;
+        return joinGameResult.regSucc;
       };
-      return !this.isUserRegistered() && !this.amIManager() && registerPlayer();
+      return (this.isUserRegistered() && joinGameResult.alreadyRegistered)
+      || (this.amIManager() && joinGameResult.isManager)
+      || registerPlayer();
     },
-    startGame() {
+    startGame() { // TODO: check if the user is the owner
       const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
       const isPlayerRegister = !!playerRegister.length;
       const start = () => {
         // Starting game
-        const gameStarted = new GameStarted();
-        this.gameLog = this.gameLog.concat(gameStarted);
+        const gameStart = new GameStart();
+        this.gameLog = this.gameLog.concat(gameStart);
         this.save();
         // Starting first question
         const firstQuestion = this.quiz.questions.find(q => q.order === 1);
@@ -163,5 +167,14 @@ Game.extend({
         .find(e => e.nameType === eventTypes.GameClose);
       return !!gameClose;
     },
+  },
+});
+
+Meteor.methods({
+  // Methods without instance:
+  'joinGame'({ code }) {
+    check(code, String);
+    const game = Game.findOne({ code });
+    return game ? game.playerRegister() : joinGameResult.noGame;
   },
 });

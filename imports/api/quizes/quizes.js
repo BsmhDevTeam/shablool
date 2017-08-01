@@ -15,6 +15,7 @@ export const Answer = Class.create({
     },
     text: {
       type: String,
+      default: '',
       validators: [
         {
           type: 'minLength',
@@ -73,6 +74,7 @@ export const Question = Class.create({
     },
     text: {
       type: String,
+      default: '',
       validators: [
         {
           type: 'minLength',
@@ -96,6 +98,7 @@ export const Question = Class.create({
     },
     time: {
       type: Number,
+      default: 30,
       validators: [
         {
           type: 'gte',

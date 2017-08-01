@@ -5,6 +5,33 @@ import Quiz from '/imports/api/quizes/quizes.js';
 import Image from '../../api/images/images';
 import QuestionForm from './question-form.js';
 
+const dropStyle = {
+  width: '100%',
+  height: '200px',
+  borderWidth: '2px',
+  borderColor: 'rgb(102, 102, 102)',
+  borderStyle: 'dashed',
+  borderRadius: '5px',
+};
+const activeStyle = {
+  width: '100%',
+  height: '200px',
+  borderWidth: '2px',
+  borderColor: 'rgb(102, 204, 102)',
+  borderStyle: 'solid',
+  borderRadius: '5px',
+  backgroundColor: 'rgb(238, 238, 238)',
+};
+const rejectStyle = {
+  width: '100%',
+  height: '200px',
+  borderWidth: '2px',
+  borderColor: 'rgb(204, 102, 102)',
+  borderStyle: 'solid',
+  borderRadius: '5px',
+  backgroundColor: 'rgb(238, 238, 238)',
+};
+
 // validations
 const validateTitle = (title) => {
   let message;
@@ -29,32 +56,6 @@ class QuizForm extends React.Component {
     const { quiz, validate, actions } = this.props;
     const titleValidation = validate && validateTitle(quiz.title);
     const quizImage = Image.findOne({ _id: quiz.image });
-    const dropStyle = {
-      width: '100%',
-      height: '200px',
-      borderWidth: '2px',
-      borderColor: 'rgb(102, 102, 102)',
-      borderStyle: 'dashed',
-      borderRadius: '5px',
-    };
-    const activeStyle = {
-      width: '100%',
-      height: '200px',
-      borderWidth: '2px',
-      borderColor: 'rgb(102, 204, 102)',
-      borderStyle: 'solid',
-      borderRadius: '5px',
-      backgroundColor: 'rgb(238, 238, 238)',
-    };
-    const rejectStyle = {
-      width: '100%',
-      height: '200px',
-      borderWidth: '2px',
-      borderColor: 'rgb(204, 102, 102)',
-      borderStyle: 'solid',
-      borderRadius: '5px',
-      backgroundColor: 'rgb(238, 238, 238)',
-    };
     const onDrop = (files) => {
       actions.changeQuizImage(files);
       this.setState({
@@ -71,21 +72,19 @@ class QuizForm extends React.Component {
         <div className="row">
           <div className="panel panel-default">
             <div className="panel-body">
-              <div className="">
-                <div className={`form-group ${titleValidation ? 'has-error' : ''}`}>
-                  <input
-                    name="title"
-                    className="input-title form-control"
-                    placeholder="כותרת שאלון"
-                    value={quiz.title}
-                    onChange={actions.changeQuizTitle}
-                  />
-                  {titleValidation
-                    ? <label className="control-label" htmlFor="title">
-                      {titleValidation}
-                    </label>
-                    : ''}
-                </div>
+              <div className={`form-group ${titleValidation ? 'has-error' : ''}`}>
+                <input
+                  name="title"
+                  className="input-title form-control"
+                  placeholder="כותרת שאלון"
+                  value={quiz.title}
+                  onChange={actions.changeQuizTitle}
+                />
+                {titleValidation
+                  ? <label className="control-label" htmlFor="title">
+                    {titleValidation}
+                  </label>
+                  : ''}
               </div>
             </div>
           </div>
@@ -151,14 +150,29 @@ class QuizForm extends React.Component {
                       activeStyle={activeStyle}
                       rejectStyle={rejectStyle}
                     >
-                      { this.state.files.length > 0 || quiz.image !== 'no-image'
-                      ? (
-                        <div className="image-and-button-area">
-                          <button type="button" className="btn btn-danger btn-circle" onClick={removeImage}><i className="glyphicon glyphicon-remove" /></button>
-                          <img className="upload-image" src={this.state.files.length > 0 ? this.state.files[0].preview : quizImage.link()} alt="img" />
+                      {this.state.files.length > 0 || quiz.image !== 'no-image'
+                        ? <div className="image-and-button-area">
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-circle"
+                            onClick={removeImage}
+                          >
+                            <i className="glyphicon glyphicon-remove" />
+                          </button>
+                          <img
+                            className="upload-image"
+                            src={
+                                this.state.files.length > 0
+                                  ? this.state.files[0].preview
+                                  : quizImage.link()
+                              }
+                            alt="img"
+                          />
                         </div>
-                        )
-                      : <p className="upload-text">גרור תמונה או תלחץ על מנת לבחור אחת <i className="fa fa-upload" aria-hidden="true" /></p>}
+                        : <p className="upload-text">
+                            גרור תמונה או תלחץ על מנת לבחור אחת{' '}
+                          <i className="fa fa-upload" aria-hidden="true" />
+                        </p>}
                     </Dropzone>
                   </div>
                 </div>

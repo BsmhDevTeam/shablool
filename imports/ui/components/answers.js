@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { eventTypes } from '../../api/games/games';
+import { eventTypes } from '/imports/startup/both/constants';
 
 const glyphIcons = {
   1: 'fa fa-star',
