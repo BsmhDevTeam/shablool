@@ -230,14 +230,4 @@ describe('games publication', function() {
       });
     });
   });
-
-  describe('games.open', function() {
-    it('get all open games', function(done) {
-      const collector = new PublicationCollector({ userId: 'me' });
-      collector.collect('games.open', (collections) => {
-        assert.equal(collections.games.length, 2);
-        done();
-      });
-    });
-  });
 });
