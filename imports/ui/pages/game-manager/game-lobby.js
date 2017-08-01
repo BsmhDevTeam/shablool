@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GameNavbar from '../../components/game-navbar';
 
-class GameLobby extends React.Component {
+export default class GameLobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,5 +85,3 @@ const PlayersLobby = ({ name }) =>
 PlayersLobby.propTypes = {
   name: PropTypes.string.isRequired,
 };
-
-export default GameLobby;

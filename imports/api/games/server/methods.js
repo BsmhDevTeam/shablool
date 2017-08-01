@@ -29,7 +29,7 @@ Game.extend({
         return joinGameResult.regSucc;
       };
       return (this.isUserRegistered() && joinGameResult.alreadyRegistered)
-      || (this.amIManager() && joinGameResult.isManager)
+      || (this.isManager() && joinGameResult.isManager)
       || registerPlayer();
     },
     startGame() { // TODO: check if the user is the owner

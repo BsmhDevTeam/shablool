@@ -37,4 +37,4 @@ practicalmeteor:sinon
 ostrio:files
 xolvio:cleaner
 practicalmeteor:chai
-peerlibrary:reactive-publish
+reywood:publish-composite

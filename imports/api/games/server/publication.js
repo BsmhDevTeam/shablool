@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { publishComposite } from 'meteor/reywood:publish-composite';
 import { check } from 'meteor/check';
 import { eventTypes } from '/imports/startup/both/constants';
 import Game from '../games.js';
@@ -26,9 +27,22 @@ Meteor.publish('games.games-played', function() {
 });
 
 // Both :
-Meteor.publish('games.get-by-code', function(code) {
-  check(code, String);
-  return Game.find({ code });
+publishComposite('games.get-by-code', function(code) {
+  return {
+    find() {
+      return Game.find({ code });
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: (game && game.getPlayersId()) || [] } },
+            { fields: { 'services.gitlab.username': 1 } },
+          );
+        },
+      },
+    ],
+  };
 });
 
 Meteor.publish('games.open', function() {

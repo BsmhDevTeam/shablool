@@ -7,10 +7,8 @@ import GameManager from '../game-manager/game-manager';
 import GamePlayer from '../game-player/game-player';
 import Loading from '../../components/loading';
 
-const GameRouter = ({ game }) => {
-  const isManager = game.quiz.owner === Meteor.userId();
-  return isManager ? <GameManager game={game} /> : <GamePlayer game={game} />;
-};
+const GameRouter = ({ game }) =>
+  (game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />);
 
 GameRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
@@ -31,10 +29,8 @@ GameRouterContainer.defaultProps = {
 };
 
 export default createContainer(({ code }) => {
-  const imagesHandle = Meteor.subscribe('images.all');
-  const usersHandle = Meteor.subscribe('users.name.by-game', code);
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !imagesHandle.ready() || !gameHandle.ready() || !usersHandle.ready();
-  const game = Game.findOne();
+  const loading = !gameHandle.ready();
+  const game = Game.findOne({ code });
   return { loading, game };
 }, GameRouterContainer);
