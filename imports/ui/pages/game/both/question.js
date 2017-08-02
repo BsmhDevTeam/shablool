@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
@@ -20,7 +19,7 @@ const Question = ({ game }) => {
       <div className="row">
         <GameNavbar text={question.text} num="" />
       </div>
-      {game.quiz.owner === Meteor.userId()
+      {game.quiz.isManager()
         ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={skipQuestion}>
             עבור שאלה
           </a>

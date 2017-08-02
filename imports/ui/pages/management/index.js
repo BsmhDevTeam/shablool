@@ -11,6 +11,7 @@ import Loading from '/imports/ui/components/loading';
 import GameCardPlayed from '/imports/ui/components/game-card-played';
 import GameCardManaged from '/imports/ui/components/game-card-managed.js';
 import { managementTabs } from '/imports/startup/both/constants.js';
+import MyQuizes from './my-quizes';
 
 class Main extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const { quizes, gamesManaged, gamesPlayed } = this.props;
+    const { myQuizes, gamesManaged, gamesPlayed } = this.props;
     const { activeTab, quizDeleted, quizForked, showDeleteQuizAlert, quizToDelete } = this.state;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
@@ -106,58 +107,35 @@ class Main extends React.Component {
             </button>
           </div>
         </div>
-        <div className="">
-          <div className="tab-content">
-            <div
-              className={`tab-pane fade in ${activeTab === managementTabs.myQuizes
-                ? 'active'
-                : ''}`}
-            >
-              <div className="row">
-                <a href="/CreateQuiz" className="add-question">
-                  <div className="panel panel-default" id="add-quiz-panel">
-                    <div className="panel-body">
-                      <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
-                    </div>
-                  </div>
-                </a>
-              </div>
-              {quizes.length
-                ? quizes.map(quiz =>
-                  <div className="row" key={quiz._id}>
-                    <QuizCard quiz={quiz} actions={actions} />
-                  </div>,
-                  )
-                : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
-            </div>
+        <div className="tab-content">
+          <MyQuizes activeTab={activeTab} myQuizes={myQuizes} actions={actions} />
 
-            <div
-              className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged
-                ? 'active'
-                : ''}`}
-            >
-              {gamesManaged.length
-                ? gamesManaged.map(game =>
-                  <div className="row" key={game._id}>
-                    <GameCardManaged game={game} />
-                  </div>,
-                  )
-                : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
-            </div>
+          <div
+            className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged
+              ? 'active'
+              : ''}`}
+          >
+            {gamesManaged.length
+              ? gamesManaged.map(game =>
+                <div className="row" key={game._id}>
+                  <GameCardManaged game={game} />
+                </div>,
+                )
+              : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
+          </div>
 
-            <div
-              className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed
-                ? 'active'
-                : ''}`}
-            >
-              {gamesPlayed.length
-                ? gamesPlayed.map(game =>
-                  <div className="row" key={game._id}>
-                    <GameCardPlayed game={game} />
-                  </div>,
-                  )
-                : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
-            </div>
+          <div
+            className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed
+              ? 'active'
+              : ''}`}
+          >
+            {gamesPlayed.length
+              ? gamesPlayed.map(game =>
+                <div className="row" key={game._id}>
+                  <GameCardPlayed game={game} />
+                </div>,
+                )
+              : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
           </div>
         </div>
         <div id="snackbar" className={quizDeleted || quizForked ? 'show' : ''}>
@@ -191,19 +169,19 @@ class Main extends React.Component {
 }
 
 Main.propTypes = {
-  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
+const ManagementContainer = ({ loading, myQuizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
+  return <Main myQuizes={myQuizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
 ManagementContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
-  quizes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
@@ -224,7 +202,7 @@ export default createContainer(() => {
     !gamesPlayedHandle.ready() ||
     !gamesManagedHandle.ready();
 
-  const quizes = Quiz.find().fetch();
+  const myQuizes = Quiz.find().fetch(); // TODO: fix query
   const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
   const gamesPlayed = Game.find({
     gameLog: { $elemMatch: { playerId: Meteor.userId() } },
@@ -233,7 +211,7 @@ export default createContainer(() => {
     .reverse();
   return {
     loading,
-    quizes,
+    myQuizes,
     gamesPlayed,
     gamesManaged,
   };

@@ -9,7 +9,7 @@ import HistoryPlayer from './games-played/game-stats.js';
 
 
 const HistoryRouter = ({ game }) => {
-  const isManager = game.quiz.owner === Meteor.userId();
+  const isManager = game.isManager();
   return isManager ? <HistoryManager game={game} /> : <HistoryPlayer game={game} />;
 };
 

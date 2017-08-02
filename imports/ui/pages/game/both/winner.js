@@ -1,12 +1,11 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Winner = ({ game }) => {
   const backToHome = () => {
-    const _ = game.quiz.owner === Meteor.userId() ? game.applyMethod('closeGame', []) : null;
+    const _ = game.isManager() ? game.applyMethod('closeGame', []) : null;
     FlowRouter.go('Home');
   };
 

@@ -10,7 +10,7 @@ const Leaders = ({ game }) => {
   return (
     <div id="leaders">
       <div className="game-background" />
-      {game.quiz.owner === Meteor.userId()
+      {game.isManager()
         ? <div className="row">
           <div className="next-question-button">
             <button className="btn btn-primary" onClick={nextQuestion}>
