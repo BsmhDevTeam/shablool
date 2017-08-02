@@ -5,7 +5,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const GameCardManaged = ({ game }) => {
   const showStatistics = () => {
-    FlowRouter.go('Manage.History', { code: game.code });
+    FlowRouter.go('Manage.Game', { code: game.code });
   };
 
   return (

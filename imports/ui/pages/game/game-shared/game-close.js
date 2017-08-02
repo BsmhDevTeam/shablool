@@ -3,7 +3,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 const GameClose = () => {
   const backToHome = () => {
-    FlowRouter.go('Game.Home');
+    FlowRouter.go('Home');
   };
   return (
     <div id="game-close">

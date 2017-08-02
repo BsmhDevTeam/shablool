@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ManageNavbar from '../../components/manage-navbar.js';
-import OneLinesChart from '../../components/one-line-chart';
+import ManageNavbar from '/imports/ui/components/manage-navbar.js';
+import OneLinesChart from '/imports/ui/components/one-line-chart';
 
 const HistoryManager = ({ game }) => (
   <div id="history">

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GameNavbar from '../../components/game-navbar';
+import GameNavbar from '/imports/ui/components/game-navbar';
 
 export default class GameLobby extends React.Component {
   constructor(props) {

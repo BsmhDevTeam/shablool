@@ -7,7 +7,7 @@ import GameNavbar from '../../components/game-navbar';
 const Winner = ({ game }) => {
   const backToHome = () => {
     const _ = game.quiz.owner === Meteor.userId() ? game.applyMethod('closeGame', []) : null;
-    FlowRouter.go('Game.Home');
+    FlowRouter.go('Home');
   };
 
   return (

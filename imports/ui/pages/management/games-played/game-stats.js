@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import ManageNavbar from '../../components/manage-navbar.js';
-import TwoLinesChart from '../../components/two-lines-chart';
+import ManageNavbar from '/imports/ui/components/manage-navbar.js';
+import TwoLinesChart from '/imports/ui/components/two-lines-chart';
 
 const HistoryPlayer = ({ game }) => (
   <div id="history">

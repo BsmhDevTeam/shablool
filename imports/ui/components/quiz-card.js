@@ -15,7 +15,7 @@ const QuizCard = ({ quiz, actions }) => {
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
-    FlowRouter.go('Game.Main', { code: game.code });
+    FlowRouter.go('Game.Play', { code: game.code });
   };
   const quizImage = Image.findOne({ _id: quiz.image });
   return (

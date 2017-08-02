@@ -34,13 +34,13 @@ class Home extends React.Component {
               notifyUser();
               break;
             case joinGameResult.alreadyRegistered:
-              FlowRouter.go('Game.Main', { code: gameCode });
+              FlowRouter.go('Game.Play', { code: gameCode });
               break;
             case joinGameResult.isManager:
-              FlowRouter.go('Game.Main', { code: gameCode });
+              FlowRouter.go('Game.Play', { code: gameCode });
               break;
             case joinGameResult.regSucc:
-              FlowRouter.go('Game.Main', { code: gameCode });
+              FlowRouter.go('Game.Play', { code: gameCode });
               break;
             default:
               break;
