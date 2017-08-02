@@ -1,5 +1,5 @@
 import React from 'react';
-import GameNavbar from '../../components/game-navbar';
+import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Instructions = () => (
   <div>

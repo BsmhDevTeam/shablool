@@ -1,26 +1,25 @@
 import React from 'react';
 import { eventTypes } from '/imports/startup/both/constants';
-import Leaders from '../game-shared/leaders.js';
-import Question from '../game-shared/question.js';
-import QuestionStatistics from '../game-shared/question-statistics';
-import Winner from '../game-shared/winner';
-import Instructions from './instructions.js';
-import AnswerSent from './answer-sent.js';
-import GameClose from '../game-shared/game-close';
+import GameLobby from './owner/lobby';
+import Leaders from './both/leaders';
+import Question from './both/question';
+import QuestionStatistics from './both/question-statistics';
+import Winner from './both/winner';
+import GameClose from './both/game-close';
 
 export default ({ game }) => {
   const mapEventToPages = (event) => {
     switch (event) {
       case eventTypes.GameInit:
-        return null;
+        return <GameLobby game={game} />;
       case eventTypes.PlayerReg:
-        return <Instructions />;
+        return <GameLobby game={game} />;
       case eventTypes.GameStart:
-        return <Instructions />;
+        return <GameLobby game={game} />;
       case eventTypes.QuestionStart:
         return <Question game={game} />;
       case eventTypes.PlayerAnswer:
-        return <AnswerSent />;
+        return <Question game={game} />;
       case eventTypes.QuestionEnd:
         return <QuestionStatistics game={game} />;
       case eventTypes.ShowLeaders:
@@ -33,6 +32,6 @@ export default ({ game }) => {
         return null;
     }
   };
-  const event = game.getGamePage();
+  const event = game.getLastEvent().nameType;
   return mapEventToPages(event);
 };

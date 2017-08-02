@@ -1,5 +1,5 @@
 import React from 'react';
-import Loading from '../../components/loading';
+import Loading from '/imports/ui/components/loading';
 
 const AnswerSent = () => (
   <div id="answer-sent">

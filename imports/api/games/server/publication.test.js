@@ -2,9 +2,10 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
-import './publication.js';
+import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
 import Game, { GameInit, GameClose, PlayerReg } from '../games.js';
-import Quiz, { Question, Answer } from '../../quizes/quizes.js';
+import './publication.js';
+
 
 describe('games publication', function() {
   beforeEach(function() {

@@ -10,16 +10,22 @@ export const eventTypes = {
   GameClose: 'GAME_CLOSE',
 };
 
-export const joinGameResult = {
+export const joinGameResults = {
   alreadyRegistered: 'ALREADY_REGISTERED',
   isManager: 'IS_MANAGER',
   noGame: 'NO_GAME',
   regSucc: 'REG_SUCC',
 };
 
-export const startGameResult = {
+export const startGameResults = {
   alreadyStarted: 'ALREADY_STARTED',
   notOwner: 'NOT_OWNER',
   noPlayersReg: 'NO_PLAYERS_REG',
   startSucc: 'START_SUCC',
+};
+
+export const managementTabs = {
+  myQuizes: 'MY_QUIZES',
+  gamesManaged: 'GAMES_MANAGED',
+  gamesPlayed: 'GAMES_PLAYED',
 };

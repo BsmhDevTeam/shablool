@@ -3,9 +3,10 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import Game from '/imports/api/games/games';
-import GameManager from '../game-manager/game-manager';
-import GamePlayer from '../game-player/game-player';
-import Loading from '../../components/loading';
+import Loading from '/imports/ui/components/loading';
+import GameManager from './owner-router.js';
+import GamePlayer from './player-router.js';
+
 
 const GameRouter = ({ game }) =>
   (game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />);

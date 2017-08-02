@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { max } from 'underscore';
 import { check } from 'meteor/check';
-import { joinGameResult, eventTypes } from '/imports/startup/both/constants';
+import { joinGameResults, eventTypes } from '/imports/startup/both/constants';
 import Game, {
   PlayerReg,
   GameStart,
@@ -26,10 +26,10 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(newReg);
         this.save();
-        return joinGameResult.regSucc;
+        return joinGameResults.regSucc;
       };
-      return (this.isUserRegistered() && joinGameResult.alreadyRegistered)
-      || (this.isManager() && joinGameResult.isManager)
+      return (this.isUserRegistered() && joinGameResults.alreadyRegistered)
+      || (this.isManager() && joinGameResults.isManager)
       || registerPlayer();
     },
     startGame() { // TODO: check if the user is the owner
@@ -175,6 +175,6 @@ Meteor.methods({
   'joinGame'({ code }) {
     check(code, String);
     const game = Game.findOne({ code });
-    return game ? game.playerRegister() : joinGameResult.noGame;
+    return game ? game.playerRegister() : joinGameResults.noGame;
   },
 });

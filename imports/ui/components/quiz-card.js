@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
-import Image from '../../api/images/images';
+import Image from '/imports/api/images/images';
 
 const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {

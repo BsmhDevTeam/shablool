@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Answers from '../../components/answers';
-import GameNavbar from '../../components/game-navbar';
-import CountdownTimer from '../../components/count-down-timer';
-import Image from '../../../api/images/images';
+import Answers from '/imports/ui/components/answers';
+import GameNavbar from '/imports/ui/components/game-navbar';
+import CountdownTimer from '/imports/ui/components/count-down-timer';
+import Image from '/imports/api/images/images';
 
 const Question = ({ game }) => {
   const question = game.lastQuestionToStart();

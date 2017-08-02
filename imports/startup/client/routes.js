@@ -16,10 +16,10 @@ import CreateQuiz from '/imports/ui/pages/management/my-quizes/create-quiz';
 import EditQuiz from '/imports/ui/pages//management/my-quizes/edit-quiz.js';
 import Search from '/imports/ui/pages/search/search.js';
 import ViewQuiz from '/imports/ui/pages/search/view-quiz';
-import Main from '/imports/ui/pages/management/main.js';
-import GameRouter from '/imports/ui/pages/game/game-router';
-import HistoryRouter from '../../ui/pages/game-shared/history-router';
-import NotFound from '../../ui/pages/not-found/not-found';
+import Main from '/imports/ui/pages/management';
+import GameRouter from '/imports/ui/pages/game/router';
+import HistoryRouter from '/imports/ui/pages/management/game-stats-router';
+import NotFound from '/imports/ui/pages/not-found/not-found';
 
 
 const verifyLogin = () => {

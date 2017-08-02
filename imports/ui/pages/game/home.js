@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { joinGameResult } from '/imports/startup/both/constants';
+import { joinGameResults } from '/imports/startup/both/constants';
 
 class Home extends React.Component {
   constructor(props) {
@@ -30,16 +30,16 @@ class Home extends React.Component {
           console.log(err);
         } else {
           switch (res) {
-            case joinGameResult.noGame:
+            case joinGameResults.noGame:
               notifyUser();
               break;
-            case joinGameResult.alreadyRegistered:
+            case joinGameResults.alreadyRegistered:
               FlowRouter.go('Game.Play', { code: gameCode });
               break;
-            case joinGameResult.isManager:
+            case joinGameResults.isManager:
               FlowRouter.go('Game.Play', { code: gameCode });
               break;
-            case joinGameResult.regSucc:
+            case joinGameResults.regSucc:
               FlowRouter.go('Game.Play', { code: gameCode });
               break;
             default:

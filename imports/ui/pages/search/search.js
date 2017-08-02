@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes.js';
-import QuizCard from '../../components/quiz-card.js';
-import Loading from '../../components/loading';
+import QuizCard from '/imports/ui/components/quiz-card.js';
+import Loading from '/imports/ui/components/loading';
 
 class Search extends React.Component {
   constructor(props) {

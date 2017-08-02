@@ -4,7 +4,7 @@ import { sinon } from 'meteor/practicalmeteor:sinon';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
 import { eventTypes } from '/imports/startup/both/constants';
-import Quiz, { Question, Answer } from '../../quizes/quizes';
+import Quiz, { Question, Answer } from '/imports/api/quizes/quizes';
 import Game, { GameInit, QuestionEnd } from '../games.js';
 import './methods';
 

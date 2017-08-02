@@ -4,47 +4,46 @@ import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
-import Quiz from '../../../api/quizes/quizes';
-import Game from '../../../api/games/games';
-import QuizCard from '../../components/quiz-card';
-import Loading from '../../components/loading';
-import GameCardPlayed from '../../components/gameCardPlayed';
-import GameCardManaged from '../../components/gameCardManaged.js';
-
-const tabNames = {
-  myQuizes: 'my-quizes',
-  gamesManaged: 'games-managed',
-  gamesPlayed: 'games-played',
-};
+import Quiz from '/imports/api/quizes/quizes';
+import Game from '/imports/api/games/games';
+import QuizCard from '/imports/ui/components/quiz-card';
+import Loading from '/imports/ui/components/loading';
+import GameCardPlayed from '/imports/ui/components/game-card-played';
+import GameCardManaged from '/imports/ui/components/game-card-managed.js';
+import { managementTabs } from '/imports/startup/both/constants.js';
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: tabNames.myQuizes,
+      activeTab: managementTabs.myQuizes,
+      quizToDelete: null,
+      showDeleteQuizAlert: false,
       quizDeleted: false,
       quizForked: false,
-      showDeleteQuizAlert: false,
-      quizToDelete: null,
     };
   }
 
   render() {
     const { quizes, gamesManaged, gamesPlayed } = this.props;
-    const activeTab = this.state.activeTab;
+    const { activeTab, quizDeleted, quizForked, showDeleteQuizAlert, quizToDelete } = this.state;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
+
     const showDeleteAlert = (quiz) => {
       this.setState({ quizToDelete: quiz, showDeleteQuizAlert: true });
     };
+
     const deleteQuiz = () => {
-      this.state.quizToDelete.applyMethod('delete', []);
+      quizToDelete.applyMethod('delete', []);
+
       const notifyUser = () => {
         this.setState({ quizDeleted: true });
         setTimeout(() => this.setState({ quizDeleted: false }), 3000);
       };
       notifyUser();
     };
+
     const forkQuiz = (quiz) => {
       const newQuiz = new Quiz({
         questions: quiz.questions,
@@ -53,16 +52,19 @@ class Main extends React.Component {
         owner: Meteor.userId(),
       });
       newQuiz.applyMethod('create', []);
+
       const notifyUser = () => {
         this.setState({ quizForked: true });
         setTimeout(() => this.setState({ quizForked: false }), 3000);
       };
       notifyUser();
     };
+
     const actions = {
       showDeleteAlert,
       forkQuiz,
     };
+
     return (
       <div id="quiz-management-main">
         <div
@@ -72,32 +74,32 @@ class Main extends React.Component {
         >
           <div className="btn-group" role="group">
             <button
-              className={`btn ${activeTab === tabNames.myQuizes ? 'btn-primary' : 'btn-default'}`}
-              onClick={changeTab(tabNames.myQuizes)}
+              className={`btn ${activeTab === managementTabs.myQuizes
+                ? 'btn-primary'
+                : 'btn-default'}`}
+              onClick={changeTab(managementTabs.myQuizes)}
             >
-              <span
-                className="glyphicon glyphicon-list-alt"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
               <div className="hidden-xs">השאלונים שלי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              className={`btn ${activeTab === tabNames.gamesManaged ? 'btn-primary' : 'btn-default'}`}
-              onClick={changeTab(tabNames.gamesManaged)}
+              className={`btn ${activeTab === managementTabs.gamesManaged
+                ? 'btn-primary'
+                : 'btn-default'}`}
+              onClick={changeTab(managementTabs.gamesManaged)}
             >
-              <span
-                className="glyphicon glyphicon-briefcase"
-                aria-hidden="true"
-              />
+              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
               <div className="hidden-xs">משחקים שניהלתי</div>
             </button>
           </div>
           <div className="btn-group" role="group">
             <button
-              className={`btn ${activeTab === tabNames.gamesPlayed ? 'btn-primary' : 'btn-default'}`}
-              onClick={changeTab(tabNames.gamesPlayed)}
+              className={`btn ${activeTab === managementTabs.gamesPlayed
+                ? 'btn-primary'
+                : 'btn-default'}`}
+              onClick={changeTab(managementTabs.gamesPlayed)}
             >
               <span className="glyphicon glyphicon-stats" aria-hidden="true" />
               <div className="hidden-xs">משחקים ששיחקתי</div>
@@ -107,69 +109,69 @@ class Main extends React.Component {
         <div className="">
           <div className="tab-content">
             <div
-              className={`tab-pane fade in ${activeTab === tabNames.myQuizes ? 'active' : ''}`}
+              className={`tab-pane fade in ${activeTab === managementTabs.myQuizes
+                ? 'active'
+                : ''}`}
             >
               <div className="row">
                 <a href="/CreateQuiz" className="add-question">
                   <div className="panel panel-default" id="add-quiz-panel">
                     <div className="panel-body">
-                      <span
-                        className="glphicon glyphicon-plus"
-                        id="add-quiz-plus-icon"
-                      />
+                      <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
                     </div>
                   </div>
                 </a>
               </div>
               {quizes.length
-                ? quizes.map(quiz => (
+                ? quizes.map(quiz =>
                   <div className="row" key={quiz._id}>
                     <QuizCard quiz={quiz} actions={actions} />
-                  </div>
-                  ))
+                  </div>,
+                  )
                 : <h3>לא יצרת אפילו שאלון אחד, למה אתה מחכה?</h3>}
             </div>
 
             <div
-              className={`tab-pane fade in ${activeTab === tabNames.gamesManaged ? 'active' : ''}`}
+              className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged
+                ? 'active'
+                : ''}`}
             >
               {gamesManaged.length
-                ? gamesManaged.map(game => (
+                ? gamesManaged.map(game =>
                   <div className="row" key={game._id}>
                     <GameCardManaged game={game} />
-                  </div>
-                  ))
+                  </div>,
+                  )
                 : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
             </div>
 
             <div
-              className={`tab-pane fade in ${activeTab === tabNames.gamesPlayed ? 'active' : ''}`}
+              className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed
+                ? 'active'
+                : ''}`}
             >
               {gamesPlayed.length
-                ? gamesPlayed.map(game => (
+                ? gamesPlayed.map(game =>
                   <div className="row" key={game._id}>
                     <GameCardPlayed game={game} />
-                  </div>
-                  ))
+                  </div>,
+                  )
                 : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
             </div>
           </div>
         </div>
-        <div
-          id="snackbar"
-          className={
-            this.state.quizDeleted || this.state.quizForked ? 'show' : ''
-          }
-        >
-          {this.state.quizDeleted
-            ? 'השאלון נמחק בהצלחה'
-            : 'השאלון הועתק בהצלחה'}
+        <div id="snackbar" className={quizDeleted || quizForked ? 'show' : ''}>
+          {quizDeleted ? 'השאלון נמחק בהצלחה' : 'השאלון הועתק בהצלחה'}
         </div>
         <SweetAlert
-          show={this.state.showDeleteQuizAlert}
+          show={showDeleteQuizAlert}
           title="מחיקת שאלון"
           type="warning"
-          text={this.state.showDeleteQuizAlert ? `האם אתה בטוח שברצונך למחוק את השאלון: ${this.state.quizToDelete.title}?` : ''}
+          text={
+            showDeleteQuizAlert
+              ? `האם אתה בטוח שברצונך למחוק את השאלון: ${quizToDelete.title}?`
+              : ''
+          }
           showCancelButton
           confirmButtonText="מחק!"
           cancelButtonText="בטל"
@@ -194,20 +196,9 @@ Main.propTypes = {
   gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const ManagementContainer = ({
-  loading,
-  quizes,
-  gamesPlayed,
-  gamesManaged,
-}) => {
+const ManagementContainer = ({ loading, quizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return (
-    <Main
-      quizes={quizes}
-      gamesPlayed={gamesPlayed}
-      gamesManaged={gamesManaged}
-    />
-  );
+  return <Main quizes={quizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
 ManagementContainer.propTypes = {
@@ -234,9 +225,7 @@ export default createContainer(() => {
     !gamesManagedHandle.ready();
 
   const quizes = Quiz.find().fetch();
-  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() })
-    .fetch()
-    .reverse();
+  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
   const gamesPlayed = Game.find({
     gameLog: { $elemMatch: { playerId: Meteor.userId() } },
   })

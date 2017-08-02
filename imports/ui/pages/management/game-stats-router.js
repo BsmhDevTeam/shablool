@@ -3,9 +3,10 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import Game from '/imports/api/games/games';
-import HistoryManager from './games-managed/game-stats.js';
-import HistoryPlayer from './games-played/games-stats.js';
-import Loading from '../../components/loading';
+import Loading from '/imports/ui/components/loading';
+import HistoryManager from './games-managed/games-stats.js';
+import HistoryPlayer from './games-played/game-stats.js';
+
 
 const HistoryRouter = ({ game }) => {
   const isManager = game.quiz.owner === Meteor.userId();

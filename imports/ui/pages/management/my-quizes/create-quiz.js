@@ -4,11 +4,11 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
-import Quiz, { Question, Answer } from '../../../api/quizes/quizes.js';
-import Tag from '../../../api/tags/tags.js';
-import QuizForm from '../../components/quiz-form.js';
-import Image from '../../../api/images/images';
-import Loading from '../../components/loading.js';
+import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
+import Tag from '/imports/api/tags/tags.js';
+import QuizForm from '/imports/ui/components/quiz-form.js';
+import Image from '/imports/api/images/images';
+import Loading from '/imports/ui/components/loading.js';
 
 // Utilities
 const newQuestion = () => {

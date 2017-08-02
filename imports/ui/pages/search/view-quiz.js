@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import React from 'react';
-import Quiz from '../../../api/quizes/quizes';
-import Loading from '../../components/loading';
+import Quiz from '/imports/api/quizes/quizes';
+import Loading from '/imports/ui/components/loading';
 
 const glyphIcons = {
   1: 'fa fa-star',

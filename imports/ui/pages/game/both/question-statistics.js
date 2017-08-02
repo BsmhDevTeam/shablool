@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Answers from '../../components/answers';
-import GameNavbar from '../../components/game-navbar';
-import AnswerBar from '../../components/answer-bar-chart';
+import Answers from '/imports/ui/components/answers';
+import GameNavbar from '/imports/ui/components/game-navbar';
+import AnswerBar from '/imports/ui/components/answer-bar-chart';
 
 const QuestionStatistics = ({ game }) => {
   const question = game.lastQuestionToStart();

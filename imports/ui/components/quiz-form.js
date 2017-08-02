@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import Quiz from '/imports/api/quizes/quizes.js';
-import Image from '../../api/images/images';
+import Image from '/imports/api/images/images';
 import QuestionForm from './question-form.js';
 
 const dropStyle = {
