@@ -19,7 +19,7 @@ const Question = ({ game }) => {
       <div className="row">
         <GameNavbar text={question.text} num="" />
       </div>
-      {game.quiz.isManager()
+      {game.isManager()
         ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={skipQuestion}>
             עבור שאלה
           </a>

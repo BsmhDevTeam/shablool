@@ -106,7 +106,7 @@ const QuizCard = ({ quiz, actions }) => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            {quiz.getTags().map(t => <TagTemplate key={t._id} tag={t} />)}
+            {quiz.tags.map(t => <TagTemplate key={t} tag={t} />)}
           </div>
         </div>
       </div>
@@ -122,13 +122,13 @@ QuizCard.propTypes = {
 const TagTemplate = ({ tag }) => (
   <h4 className="pull-right tag">
     <span className="label label-info" aria-hidden="true">
-      {tag.name}
+      {tag}
     </span>
   </h4>
 );
 
 TagTemplate.propTypes = {
-  tag: PropTypes.instanceOf(Object).isRequired,
+  tag: PropTypes.string.isRequired,
 };
 
 export default QuizCard;

@@ -188,7 +188,6 @@ ManagementContainer.propTypes = {
 
 export default createContainer(() => {
   const imagesHandle = Meteor.subscribe('images.all');
-  const tagsHandle = Meteor.subscribe('tags.all');
   const usersHandle = Meteor.subscribe('users.names');
   const quizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
@@ -196,7 +195,6 @@ export default createContainer(() => {
 
   const loading =
     !imagesHandle.ready() ||
-    !tagsHandle.ready() ||
     !quizesHandle.ready() ||
     !usersHandle.ready() ||
     !gamesPlayedHandle.ready() ||

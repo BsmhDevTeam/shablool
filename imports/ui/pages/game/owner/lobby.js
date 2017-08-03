@@ -12,7 +12,6 @@ export default class GameLobby extends React.Component {
   render() {
     const { game } = this.props;
     const players = game.getPlayersName();
-    console.log(players);
     const startGame = () => {
       const showAlert = () => {
         this.setState({ showNoPlayerAlert: true });

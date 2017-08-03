@@ -1,6 +1,5 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
-import Tag from '../tags/tags.js';
 
 const Quizes = new Mongo.Collection('quizes');
 
@@ -190,9 +189,5 @@ export default Class.create({
 
   meteorMethods: {},
 
-  helpers: {
-    getTags() {
-      return Tag.find({ _id: { $in: this.tags } });
-    },
-  },
+  helpers: {},
 });
