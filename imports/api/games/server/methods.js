@@ -32,7 +32,7 @@ Game.extend({
       || (this.isManager() && joinGameResults.isManager)
       || registerPlayer();
     },
-    startGame() { // TODO: check if the user is the owner
+    startGame() {
       const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
       const isPlayerRegister = !!playerRegister.length;
       const start = () => {
@@ -59,7 +59,7 @@ Game.extend({
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return true;
       };
-      return isPlayerRegister ? start() : false;
+      return isPlayerRegister && this.isManager() ? start() : false;
     },
     questionEnd(qId) {
       const addToGameLog = () => {
@@ -68,7 +68,6 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(questionEnd);
         this.save();
-        console.log('gameLog: ', this.gameLog);
         return true;
       };
       const questionEnd = this.gameLog
@@ -102,8 +101,6 @@ Game.extend({
         .filter(e => e.nameType === eventTypes.PlayerReg)
         .find(e => e.playerId === Meteor.userId());
 
-      const isGameManager = this.quiz.owner === Meteor.userId();
-
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
           playerId: Meteor.userId(),
@@ -120,7 +117,7 @@ Game.extend({
         !isQuestionStarted ||
         isQuestionClosed ||
         playerAlreadyAnswer ||
-        isGameManager ||
+        this.isManager() ||
         addingPlayerAnswerEvent()
       );
     },
@@ -145,9 +142,15 @@ Game.extend({
       return true;
     },
     endGame() {
-      const gameEnd = new GameEnd();
-      this.gameLog = this.gameLog.concat(gameEnd);
-      this.save();
+      const addToGameLog = () => {
+        const gameEnd = new GameEnd();
+        this.gameLog = this.gameLog.concat(gameEnd);
+        this.save();
+        return true;
+      };
+      const gameEnd = this.gameLog
+        .find(e => e.nameType === eventTypes.GameEnd);
+      return gameEnd ? false : addToGameLog();
     },
     endGameOrNextQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
