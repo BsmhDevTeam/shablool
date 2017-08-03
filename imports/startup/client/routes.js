@@ -12,13 +12,13 @@ import LoginLayout from '/imports/ui/layouts/login.js';
 import Home from '/imports/ui/pages/game/home';
 import Login from '/imports/ui/pages/login/login';
 import LoginError from '/imports/ui/pages/login/login-error';
-import CreateQuiz from '/imports/ui/pages/management/my-quizes/create-quiz';
-import EditQuiz from '/imports/ui/pages//management/my-quizes/edit-quiz.js';
+import CreateQuiz from '/imports/ui/pages/manage/my-quizes/create-quiz';
+import EditQuiz from '/imports/ui/pages//manage/my-quizes/edit-quiz.js';
 import Search from '/imports/ui/pages/search/search.js';
 import ViewQuiz from '/imports/ui/pages/search/view-quiz';
-import Main from '/imports/ui/pages/management';
+import Main from '/imports/ui/pages/manage';
 import GameRouter from '/imports/ui/pages/game/router';
-import HistoryRouter from '/imports/ui/pages/management/game-stats-router';
+import HistoryRouter from '/imports/ui/pages/manage/game-stats-router';
 import NotFound from '/imports/ui/pages/not-found/not-found';
 
 

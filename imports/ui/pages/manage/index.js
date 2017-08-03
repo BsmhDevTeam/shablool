@@ -6,14 +6,13 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes';
 import Game from '/imports/api/games/games';
-import QuizCard from '/imports/ui/components/quiz-card';
 import Loading from '/imports/ui/components/loading';
-import GameCardPlayed from '/imports/ui/components/game-card-played';
-import GameCardManaged from '/imports/ui/components/game-card-managed.js';
 import { managementTabs } from '/imports/startup/both/constants.js';
 import MyQuizes from './my-quizes';
+import GamesManaged from './games-managed';
+import GamesPlayed from './games-played';
 
-class Main extends React.Component {
+class Manage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,76 +66,14 @@ class Main extends React.Component {
     };
 
     return (
-      <div id="quiz-management-main">
-        <div
-          className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg"
-          id="tabs-area"
-          role="group"
-        >
-          <div className="btn-group" role="group">
-            <button
-              className={`btn ${activeTab === managementTabs.myQuizes
-                ? 'btn-primary'
-                : 'btn-default'}`}
-              onClick={changeTab(managementTabs.myQuizes)}
-            >
-              <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
-              <div className="hidden-xs">השאלונים שלי</div>
-            </button>
-          </div>
-          <div className="btn-group" role="group">
-            <button
-              className={`btn ${activeTab === managementTabs.gamesManaged
-                ? 'btn-primary'
-                : 'btn-default'}`}
-              onClick={changeTab(managementTabs.gamesManaged)}
-            >
-              <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
-              <div className="hidden-xs">משחקים שניהלתי</div>
-            </button>
-          </div>
-          <div className="btn-group" role="group">
-            <button
-              className={`btn ${activeTab === managementTabs.gamesPlayed
-                ? 'btn-primary'
-                : 'btn-default'}`}
-              onClick={changeTab(managementTabs.gamesPlayed)}
-            >
-              <span className="glyphicon glyphicon-stats" aria-hidden="true" />
-              <div className="hidden-xs">משחקים ששיחקתי</div>
-            </button>
-          </div>
-        </div>
+      <div id="management">
+        <ManageTabs activeTab={activeTab} changeTab={changeTab} />
         <div className="tab-content">
           <MyQuizes activeTab={activeTab} myQuizes={myQuizes} actions={actions} />
 
-          <div
-            className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged
-              ? 'active'
-              : ''}`}
-          >
-            {gamesManaged.length
-              ? gamesManaged.map(game =>
-                <div className="row" key={game._id}>
-                  <GameCardManaged game={game} />
-                </div>,
-                )
-              : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
-          </div>
+          <GamesManaged activeTab={activeTab} gamesManaged={gamesManaged} />
 
-          <div
-            className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed
-              ? 'active'
-              : ''}`}
-          >
-            {gamesPlayed.length
-              ? gamesPlayed.map(game =>
-                <div className="row" key={game._id}>
-                  <GameCardPlayed game={game} />
-                </div>,
-                )
-              : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}
-          </div>
+          <GamesPlayed activeTab={activeTab} gamesPlayed={gamesPlayed} />
         </div>
         <div id="snackbar" className={quizDeleted || quizForked ? 'show' : ''}>
           {quizDeleted ? 'השאלון נמחק בהצלחה' : 'השאלון הועתק בהצלחה'}
@@ -168,18 +105,18 @@ class Main extends React.Component {
   }
 }
 
-Main.propTypes = {
+Manage.propTypes = {
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const ManagementContainer = ({ loading, myQuizes, gamesPlayed, gamesManaged }) => {
+const ManageContainer = ({ loading, myQuizes, gamesPlayed, gamesManaged }) => {
   if (loading) return <Loading />;
-  return <Main myQuizes={myQuizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
+  return <Manage myQuizes={myQuizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
 };
 
-ManagementContainer.propTypes = {
+ManageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
   gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -187,26 +124,16 @@ ManagementContainer.propTypes = {
 };
 
 export default createContainer(() => {
-  const imagesHandle = Meteor.subscribe('images.all');
-  const tagsHandle = Meteor.subscribe('tags.all');
-  const usersHandle = Meteor.subscribe('users.names');
-  const quizesHandle = Meteor.subscribe('quizes.my-quizes');
+  const myQuizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
   const gamesManagedHandle = Meteor.subscribe('games.games-managed');
 
   const loading =
-    !imagesHandle.ready() ||
-    !tagsHandle.ready() ||
-    !quizesHandle.ready() ||
-    !usersHandle.ready() ||
-    !gamesPlayedHandle.ready() ||
-    !gamesManagedHandle.ready();
+    !myQuizesHandle.ready() || !gamesPlayedHandle.ready() || !gamesManagedHandle.ready();
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
   const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
-  const gamesPlayed = Game.find({
-    gameLog: { $elemMatch: { playerId: Meteor.userId() } },
-  })
+  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: Meteor.userId() } } })
     .fetch()
     .reverse();
   return {
@@ -215,4 +142,49 @@ export default createContainer(() => {
     gamesPlayed,
     gamesManaged,
   };
-}, ManagementContainer);
+}, ManageContainer);
+
+const ManageTabs = ({ activeTab, changeTab }) => (
+  <div
+    className="tab-btns btn-pref btn-group btn-group-justified btn-group-lg"
+    id="tabs-area"
+    role="group"
+  >
+    <div className="btn-group" role="group">
+      <button
+        className={`btn ${activeTab === managementTabs.myQuizes ? 'btn-primary' : 'btn-default'}`}
+        onClick={changeTab(managementTabs.myQuizes)}
+      >
+        <span className="glyphicon glyphicon-list-alt" aria-hidden="true" />
+        <div className="hidden-xs">השאלונים שלי</div>
+      </button>
+    </div>
+    <div className="btn-group" role="group">
+      <button
+        className={`btn ${activeTab === managementTabs.gamesManaged
+            ? 'btn-primary'
+            : 'btn-default'}`}
+        onClick={changeTab(managementTabs.gamesManaged)}
+      >
+        <span className="glyphicon glyphicon-briefcase" aria-hidden="true" />
+        <div className="hidden-xs">משחקים שניהלתי</div>
+      </button>
+    </div>
+    <div className="btn-group" role="group">
+      <button
+        className={`btn ${activeTab === managementTabs.gamesPlayed
+            ? 'btn-primary'
+            : 'btn-default'}`}
+        onClick={changeTab(managementTabs.gamesPlayed)}
+      >
+        <span className="glyphicon glyphicon-stats" aria-hidden="true" />
+        <div className="hidden-xs">משחקים ששיחקתי</div>
+      </button>
+    </div>
+  </div>
+  );
+
+ManageTabs.propTypes = {
+  activeTab: PropTypes.string.isRequired,
+  changeTab: PropTypes.func.isRequired,
+};
