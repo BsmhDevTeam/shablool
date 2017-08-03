@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz from '/imports/api/quizes/quizes';
-import Tag from '/imports/api/tags/tags.js';
 import QuizForm from '/imports/ui/components/quiz-form.js';
 import Image from '/imports/api/images/images';
 import Loading from '/imports/ui/components/loading';
@@ -79,23 +78,17 @@ class EditQuiz extends React.Component {
       // clear form
       form.tag.value = '';
 
-      // create new tag
-      const newTag = {
-        _id: uuidV4(),
-        name: normalizeTagName(tagName),
-      };
-
       // update state
       const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      return quiz.tags.find(t => t.name === tagName)
+      const quiz$ = { ...quiz, tags: [...quiz.tags, normalizeTagName(tagName)] };
+      return quiz.tags.find(t => t === normalizeTagName(tagName))
         ? 'Nothing'
         : this.setState({ quiz: quiz$ });
     };
 
-    const removeTag = id => () => {
+    const removeTag = tag => () => {
       const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t._id !== id) };
+      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t !== tag) };
       this.setState({ quiz: quiz$ });
     };
 
@@ -244,14 +237,10 @@ class EditQuiz extends React.Component {
 
     const saveQuiz = () => {
       const quiz = this.state.quiz;
-      const tags = quiz.tags.map((t) => {
-        const tag = Tag.findOne({ name: t.name });
-        return tag ? tag._id : new Tag(t).applyMethod('create', []);
-      });
 
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions, tags }], (err, result) => result && FlowRouter.go('Manage.Home'));
+      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && FlowRouter.go('Manage.Home'));
     };
 
     const uploadImages = (e) => {
@@ -299,7 +288,7 @@ EditQuiz.propTypes = {
 const EditQuizContainer = ({ loading }) => {
   if (loading) return <Loading />;
   const quiz = Quiz.findOne();
-  return <EditQuiz quiz={{ ...quiz, tags: quiz.getTags().fetch() }} />;
+  return <EditQuiz quiz={{ ...quiz }} />;
 };
 
 EditQuizContainer.propTypes = {
@@ -307,7 +296,6 @@ EditQuizContainer.propTypes = {
 };
 
 export default createContainer(({ id }) => {
-  Meteor.subscribe('tags.all');
   const quizHandle = Meteor.subscribe('quizes.get', id);
   const imagesHandle = Meteor.subscribe('images.all');
   const loading = !imagesHandle.ready() && !quizHandle.ready();

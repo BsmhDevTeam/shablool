@@ -22,7 +22,6 @@ less@2.7.9                        # Leaner CSS language
 
 practicalmeteor:mocha             # A package for writing and running your meteor app and package tests with mocha
 johanbrook:publication-collector  # Test a Meteor publication by collecting its output
-jagi:astronomy                    # Model layer for your meteor app
 arillo:flow-router-helpers
 react-meteor-data
 static-html
@@ -38,3 +37,4 @@ ostrio:files
 xolvio:cleaner
 practicalmeteor:chai
 reywood:publish-composite
+jagi:astronomy

@@ -137,7 +137,7 @@ class QuizForm extends React.Component {
                   </div>
                   <div className="row">
                     <div className="">
-                      {quiz.tags.map(t => <TagTemplate key={t._id} tag={t} actions={actions} />)}
+                      {quiz.tags.map(t => <TagTemplate key={t} tag={t} actions={actions} />)}
                     </div>
                   </div>
                 </div>
@@ -207,14 +207,14 @@ const TagTemplate = ({ tag, actions }) =>
     <span
       className="label label-info clickable"
       aria-hidden="true"
-      onClick={actions.removeTag(tag._id)}
+      onClick={actions.removeTag(tag)}
     >
-      {tag.name}
+      {tag}
     </span>
   </h3>;
 
 TagTemplate.propTypes = {
-  tag: PropTypes.instanceOf(Object).isRequired,
+  tag: PropTypes.string.isRequired,
   actions: PropTypes.instanceOf(Object).isRequired,
 };
 

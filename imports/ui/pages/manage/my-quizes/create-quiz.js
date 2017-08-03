@@ -5,7 +5,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
-import Tag from '/imports/api/tags/tags.js';
 import QuizForm from '/imports/ui/components/quiz-form.js';
 import Image from '/imports/api/images/images';
 import Loading from '/imports/ui/components/loading.js';
@@ -110,21 +109,15 @@ class CreateQuiz extends React.Component {
       // clear form
       form.tag.value = '';
 
-      // create new tag
-      const newTag = {
-        _id: uuidV4(),
-        name: normalizeTagName(tagName),
-      };
-
       // update state
       const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: [...quiz.tags, newTag] };
-      return quiz.tags.find(t => t.name === tagName) ? 'Nothing' : this.setState({ quiz: quiz$ });
+      const quiz$ = { ...quiz, tags: [...quiz.tags, normalizeTagName(tagName)] };
+      return quiz.tags.find(t => t === normalizeTagName(tagName)) ? 'Nothing' : this.setState({ quiz: quiz$ });
     };
 
-    const removeTag = id => () => {
+    const removeTag = tag => () => {
       const quiz = this.state.quiz;
-      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t._id !== id) };
+      const quiz$ = { ...quiz, tags: quiz.tags.filter(t => t !== tag) };
       this.setState({ quiz: quiz$ });
     };
 
@@ -227,13 +220,8 @@ class CreateQuiz extends React.Component {
 
     const saveQuiz = () => {
       const quiz = this.state.quiz;
-      const tags = quiz.tags.map((t) => {
-        const tag = Tag.findOne({ name: t.name });
-        return tag ? tag._id : new Tag(t).applyMethod('create', []);
-      });
-
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
-      const quiz$ = new Quiz({ ...quiz, questions, tags, owner: Meteor.userId() }, { cast: true });
+      const quiz$ = new Quiz({ ...quiz, questions, owner: Meteor.userId() }, { cast: true });
       quiz$.applyMethod('create', [], (err, result) => result && FlowRouter.go('Manage.Home'));
     };
 

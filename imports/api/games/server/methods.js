@@ -32,7 +32,7 @@ Game.extend({
       || (this.isManager() && joinGameResults.isManager)
       || registerPlayer();
     },
-    startGame() { // TODO: check if the user is the owner
+    startGame() {
       const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
       const isPlayerRegister = !!playerRegister.length;
       const start = () => {
@@ -49,27 +49,31 @@ Game.extend({
         this.save();
         // Ending question
         const questionEndToLog = () => (
-          this.isQuestionEndAlready(firstQuestion._id) ||
           this.questionEnd(firstQuestion._id)
         );
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
         // Closing Game
         const closeGameToLog = () => (
-          this.isGameCloseAlready() ||
           this.closeGame()
         );
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return true;
       };
-      return isPlayerRegister ? start() : false;
+      return isPlayerRegister && this.isManager() ? start() : false;
     },
     questionEnd(qId) {
-      const questionEnd = new QuestionEnd({
-        questionId: qId,
-      });
-      this.gameLog = this.gameLog.concat(questionEnd);
-      this.save();
-      return true;
+      const addToGameLog = () => {
+        const questionEnd = new QuestionEnd({
+          questionId: qId,
+        });
+        this.gameLog = this.gameLog.concat(questionEnd);
+        this.save();
+        return true;
+      };
+      const questionEnd = this.gameLog
+      .filter(e => e.nameType === eventTypes.QuestionEnd)
+      .find(e => e.questionId === qId);
+      return questionEnd ? false : addToGameLog();
     },
     skipQuestion(qId) {
       const questionEnd = new QuestionEnd({
@@ -97,8 +101,6 @@ Game.extend({
         .filter(e => e.nameType === eventTypes.PlayerReg)
         .find(e => e.playerId === Meteor.userId());
 
-      const isGameManager = this.quiz.owner === Meteor.userId();
-
       const addingPlayerAnswerEvent = () => {
         const playerAnswerEvent = new PlayerAnswer({
           playerId: Meteor.userId(),
@@ -115,7 +117,7 @@ Game.extend({
         !isQuestionStarted ||
         isQuestionClosed ||
         playerAlreadyAnswer ||
-        isGameManager ||
+        this.isManager() ||
         addingPlayerAnswerEvent()
       );
     },
@@ -129,8 +131,7 @@ Game.extend({
       this.save();
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () =>
-        this.isQuestionEndAlready(qId) || this.questionEnd(qId);
+      const questionEndToLog = () => this.questionEnd(qId);
       Meteor.setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
@@ -141,9 +142,15 @@ Game.extend({
       return true;
     },
     endGame() {
-      const gameEnd = new GameEnd();
-      this.gameLog = this.gameLog.concat(gameEnd);
-      this.save();
+      const addToGameLog = () => {
+        const gameEnd = new GameEnd();
+        this.gameLog = this.gameLog.concat(gameEnd);
+        this.save();
+        return true;
+      };
+      const gameEnd = this.gameLog
+        .find(e => e.nameType === eventTypes.GameEnd);
+      return gameEnd ? false : addToGameLog();
     },
     endGameOrNextQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
@@ -152,20 +159,15 @@ Game.extend({
         : this.nextQuestion();
     },
     closeGame() {
-      const gameClose = new GameClose();
-      this.gameLog = this.gameLog.concat(gameClose);
-      this.save();
-    },
-    isQuestionEndAlready(qId) { // need to be in methods so it will be updated
-      const questionEnd = this.gameLog
-        .filter(e => e.nameType === eventTypes.QuestionEnd)
-        .find(e => e.questionId === qId);
-      return !!questionEnd;
-    },
-    isGameCloseAlready() { // need to be in methods so it will be updated
+      const addToGameLog = () => {
+        const gameClose = new GameClose();
+        this.gameLog = this.gameLog.concat(gameClose);
+        this.save();
+        return true;
+      };
       const gameClose = this.gameLog
         .find(e => e.nameType === eventTypes.GameClose);
-      return !!gameClose;
+      return gameClose ? false : addToGameLog();
     },
   },
 });
