@@ -6,8 +6,9 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes';
 import Game from '/imports/api/games/games';
-import Loading from '/imports/ui/components/loading';
 import { managementTabs } from '/imports/startup/both/constants.js';
+import Loading from '/imports/ui/components/loading';
+import Snackbar from '/imports/ui/components/snackbar';
 import MyQuizes from './my-quizes';
 import GamesManaged from './games-managed';
 import GamesPlayed from './games-played';
@@ -19,14 +20,13 @@ class Manage extends React.Component {
       activeTab: managementTabs.myQuizes,
       quizToDelete: null,
       showDeleteQuizAlert: false,
-      quizDeleted: false,
-      quizForked: false,
+      snackbarNotification: false,
     };
   }
 
   render() {
     const { myQuizes, gamesManaged, gamesPlayed } = this.props;
-    const { activeTab, quizDeleted, quizForked, showDeleteQuizAlert, quizToDelete } = this.state;
+    const { activeTab, showDeleteQuizAlert, quizToDelete, snackbarNotification } = this.state;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
 
@@ -38,8 +38,8 @@ class Manage extends React.Component {
       quizToDelete.applyMethod('delete', []);
 
       const notifyUser = () => {
-        this.setState({ quizDeleted: true });
-        setTimeout(() => this.setState({ quizDeleted: false }), 3000);
+        this.setState({ snackbarNotification: 'השאלון נמחק בהצלחה' });
+        setTimeout(() => this.setState({ snackbarNotification: false }), 3000);
       };
       notifyUser();
     };
@@ -54,8 +54,8 @@ class Manage extends React.Component {
       newQuiz.applyMethod('create', []);
 
       const notifyUser = () => {
-        this.setState({ quizForked: true });
-        setTimeout(() => this.setState({ quizForked: false }), 3000);
+        this.setState({ snackbarNotification: 'השאלון הועתק בהצלחה' });
+        setTimeout(() => this.setState({ snackbarNotification: false }), 3000);
       };
       notifyUser();
     };
@@ -70,14 +70,10 @@ class Manage extends React.Component {
         <ManageTabs activeTab={activeTab} changeTab={changeTab} />
         <div className="tab-content">
           <MyQuizes activeTab={activeTab} myQuizes={myQuizes} actions={actions} />
-
           <GamesManaged activeTab={activeTab} gamesManaged={gamesManaged} />
-
           <GamesPlayed activeTab={activeTab} gamesPlayed={gamesPlayed} />
         </div>
-        <div id="snackbar" className={quizDeleted || quizForked ? 'show' : ''}>
-          {quizDeleted ? 'השאלון נמחק בהצלחה' : 'השאלון הועתק בהצלחה'}
-        </div>
+        {snackbarNotification ? <Snackbar message={snackbarNotification} /> : ''}
         <SweetAlert
           show={showDeleteQuizAlert}
           title="מחיקת שאלון"
