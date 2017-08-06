@@ -18,8 +18,18 @@ import Game, {
   PlayerAnswer,
   ShowLeaders,
   GameEnd,
-  GameClose
-} from "../games";
+  GameClose,
+} from '../games';
+
+const endQuestion = (gId, qId) => {
+  const game = Game.findOne(gId);
+  game.questionEnd(qId);
+};
+
+const closeGame = (gId) => {
+  const game = Game.findOne(gId);
+  game.closeGame();
+};
 
 Game.extend({
   meteorMethods: {
@@ -61,10 +71,12 @@ Game.extend({
         this.gameLog = this.gameLog.concat(questionStarted);
         this.save();
         // Ending question
-        const questionEndToLog = () => this.questionEnd(firstQuestion._id);
+        const questionEndToLog = () => {
+          endQuestion(this._id, firstQuestion._id);
+        };
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
         // Closing Game
-        const closeGameToLog = () => this.closeGame();
+        const closeGameToLog = () => closeGame(this._id);
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return startGameResults.startSucc;
       };
@@ -126,7 +138,7 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(playerAnswerEvent);
         this.save();
-        this.isEveryoneAnswered(qId) && this.questionEnd(qId);
+        this.isEveryoneAnswered(qId) && endQuestion(this._id, qId);
         return playerAnswerResults.playerAnswerSucc;
       };
 
@@ -147,7 +159,9 @@ Game.extend({
       this.save();
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () => this.questionEnd(qId);
+      const questionEndToLog = () => {
+        endQuestion(this._id, qId);
+      };
       Meteor.setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
