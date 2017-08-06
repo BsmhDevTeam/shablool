@@ -13,6 +13,10 @@ import Game, {
   GameClose,
 } from '../games';
 
+const endQuestion = (gId, qId) => {
+  const game = Game.findOne(gId);
+  game.questionEnd(qId);
+};
 
 Game.extend({
   meteorMethods: {
@@ -28,9 +32,11 @@ Game.extend({
         this.save();
         return joinGameResults.regSucc;
       };
-      return (this.isUserRegistered() && joinGameResults.alreadyRegistered)
-      || (this.isManager() && joinGameResults.isManager)
-      || registerPlayer();
+      return (
+        (this.isUserRegistered() && joinGameResults.alreadyRegistered) ||
+        (this.isManager() && joinGameResults.isManager) ||
+        registerPlayer()
+      );
     },
     startGame() {
       const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
@@ -48,14 +54,12 @@ Game.extend({
         this.gameLog = this.gameLog.concat(questionStarted);
         this.save();
         // Ending question
-        const questionEndToLog = () => (
-          this.questionEnd(firstQuestion._id)
-        );
+        const questionEndToLog = () => {
+          endQuestion(this._id, firstQuestion._id);
+        };
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
         // Closing Game
-        const closeGameToLog = () => (
-          this.closeGame()
-        );
+        const closeGameToLog = () => this.closeGame();
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return true;
       };
@@ -71,8 +75,8 @@ Game.extend({
         return true;
       };
       const questionEnd = this.gameLog
-      .filter(e => e.nameType === eventTypes.QuestionEnd)
-      .find(e => e.questionId === qId);
+        .filter(e => e.nameType === eventTypes.QuestionEnd)
+        .find(e => e.questionId === qId);
       return questionEnd ? false : addToGameLog();
     },
     skipQuestion(qId) {
@@ -109,7 +113,7 @@ Game.extend({
         });
         this.gameLog = this.gameLog.concat(playerAnswerEvent);
         this.save();
-        return this.isEveryoneAnswered(qId) && this.questionEnd(qId);
+        return this.isEveryoneAnswered(qId) && endQuestion(this._id, qId);
       };
 
       return (
@@ -131,7 +135,9 @@ Game.extend({
       this.save();
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
-      const questionEndToLog = () => this.questionEnd(qId);
+      const questionEndToLog = () => {
+        endQuestion(this._id, qId);
+      };
       Meteor.setTimeout(questionEndToLog, q.time * 1000);
       return true;
     },
@@ -148,8 +154,7 @@ Game.extend({
         this.save();
         return true;
       };
-      const gameEnd = this.gameLog
-        .find(e => e.nameType === eventTypes.GameEnd);
+      const gameEnd = this.gameLog.find(e => e.nameType === eventTypes.GameEnd);
       return gameEnd ? false : addToGameLog();
     },
     endGameOrNextQuestion() {
@@ -165,8 +170,7 @@ Game.extend({
         this.save();
         return true;
       };
-      const gameClose = this.gameLog
-        .find(e => e.nameType === eventTypes.GameClose);
+      const gameClose = this.gameLog.find(e => e.nameType === eventTypes.GameClose);
       return gameClose ? false : addToGameLog();
     },
   },
@@ -174,7 +178,7 @@ Game.extend({
 
 Meteor.methods({
   // Methods without instance:
-  'joinGame'({ code }) {
+  joinGame({ code }) {
     check(code, String);
     const game = Game.findOne({ code });
     return game ? game.playerRegister() : joinGameResults.noGame;
