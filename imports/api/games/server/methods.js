@@ -1,7 +1,15 @@
-import { Meteor } from 'meteor/meteor';
-import { max } from 'underscore';
-import { check } from 'meteor/check';
-import { joinGameResults, eventTypes } from '/imports/startup/both/constants';
+import { Meteor } from "meteor/meteor";
+import { max } from "underscore";
+import { check } from "meteor/check";
+import { 
+  joinGameResults,
+  eventTypes,
+  startGameResults,
+  questionEndResults,
+  playerAnswerResults,
+  endGameResults,
+  closeGameResults
+ } from "/imports/startup/both/constants";
 import Game, {
   PlayerReg,
   GameStart,
@@ -10,9 +18,8 @@ import Game, {
   PlayerAnswer,
   ShowLeaders,
   GameEnd,
-  GameClose,
-} from '../games';
-
+  GameClose
+} from "../games";
 
 Game.extend({
   meteorMethods: {
@@ -22,19 +29,25 @@ Game.extend({
     playerRegister() {
       const registerPlayer = () => {
         const newReg = new PlayerReg({
-          playerId: Meteor.userId(),
+          playerId: Meteor.userId()
         });
         this.gameLog = this.gameLog.concat(newReg);
         this.save();
         return joinGameResults.regSucc;
       };
-      return (this.isUserRegistered() && joinGameResults.alreadyRegistered)
-      || (this.isManager() && joinGameResults.isManager)
-      || registerPlayer();
+      return (
+        (this.isUserRegistered() && joinGameResults.alreadyRegistered) ||
+        (this.isManager() && joinGameResults.isManager) ||
+        registerPlayer()
+      );
     },
     startGame() {
-      const playerRegister = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
-      const isPlayerRegister = !!playerRegister.length;
+      const isPlayerRegister = !!this.gameLog.find(
+        e => e.nameType === eventTypes.PlayerReg
+      );
+      const isGameStarted = !!this.gameLog.find(
+        e => e.nameType === eventTypes.GameStart
+      );
       const start = () => {
         // Starting game
         const gameStart = new GameStart();
@@ -43,41 +56,45 @@ Game.extend({
         // Starting first question
         const firstQuestion = this.quiz.questions.find(q => q.order === 1);
         const questionStarted = new QuestionStart({
-          questionId: firstQuestion._id,
+          questionId: firstQuestion._id
         });
         this.gameLog = this.gameLog.concat(questionStarted);
         this.save();
         // Ending question
-        const questionEndToLog = () => (
-          this.questionEnd(firstQuestion._id)
-        );
+        const questionEndToLog = () => this.questionEnd(firstQuestion._id);
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
         // Closing Game
-        const closeGameToLog = () => (
-          this.closeGame()
-        );
+        const closeGameToLog = () => this.closeGame();
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
-        return true;
+        return startGameResults.startSucc;
       };
-      return isPlayerRegister && this.isManager() ? start() : false;
+      return (!isPlayerRegister && startGameResults.noPlayersReg)
+        || (!this.isManager() && startGameResults.notOwner)
+        || (isGameStarted && startGameResults.alreadyStarted)
+        || start();
     },
     questionEnd(qId) {
       const addToGameLog = () => {
         const questionEnd = new QuestionEnd({
-          questionId: qId,
+          questionId: qId
         });
         this.gameLog = this.gameLog.concat(questionEnd);
         this.save();
-        return true;
+        return questionEndResults.endSucc;
       };
-      const questionEnd = this.gameLog
-      .filter(e => e.nameType === eventTypes.QuestionEnd)
-      .find(e => e.questionId === qId);
-      return questionEnd ? false : addToGameLog();
+      const isQuestionEndAlready = !!this.gameLog
+        .filter(e => e.nameType === eventTypes.QuestionEnd)
+        .find(e => e.questionId === qId);
+      const isQuestionstart = !!this.gameLog
+        .filter(e => e.nameType === eventTypes.QuestionStart)
+        .find(e => e.questionId === qId);
+      return (isQuestionEndAlready && questionEndResults.alreadyEnded)
+        || (!isQuestionstart && questionEndResults.questionHasNotStarted)
+        || addToGameLog();
     },
     skipQuestion(qId) {
       const questionEnd = new QuestionEnd({
-        questionId: qId,
+        questionId: qId
       });
       const showLeaders = new ShowLeaders();
       this.gameLog = this.gameLog.concat([questionEnd, showLeaders]);
@@ -89,7 +106,7 @@ Game.extend({
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
 
-      const isQuestionClosed = this.gameLog
+      const isQuestionEnded = this.gameLog
         .filter(e => e.nameType === eventTypes.QuestionEnd)
         .find(e => e.questionId === qId);
 
@@ -105,27 +122,26 @@ Game.extend({
         const playerAnswerEvent = new PlayerAnswer({
           playerId: Meteor.userId(),
           questionId: qId,
-          answerId: aId,
+          answerId: aId
         });
         this.gameLog = this.gameLog.concat(playerAnswerEvent);
         this.save();
-        return this.isEveryoneAnswered(qId) && this.questionEnd(qId);
+        this.isEveryoneAnswered(qId) && this.questionEnd(qId);
+        return playerAnswerResults.playerAnswerSucc;
       };
 
-      return (
-        !playerRegistered ||
-        !isQuestionStarted ||
-        isQuestionClosed ||
-        playerAlreadyAnswer ||
-        this.isManager() ||
-        addingPlayerAnswerEvent()
-      );
+      return (!playerRegistered && playerAnswerResults.playerHasNotRegistered)
+        || (!isQuestionStarted && playerAnswerResults.questionHasNotStarted)
+        || (isQuestionEnded && playerAnswerResults.questionHasEnded)
+        || (playerAlreadyAnswer && playerAnswerResults.alreadyAnswered)
+        || (this.isManager() && playerAnswerResults.isManager)
+        || addingPlayerAnswerEvent();
     },
     nextQuestion() {
       // start question
       const qId = this.nextQuestionId();
       const questionStarted = new QuestionStart({
-        questionId: qId,
+        questionId: qId
       });
       this.gameLog = this.gameLog.concat(questionStarted);
       this.save();
@@ -146,11 +162,12 @@ Game.extend({
         const gameEnd = new GameEnd();
         this.gameLog = this.gameLog.concat(gameEnd);
         this.save();
-        return true;
+        return endGameResults.endSucc;
       };
-      const gameEnd = this.gameLog
-        .find(e => e.nameType === eventTypes.GameEnd);
-      return gameEnd ? false : addToGameLog();
+      const isGameEndedAllready = !!this.gameLog.find(e => e.nameType === eventTypes.GameEnd);
+      return (isGameEndedAllready && endGameResults.alreadyEnded)
+        || (!this.isManager() && endGameResults.notOwner)
+        || addToGameLog();
     },
     endGameOrNextQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
@@ -163,20 +180,23 @@ Game.extend({
         const gameClose = new GameClose();
         this.gameLog = this.gameLog.concat(gameClose);
         this.save();
-        return true;
+        return closeGameResults.closeSucc;
       };
-      const gameClose = this.gameLog
-        .find(e => e.nameType === eventTypes.GameClose);
-      return gameClose ? false : addToGameLog();
-    },
-  },
+      const isGameClosedAllready = !!this.gameLog.find(
+        e => e.nameType === eventTypes.GameClose
+      );
+      return (isGameClosedAllready && closeGameResults.alreadyClosed)
+        || (!this.isManager() && closeGameResults.notOwner)
+        || addToGameLog();
+    }
+  }
 });
 
 Meteor.methods({
   // Methods without instance:
-  'joinGame'({ code }) {
+  joinGame({ code }) {
     check(code, String);
     const game = Game.findOne({ code });
     return game ? game.playerRegister() : joinGameResults.noGame;
-  },
+  }
 });

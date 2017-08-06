@@ -124,12 +124,13 @@ ManageContainer.propTypes = {
 };
 
 export default createContainer(() => {
+  const imagesHandle = Meteor.subscribe('images.all');
   const myQuizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('games.games-played');
   const gamesManagedHandle = Meteor.subscribe('games.games-managed');
 
   const loading =
-    !myQuizesHandle.ready() || !gamesPlayedHandle.ready() || !gamesManagedHandle.ready();
+    !myQuizesHandle.ready() || !gamesPlayedHandle.ready() || !gamesManagedHandle.ready() || !imagesHandle.ready();
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
   const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
