@@ -18,6 +18,11 @@ const endQuestion = (gId, qId) => {
   game.questionEnd(qId);
 };
 
+const closeGame = (gId) => {
+  const game = Game.findOne(gId);
+  game.closeGame();
+};
+
 Game.extend({
   meteorMethods: {
     initGame() {
@@ -59,7 +64,7 @@ Game.extend({
         };
         Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
         // Closing Game
-        const closeGameToLog = () => this.closeGame();
+        const closeGameToLog = () => closeGame(this._id);
         Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
         return true;
       };
