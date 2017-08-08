@@ -45,27 +45,4 @@ const QuestionStatistics = ({ game }) => {
   );
 };
 
-QuestionStatistics.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired,
-};
-
-const QuestionStatisticsContainer = ({ loading, game }) => {
-  if (loading) return <Loading color={'white'} />;
-  return <QuestionStatistics game={game} />;
-};
-
-QuestionStatisticsContainer.propTypes = {
-  game: PropTypes.instanceOf(Object),
-  loading: PropTypes.bool.isRequired,
-};
-
-QuestionStatisticsContainer.defaultProps = {
-  game: undefined,
-};
-
-export default createContainer(({ code }) => {
-  const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready();
-  const game = Game.findOne({ code });
-  return { loading, game };
-}, QuestionStatisticsContainer);
+export default QuestionStatistics;

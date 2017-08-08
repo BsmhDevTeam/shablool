@@ -21,11 +21,11 @@ export default ({ game }) => {
       case eventTypes.PlayerAnswer:
         return <Question game={game} />;
       case eventTypes.QuestionEnd:
-        return <QuestionStatistics code={game.code} />;
+        return <QuestionStatistics game={game} />;
       case eventTypes.ShowLeaders:
-        return <Leaders code={game.code} />;
+        return <Leaders game={game} />;
       case eventTypes.GameEnd:
-        return <Winner code={game.code} />;
+        return <Winner game={game} />;
       case eventTypes.GameClose:
         return <GameClose />;
       default:

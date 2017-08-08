@@ -41,34 +41,11 @@ const Winner = ({ game }) => {
       </div>
       <div className="row">
         <div className="winner-score">
-          <p>!with {game.getWinner().userScore} points</p>
+          <p>עם {game.getWinner().userScore} נקודות!</p>
         </div>
       </div>
     </div>
   );
 };
 
-Winner.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired,
-};
-
-const WinnerContainer = ({ loading, game }) => {
-  if (loading) return <Loading color={'white'} />;
-  return <Leaders game={game} />;
-};
-
-WinnerContainer.propTypes = {
-  game: PropTypes.instanceOf(Object),
-  loading: PropTypes.bool.isRequired,
-};
-
-WinnerContainer.defaultProps = {
-  game: undefined,
-};
-
-export default createContainer(({ code }) => {
-  const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready();
-  const game = Game.findOne({ code });
-  return { loading, game };
-}, WinnerContainer);
+export default Winner;

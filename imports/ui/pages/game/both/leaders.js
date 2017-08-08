@@ -45,27 +45,4 @@ const Leaders = ({ game }) => {
   );
 };
 
-Leaders.propTypes = {
-  game: PropTypes.instanceOf(Object).isRequired,
-};
-
-const LeadersContainer = ({ loading, game }) => {
-  if (loading) return <Loading color={'white'} />;
-  return <Leaders game={game} />;
-};
-
-LeadersContainer.propTypes = {
-  game: PropTypes.instanceOf(Object),
-  loading: PropTypes.bool.isRequired,
-};
-
-LeadersContainer.defaultProps = {
-  game: undefined,
-};
-
-export default createContainer(({ code }) => {
-  const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready();
-  const game = Game.findOne({ code });
-  return { loading, game };
-}, LeadersContainer);
+export default Leaders;
