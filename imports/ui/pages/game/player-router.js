@@ -1,5 +1,8 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 import { eventTypes } from '/imports/startup/both/constants';
+import Loading from '/imports/ui/components/loading';
 import Leaders from './both/leaders.js';
 import Question from './both/question.js';
 import QuestionStatistics from './both/question-statistics';
@@ -22,11 +25,11 @@ export default ({ game }) => {
       case eventTypes.PlayerAnswer:
         return <AnswerSent />;
       case eventTypes.QuestionEnd:
-        return <QuestionStatistics game={game} />;
+        return <QuestionStatistics code={game.code} />;
       case eventTypes.ShowLeaders:
-        return <Leaders game={game} />;
+        return <Leaders code={game.code} />;
       case eventTypes.GameEnd:
-        return <Winner game={game} />;
+        return <Winner code={game.code} />;
       case eventTypes.GameClose:
         return <GameClose />;
       default:

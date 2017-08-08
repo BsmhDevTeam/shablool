@@ -435,11 +435,11 @@ export default Class.create({
       const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const questionStartEvent = questionStartEvents.filter(e => e.questionId === questionId);
       // Check if question already ended
-      // const questionEndEvents = this.gameLog.find(e => e.nameType === eventTypes.QuestionEnd);
-      // const questionEndEvent = this.gameLog.find(e => e.questionId === questionId);
-      // const isQuestionEnded = !!questionEndEvent;
+      const questionEndEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
+      const questionEndEvent = questionEndEvents.find(e => e.questionId === questionId);
+      const isQuestionEnded = !!questionEndEvent;
       // calculate time passed
-      const currentTime = new Date();
+      const currentTime = isQuestionEnded ? questionEndEvent.createdAt : new Date();
       const timePassed = questionStartEvent.map(
         e => (currentTime.getTime() - e.createdAt.getTime()) / 1000,
       );

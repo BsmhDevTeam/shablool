@@ -1,6 +1,10 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
+import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import Game from '/imports/api/games/games';
+import Loading from '/imports/ui/components/loading';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Winner = ({ game }) => {
@@ -48,4 +52,23 @@ Winner.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
 };
 
-export default Winner;
+const WinnerContainer = ({ loading, game }) => {
+  if (loading) return <Loading color={'white'} />;
+  return <Leaders game={game} />;
+};
+
+WinnerContainer.propTypes = {
+  game: PropTypes.instanceOf(Object),
+  loading: PropTypes.bool.isRequired,
+};
+
+WinnerContainer.defaultProps = {
+  game: undefined,
+};
+
+export default createContainer(({ code }) => {
+  const gameHandle = Meteor.subscribe('games.get-by-code', code);
+  const loading = !gameHandle.ready();
+  const game = Game.findOne({ code });
+  return { loading, game };
+}, WinnerContainer);

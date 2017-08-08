@@ -1,8 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
+import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
 import GameNavbar from '/imports/ui/components/game-navbar';
+import Loading from '/imports/ui/components/loading';
+import Game from '/imports/api/games/games';
 import AnswerBar from '/imports/ui/components/answer-bar-chart';
 
 const QuestionStatistics = ({ game }) => {
@@ -25,7 +28,7 @@ const QuestionStatistics = ({ game }) => {
         : ''}
       <div className="row">
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
-          <p className="count-down-timer-num">0</p>
+          <p className="count-down-timer-num">{game.getQuestionTimeLeft(question._id)}</p>
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <AnswerBar game={game} />
@@ -46,4 +49,23 @@ QuestionStatistics.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
 };
 
-export default QuestionStatistics;
+const QuestionStatisticsContainer = ({ loading, game }) => {
+  if (loading) return <Loading color={'white'} />;
+  return <QuestionStatistics game={game} />;
+};
+
+QuestionStatisticsContainer.propTypes = {
+  game: PropTypes.instanceOf(Object),
+  loading: PropTypes.bool.isRequired,
+};
+
+QuestionStatisticsContainer.defaultProps = {
+  game: undefined,
+};
+
+export default createContainer(({ code }) => {
+  const gameHandle = Meteor.subscribe('games.get-by-code', code);
+  const loading = !gameHandle.ready();
+  const game = Game.findOne({ code });
+  return { loading, game };
+}, QuestionStatisticsContainer);
