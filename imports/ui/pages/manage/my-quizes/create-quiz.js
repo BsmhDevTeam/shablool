@@ -24,14 +24,7 @@ class CreateQuiz extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      quiz: {
-        title: '',
-        questions: [newQuestion()],
-        tags: [],
-        owner: Meteor.userId(),
-        private: false,
-        image: 'no-image',
-      },
+      quiz: new Quiz({ questions: [newQuestion()], owner: Meteor.userId() }),
       currentUpload: false,
       uploads: [],
       uploadsCounter: false,

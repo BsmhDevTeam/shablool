@@ -11,19 +11,9 @@ import Loading from '/imports/ui/components/loading';
 
 // Utilities
 const newQuestion = () => {
-  const answers = [1, 2, 3, 4].map(i => ({
-    _id: uuidV4(),
-    text: '',
-    order: i,
-    points: 0,
-  }));
-  return {
-    _id: uuidV4(),
-    text: '',
-    time: 30,
-    answers,
-    image: 'no-image',
-  };
+  const answers = [1, 2, 3, 4].map(i => (new Answer({ _id: uuidV4(), order: i })));
+  const question = new Question({ _id: uuidV4(), answers });
+  return question;
 };
 
 const normalizeTagName = str =>
