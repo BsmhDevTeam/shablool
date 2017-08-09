@@ -25,28 +25,10 @@ class Home extends React.Component {
 
       Meteor.call('joinGame', {
         code: gameCode,
-      }, (err, res) => {
-        if (err) {
-          console.log(err);
-        } else {
-          switch (res) {
-            case joinGameResults.noGame:
-              notifyUser();
-              break;
-            case joinGameResults.alreadyRegistered:
-              FlowRouter.go('Game.Play', { code: gameCode });
-              break;
-            case joinGameResults.isManager:
-              FlowRouter.go('Game.Play', { code: gameCode });
-              break;
-            case joinGameResults.regSucc:
-              FlowRouter.go('Game.Play', { code: gameCode });
-              break;
-            default:
-              break;
-          }
-        }
-      });
+      }, (err, res) => (
+        res ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode })
+        ),
+      );
     };
 
     return (

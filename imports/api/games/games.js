@@ -559,16 +559,5 @@ export default Class.create({
       }));
       return playerAndAvarageTime;
     },
-    getNumberOfPlayers() {
-      const playersRegEvent = this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg);
-      return playersRegEvent.length;
-    },
-    isEveryoneAnswered(qId) {
-      const playerAnswerEvents = this.gameLog
-        .filter(e => e.nameType === eventTypes.PlayerAnswer)
-        .filter(e => e.questionId === qId);
-      const isEveryoneAnswered = playerAnswerEvents.length === this.getNumberOfPlayers();
-      return isEveryoneAnswered;
-    },
   },
 });
