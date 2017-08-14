@@ -59,7 +59,7 @@ export default class GameLobby extends React.Component {
               : <div className="alert alert-is-primary">מחכה לשחקנים...</div>}
           </div>
         </div>
-        <audio src="/audio.mp3" autoPlay loop />
+        <audio src="/game_lobby_audio.mp3" autoPlay loop />
         <div id="snackbar" className={this.state.showNoPlayerAlert ? 'show' : ''}>
           לא ניתן להתחיל משחק בלי שחקנים
         </div>

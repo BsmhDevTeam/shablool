@@ -2,10 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { max } from 'underscore';
 import { check } from 'meteor/check';
 import {
-  joinGameResults,
   eventTypes,
   startGameResults,
-  endGameResults,
 } from '/imports/startup/both/constants';
 import Game, {
   PlayerReg,
@@ -24,39 +22,78 @@ Game.extend({
       return this.save();
     },
     startGame() {
-      const isPlayerRegister = !!this.gameLog.find(
-        e => e.nameType === eventTypes.PlayerReg,
-      );
-      const isGameStarted = !!this.gameLog.find(
-        e => e.nameType === eventTypes.GameStart,
-      );
-      const start = () => {
-        // Starting game
-        const gameStart = new GameStart();
-        this.gameLog = this.gameLog.concat(gameStart);
-        this.save();
-        // Starting first question
-        const firstQuestion = this.quiz.questions.find(q => q.order === 1);
-        const questionStarted = new QuestionStart({
-          questionId: firstQuestion._id,
-        });
-        this.gameLog = this.gameLog.concat(questionStarted);
-        this.save();
-        // Ending question
-        const questionEndToLog = () => {
-          this.questionEnd(firstQuestion._id);
-        };
-        Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
-        // Closing Game
-        const closeGameToLog = () => this.closeGame(this._id);
-        Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
-        return startGameResults.startSucc;
+      // Starting game
+      this.gameStart();
+      // Starting first question
+      const firstQuestion = this.quiz.questions.find(q => q.order === 1);
+      this.questionStart(firstQuestion._id);
+      // Ending question
+      const questionEndToLog = () => {
+        this.questionEnd(firstQuestion._id);
       };
-      return (
-        (!isPlayerRegister && startGameResults.noPlayersReg) ||
-        (!this.isManager() && startGameResults.notOwner) ||
-        (isGameStarted && startGameResults.alreadyStarted) ||
-        start()
+      Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
+      // Closing Game
+      const closeGameToLog = () => this.closeGame();
+      Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
+    },
+    gameStart() {
+      Game.update(
+        {
+          $and: [
+            { _id: this._id },
+            {
+              gameLog: {
+                $elemMatch: {
+                  nameType: eventTypes.PlayerReg,
+                },
+              },
+            },
+            {
+              gameLog: {
+                $not: {
+                  $elemMatch: {
+                    nameType: eventTypes.GameStart,
+                  },
+                },
+              },
+            },
+            {
+              'quiz.owner': { $eq: Meteor.userId() },
+            },
+          ],
+        },
+        {
+          $push: {
+            gameLog: new GameStart(),
+          },
+        },
+      );
+    },
+    questionStart(qId) {
+      Game.update(
+        {
+          $and: [
+            { _id: this._id },
+            {
+              gameLog: {
+                $not: {
+                  $elemMatch: {
+                    nameType: eventTypes.QuestionStart,
+                    questionId: qId,
+                  },
+                },
+              },
+            },
+            {
+              'quiz.owner': { $eq: Meteor.userId() },
+            },
+          ],
+        },
+        {
+          $push: {
+            gameLog: new QuestionStart({ questionId: qId }),
+          },
+        },
       );
     },
     questionEnd(qId) {
@@ -87,30 +124,6 @@ Game.extend({
         {
           $push: {
             gameLog: new QuestionEnd({ questionId: qId }),
-          },
-        },
-      );
-    },
-    questionStart(qId) {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.QuestionStart,
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new QuestionStart({ questionId: qId }),
           },
         },
       );
@@ -182,7 +195,7 @@ Game.extend({
           },
         },
       );
-      return this.isEveryoneAnswered(qId);
+      return this.endQuestionIfEveryoneAnswered(qId);
     },
     nextQuestion() {
       // start question
@@ -217,6 +230,13 @@ Game.extend({
                   $elemMatch: {
                     nameType: eventTypes.GameEnd,
                   },
+                },
+              },
+            },
+            {
+              gameLog: {
+                $elemMatch: {
+                  nameType: eventTypes.GameStart,
                 },
               },
             },
@@ -264,7 +284,7 @@ Game.extend({
         },
       );
     },
-    isEveryoneAnswered(qId) {
+    endQuestionIfEveryoneAnswered(qId) {
       Game.update(
         {
           $and: [
@@ -278,11 +298,6 @@ Game.extend({
                   },
                 },
               },
-            },
-            {
-              $where() {
-                return this.gameLog.filter(e => (e.nameType === eventTypes.PlayerAnswer) && (e.questionId === qId)).length
-                === this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length; },
             },
           ],
         },
@@ -304,6 +319,15 @@ Meteor.methods({
       {
         $and: [
           { code },
+          {
+            gameLog: {
+              $not: {
+                $elemMatch: {
+                  nameType: eventTypes.GameStart,
+                },
+              },
+            },
+          },
           {
             gameLog: {
               $not: {

@@ -1,5 +1,8 @@
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
+import faker from 'faker';
+import { Factory } from 'meteor/dburles:factory';
+import { range } from 'underscore';
 
 const Quizes = new Mongo.Collection('quizes');
 
@@ -126,7 +129,7 @@ export const Question = Class.create({
   },
 });
 
-export default Class.create({
+const Quiz = Class.create({
   name: 'Quiz',
   collection: Quizes,
   fields: {
@@ -190,4 +193,28 @@ export default Class.create({
   meteorMethods: {},
 
   helpers: {},
+});
+
+export default Quiz;
+
+const mockAnswer = order => (new Answer({
+  _id: faker.random.uuid(),
+  text: faker.lorem.sentence(3),
+  points: faker.random.number(),
+  order,
+}));
+
+const mockQuestion = order => (new Question({
+  _id: faker.random.uuid(),
+  text: faker.lorem.sentence(3),
+  answers: range(1, 5).map(mockAnswer),
+  time: faker.random.number({ min: 5, max: 45 }),
+  order,
+}));
+
+Factory.define('quiz', Quiz, {
+  title: () => faker.lorem.sentence(3),
+  questions: () => range(1, 5).map(mockQuestion),
+  tags: () => [],
+  owner: 'owner',
 });

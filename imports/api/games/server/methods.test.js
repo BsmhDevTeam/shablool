@@ -1,71 +1,37 @@
 import { Meteor } from 'meteor/meteor';
-import { assert } from 'meteor/practicalmeteor:chai';
 import { sinon } from 'meteor/practicalmeteor:sinon';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
-import uuidV4 from 'uuid/v4';
+import { Factory } from 'meteor/dburles:factory';
+import { assert, expect } from 'chai';
+import { first } from 'underscore';
 import { eventTypes } from '/imports/startup/both/constants';
-import Quiz, { Question, Answer } from '/imports/api/quizes/quizes';
-import Game, { GameInit, QuestionEnd } from '../games.js';
+import Game from '../games.js';
 import './methods';
+
+const asUser = (user) => {
+  Meteor.userId.restore();
+  sinon.stub(Meteor, 'userId', function() {
+    return user; // User id
+  });
+};
 
 describe('games methods', function() {
   beforeEach(function() {
-    sinon.stub(Meteor, 'userId', function() {
-      return '1234'; // User id
-    });
     resetDatabase();
+    sinon.stub(Meteor, 'userId', function() {
+      return 'owner'; // User id
+    });
   });
 
   afterEach(function() {
     Meteor.userId.restore();
+    resetDatabase();
   });
 
   describe('initGame', function() {
     it('create correctly', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const created = Game.find({ _id: id });
+      const game = Factory.create('game');
+      const created = Game.find({ _id: game._id });
       const collectionName = created._getCollectionName();
       const count = created.count();
 
@@ -74,1030 +40,416 @@ describe('games methods', function() {
     });
   });
 
-  describe('playerRegister', function() {
-    it('checking PlayerReg', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      const newGamePlayerReg = Game.findOne({ _id: id });
-      assert.equal(newGamePlayerReg.gameLog.length, 2);
+  describe('joinGame', function() {
+    it('should not have players at first', function() {
+      const game = Factory.create('game');
+      const playersRegs = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
+      expect(playersRegs).to.be.empty;
     });
 
-    it('manager try to do PlayerReg', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      const newGamePlayerReg = Game.findOne({ _id: id });
-      assert.equal(newGamePlayerReg.gameLog.length, 1);
+    it('should join game', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      const playersRegs = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
+      expect(playersRegs).to.have.lengthOf(1);
+    });
+
+    it('should not join twice', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code: game.code });
+      const playersRegs = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
+      expect(playersRegs).to.have.lengthOf(1);
+    });
+
+    it('should not join after game start', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      const playersRegs = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerReg,
+      );
+      expect(playersRegs).to.have.lengthOf(1);
     });
   });
 
-  describe('startGame', function() {
-    it('try to start game without any players', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      const isStart = newGameFromDB.startGame();
-
-      assert.equal(isStart, false);
-      assert.equal(newGameFromDB.gameLog.length, 1);
+  describe('gameStart', function() {
+    it('should start game', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      expect(gameStart).to.have.lengthOf(1);
     });
 
-    it('try to start game in a middle of a game', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      const isStart = newGameFromDB.startGame();
-      const newGameFromDB1 = Game.findOne({ _id: id });
-      assert.equal(isStart, false);
-      assert.equal(newGameFromDB1.gameLog.length, 3);
+    it('should not start game that has no players', function() {
+      const game = Factory.create('game');
+      asUser('owner');
+      game.gameStart();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      expect(gameStart).to.have.lengthOf(0);
+    });
+
+    it('should not start game that already started', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.gameStart();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      expect(gameStart).to.have.lengthOf(1);
+    });
+
+    it('should not start game if not owner', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      expect(gameStart).to.have.lengthOf(1);
+    });
+  });
+
+  describe('questionStart', function() {
+    it('should start question', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(questionStart).to.have.lengthOf(1);
+    });
+
+    it('should not start question that already started', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.questionStart(first(game.quiz.questions)._id);
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(questionStart).to.have.lengthOf(1);
+    });
+
+    it('should not start quesion if not owner', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      asUser('player');
+      game.questionStart(first(game.quiz.questions)._id);
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(questionStart).to.have.lengthOf(0);
+    });
+
+    it('should not start quesion if another question is allready running', function() {
+      console.log('blaaaaaaaaaaaaaaaaaaaaaaaaaa');
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.questionStart(game.quiz.questions[1]._id);
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(questionStart).to.have.lengthOf(1);
     });
   });
 
   describe('questionEnd', function() {
-    it('adding questionEnd to gameLog', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.questionEnd(newGameFromDB.quiz.questions[0]._id);
-      const newGameQuestionEnd = Game.findOne({ _id: id });
-      assert.equal(newGameQuestionEnd.gameLog.length, 2);
+    it('should end question', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.questionEnd(first(game.quiz.questions)._id);
+      const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
+      expect(questionEnd).to.have.lengthOf(1);
+    });
+
+    it('should not end question that already ended', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.questionEnd(first(game.quiz.questions)._id);
+      game.questionEnd(first(game.quiz.questions)._id);
+      const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
+      expect(questionEnd).to.have.lengthOf(1);
+    });
+
+    it('should end question that has started allready', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionEnd(first(game.quiz.questions)._id);
+      const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
+      expect(questionEnd).to.have.lengthOf(0);
     });
   });
 
   describe('playerAnswer', function() {
-    it('player try to answer on the same question more than once', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.playerAnswer('qId', 'a1Id');
-      newGameFromDB.playerAnswer('qId', 'a2Id');
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
+    it('should log answer', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      asUser('player');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      asUser('owner');
+      game.questionEnd(first(game.quiz.questions)._id);
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
       );
-      assert.equal(playerAnswerEvents.length, 1);
+      expect(playerAnswer).to.have.lengthOf(1);
     });
 
-    it('player try to answer on a question that has already ended', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.gameLog.concat([new QuestionEnd({ questionId: 'qId' })]);
-      newGameFromDB.save();
-      newGameFromDB.playerAnswer('qId', 'a1Id');
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
+    it('should not log answer multiple times to the same question', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      asUser('player');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      asUser('owner');
+      game.questionEnd(first(game.quiz.questions)._id);
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
       );
-      assert.equal(playerAnswerEvents.length, 0);
+      expect(playerAnswer).to.have.lengthOf(1);
     });
 
-    it('player try to answer on a question that has not started yet', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.playerAnswer('qId', 'a1Id');
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
+    it('should not log answer for question that has not start yet', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      asUser('player');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
       );
-      assert.equal(playerAnswerEvents.length, 0);
+      expect(playerAnswer).to.have.lengthOf(0);
     });
-  });
 
-  describe('nextQuestion', function() {
-    it('check if works correctly', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'q1Id',
-              text: 'first question',
-              answers: [
-                new Answer({
-                  _id: 'a11Id',
-                  text: 'answer11',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a12Id',
-                  text: 'answer12',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a13Id',
-                  text: 'answer13',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a14Id',
-                  text: 'answer14',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-            new Question({
-              _id: 'q2Id',
-              text: 'second question',
-              answers: [
-                new Answer({
-                  _id: 'a21Id',
-                  text: 'answer21',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a22Id',
-                  text: 'answer22',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a23Id',
-                  text: 'answer23',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a24Id',
-                  text: 'answer24',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 2,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.playerAnswer('q1Id', 'a11Id');
-      newGameFromDB.nextQuestion();
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog
-        .filter(e => e.nameType === eventTypes.QuestionStart)
-        .filter(e => e.questionId === 'q2Id');
-      assert.equal(playerAnswerEvents.length, 1);
-    });
-  });
-
-  describe('showLeaders', function() {
-    it('showLeaders event adding correctly', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const created = Game.findOne({ _id: id });
-      created.showLeaders();
-
-      const newGameFromDB = Game.findOne({ _id: id });
-      const showLeadersEvents = newGameFromDB.gameLog.filter(
-        e => e.nameType === eventTypes.ShowLeaders,
+    it('should not log answer for question that has already ended', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.questionEnd(first(game.quiz.questions)._id);
+      asUser('player');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
       );
-      assert.equal(showLeadersEvents.length, 1);
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerAnswer,
+      );
+      expect(playerAnswer).to.have.lengthOf(0);
+    });
+
+    it('should not log answer if manager has answer', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      game.questionEnd(first(game.quiz.questions)._id);
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerAnswer,
+      );
+      expect(playerAnswer).to.have.lengthOf(0);
     });
   });
 
   describe('endGame', function() {
-    it('GameEnd event adding correctly', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const created = Game.findOne({ _id: id });
-      created.endGame();
-
-      const newGameFromDB = Game.findOne({ _id: id });
-      const gameEndEvents = newGameFromDB.gameLog.filter(e => e.nameType === eventTypes.GameEnd);
-      assert.equal(gameEndEvents.length, 1);
-    });
-  });
-
-  describe('endGameOrNextQuestion', function() {
-    it('endGameOrNextQuestion() needs to call nextQuestion()', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'q1Id',
-              text: 'first question',
-              answers: [
-                new Answer({
-                  _id: 'a11Id',
-                  text: 'answer11',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a12Id',
-                  text: 'answer12',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a13Id',
-                  text: 'answer13',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a14Id',
-                  text: 'answer14',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-            new Question({
-              _id: 'q2Id',
-              text: 'second question',
-              answers: [
-                new Answer({
-                  _id: 'a21Id',
-                  text: 'answer21',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a22Id',
-                  text: 'answer22',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a23Id',
-                  text: 'answer23',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a24Id',
-                  text: 'answer24',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 2,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.playerAnswer('q1Id', 'a11Id');
-      newGameFromDB.endGameOrNextQuestion();
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog
-        .filter(e => e.nameType === eventTypes.QuestionStart)
-        .filter(e => e.questionId === 'q2Id');
-      assert.equal(playerAnswerEvents.length, 1);
-    });
-
-    it('endGameOrNextQuestion() needs to call nextQuestion()', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'q1Id',
-              text: 'first question',
-              answers: [
-                new Answer({
-                  _id: 'a11Id',
-                  text: 'answer11',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a12Id',
-                  text: 'answer12',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a13Id',
-                  text: 'answer13',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a14Id',
-                  text: 'answer14',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-            new Question({
-              _id: 'q2Id',
-              text: 'second question',
-              answers: [
-                new Answer({
-                  _id: 'a21Id',
-                  text: 'answer21',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a22Id',
-                  text: 'answer22',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a23Id',
-                  text: 'answer23',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a24Id',
-                  text: 'answer24',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 2,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.playerAnswer('q1Id', 'a11Id');
-      newGameFromDB.questionEnd('q1Id');
-      newGameFromDB.showLeaders();
-      newGameFromDB.endGameOrNextQuestion();
-      newGameFromDB.playerAnswer('q2Id', 'a21Id');
-      newGameFromDB.endGameOrNextQuestion();
-      const newGamePlayerAnswer = Game.findOne({ _id: id });
-      const playerAnswerEvents = newGamePlayerAnswer.gameLog.filter(
+    it('should end game', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.endGame();
+      const endGame = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.GameEnd,
       );
-      assert.equal(playerAnswerEvents.length, 1);
+      expect(endGame).to.have.lengthOf(1);
+    });
+
+    it('should not end game that has not start yet', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.endGame();
+      const endGame = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameEnd,
+      );
+      expect(endGame).to.have.lengthOf(0);
+    });
+
+    it('should not end game twice', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.endGame();
+      game.endGame();
+      const endGame = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameEnd,
+      );
+      expect(endGame).to.have.lengthOf(1);
     });
   });
 
   describe('closeGame', function() {
-    it('GameClose event adding correctly', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: uuidV4(),
-              text: 'WhatsUp ?!',
-              order: 1,
-              time: 10,
-              answers: [
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: uuidV4(),
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-            }),
-          ],
-          tags: ['tag'],
-          owner: Meteor.userId(),
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const created = Game.findOne({ _id: id });
-      created.closeGame();
-
-      const newGameFromDB = Game.findOne({ _id: id });
-      const gameCloseEvents = newGameFromDB.gameLog.filter(
+    it('should close game', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.closeGame();
+      const closeGame = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.GameClose,
       );
-      assert.equal(gameCloseEvents.length, 1);
+      expect(closeGame).to.have.lengthOf(1);
+    });
+
+    it('should not close game twice', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.closeGame();
+      game.closeGame();
+      const closeGame = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameClose,
+      );
+      expect(closeGame).to.have.lengthOf(1);
     });
   });
 
-  describe('isQuestionEndAlready', function() {
-    it('isQuestionEndAlready with question that has start', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      newGameFromDB.startGame();
-      newGameFromDB.questionEnd('qId');
-      const created = Game.findOne({ _id: id });
-      const isQuestionEnd = created.isQuestionEndAlready('qId');
-
-      assert.equal(isQuestionEnd, true);
+  describe('endQuestionIfEveryoneAnswered', function() {
+    it('should end question', function() {
+      const game = Factory.create('game');
+      asUser('player1');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('player2');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      asUser('player1');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      asUser('player2');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
+      expect(questionEnd).to.have.lengthOf(1);
     });
 
-    it('isQuestionEndAlready with question that has not start yet', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      const created = Game.findOne({ _id: id });
-      const isQuestionEnd = created.isQuestionEndAlready('qId');
-
-      assert.equal(isQuestionEnd, false);
-    });
-
-    it('isQuestionEndAlready with question that not exist', function() {
-      const newGame = new Game({
-        quiz: new Quiz({
-          title: 'test quiz',
-          questions: [
-            new Question({
-              _id: 'qId',
-              text: 'WhatsUp ?!',
-              answers: [
-                new Answer({
-                  _id: 'a1Id',
-                  text: 'good',
-                  order: 1,
-                  points: 10,
-                }),
-                new Answer({
-                  _id: 'a2Id',
-                  text: 'bad',
-                  order: 2,
-                  points: 0,
-                }),
-                new Answer({
-                  _id: 'a3Id',
-                  text: 'Awsome',
-                  order: 3,
-                  points: 100,
-                }),
-                new Answer({
-                  _id: 'a4Id',
-                  text: '...',
-                  order: 4,
-                  points: 0,
-                }),
-              ],
-              order: 1,
-              time: 10,
-            }),
-          ],
-          tags: ['tag'],
-          owner: 'owner',
-        }),
-        gameLog: [new GameInit()],
-      });
-      const id = newGame.initGame();
-      const newGameFromDB = Game.findOne({ _id: id });
-      newGameFromDB.playerRegister();
-      const created = Game.findOne({ _id: id });
-      const isQuestionEnd = created.isQuestionEndAlready('fake_id');
-
-      assert.equal(isQuestionEnd, false);
+    it('should not end question', function() {
+      const game = Factory.create('game');
+      asUser('player1');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('player2');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.gameStart();
+      game.questionStart(first(game.quiz.questions)._id);
+      asUser('player1');
+      game.playerAnswer(
+        first(game.quiz.questions)._id,
+        first(first(game.quiz.questions).answers)._id,
+      );
+      const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionEnd,
+      );
+      expect(questionEnd).to.have.lengthOf(0);
     });
   });
 });

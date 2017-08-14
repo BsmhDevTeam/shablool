@@ -41,6 +41,7 @@ const Question = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
+      <audio src="/rap.mp3" autoPlay loop />
     </div>
   );
 };

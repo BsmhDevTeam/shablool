@@ -45,4 +45,8 @@ const Leaders = ({ game }) => {
   );
 };
 
+Leaders.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+};
+
 export default Leaders;

@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
+import { Factory } from 'meteor/dburles:factory';
 import { eventTypes } from '/imports/startup/both/constants';
 import {
   max,
@@ -223,7 +224,7 @@ export const GameClose = Class.create({
   },
 });
 
-export default Class.create({
+const Game = Class.create({
   name: 'Game',
   collection: new Mongo.Collection('games'),
   fields: {
@@ -396,7 +397,7 @@ export default Class.create({
       const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
-      const qId = lastQuestionEvents.questionId;
+      const qId = lastQuestionEvents ? lastQuestionEvents.questionId : undefined;
       return qId;
     },
     lastQuestionToEnd() {
@@ -559,5 +560,16 @@ export default Class.create({
       }));
       return playerAndAvarageTime;
     },
+    getQuestionIdByOrder(order) {
+      const question = this.quiz.questions.find(q => q.order === order);
+      return question ? question._id : undefined;
+    },
   },
+});
+
+export default Game;
+
+Factory.define('game', Game, {
+  quiz: () => Factory.create('quiz', { owner: 'owner' }),
+  gameLog: () => [new GameInit()],
 });
