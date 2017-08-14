@@ -429,7 +429,11 @@ describe('games methods', function() {
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionEnd,
       );
+      const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.PlayerAnswer,
+      );
       expect(questionEnd).to.have.lengthOf(1);
+      expect(playerAnswer).to.have.lengthOf(2);
     });
 
     it('should not end question', function() {
