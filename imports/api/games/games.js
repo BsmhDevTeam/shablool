@@ -561,7 +561,7 @@ const Game = Class.create({
       return playersAnswerEvents;
     },
     isAllPlayerAnsweredToQuestion(qId) {
-      return size(this.getPlayersAnswersByQuestion(qId)) === size(this.getPlayersId());
+      return size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) === size(Game.findOne({ _id: this._id }).getPlayersId());
     },
   },
 });
