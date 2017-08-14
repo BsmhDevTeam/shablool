@@ -1,10 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { max } from 'underscore';
 import { check } from 'meteor/check';
-import {
-  eventTypes,
-  startGameResults,
-} from '/imports/startup/both/constants';
+import { eventTypes } from '/imports/startup/both/constants';
 import Game, {
   PlayerReg,
   GameStart,
@@ -195,7 +192,7 @@ Game.extend({
           },
         },
       );
-      return this.endQuestionIfEveryoneAnswered(qId);
+      return this.isAllPlayerAnsweredToQuestion(qId) && this.questionEnd(qId);
     },
     nextQuestion() {
       // start question
@@ -284,30 +281,6 @@ Game.extend({
         },
       );
     },
-    endQuestionIfEveryoneAnswered(qId) {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.QuestionEnd,
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new QuestionEnd({ questionId: qId }),
-          },
-        },
-      );
-    },
   },
 });
 
@@ -348,9 +321,7 @@ Meteor.methods({
           gameLog: new PlayerReg({ playerId: Meteor.userId() }),
         },
       },
-      (err, res) => (
-        (res > 0)
-      ),
+      (err, res) => res > 0,
     );
   },
 });
