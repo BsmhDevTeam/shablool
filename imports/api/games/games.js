@@ -10,10 +10,10 @@ import {
   sortBy,
   mapObject,
   pairs,
-  reduceRight,
   pluck,
   first,
   last,
+  size,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
 
@@ -263,18 +263,13 @@ const Game = Class.create({
     },
     getGamePage() {
       // TODO: rewrite
-      return reduceRight(
-        this.gameLog,
-        (page, event) => {
-          const isPlayerEvent =
-            event.nameType === eventTypes.PlayerAnswer || event.nameType === eventTypes.PlayerReg;
-          return (
-            page ||
-            (!isPlayerEvent && event.nameType) ||
-            (isPlayerEvent && event.playerId === Meteor.userId() && event.nameType)
-          );
-        },
-        '',
+      const playerEvents = this.gameLog.filter(e => e.playerId === Meteor.userId());
+      const otherEvents = this.gameLog.filter(
+        e => !(e.nameType === eventTypes.PlayerAnswer || e.nameType === eventTypes.PlayerReg),
+      );
+      return max(
+        [max(playerEvents, e => e.createdAt), max(otherEvents, e => e.createdAt)],
+        e => e.createdAt,
       );
     },
     isUserRegistered() {
@@ -286,7 +281,7 @@ const Game = Class.create({
       const getAnswerOrder = id =>
         this.quiz.questions.find(q => q._id === lastQuestionId).answers.find(a => a._id === id)
           .order; // answer._id => answer.order
-      const playersAnswerEvents = this.getQuestionAnswers() // => [PlayerAnswer, ...]
+      const playersAnswerEvents = this.getLastQuestionAnswers() // => [PlayerAnswer, ...]
         .map(e => e.answerId) // => [answerId, ...]
         .map(getAnswerOrder) // => [answerOrder, ...]
         .concat([1, 2, 3, 4]); // => so there will always be 4 columns in the bar chart
@@ -302,15 +297,10 @@ const Game = Class.create({
       return answerOrderCount;
     },
     answerCount() {
-      const playersAnswerEvents = this.getQuestionAnswers();
-      return playersAnswerEvents.length;
+      return this.getLastQuestionAnswers().length;
     },
-    getQuestionAnswers() {
-      const lastQuestionId = this.lastQuestionToStartId();
-      const playersAnswerEvents = this.gameLog
-        .filter(e => e.nameType === eventTypes.PlayerAnswer)
-        .filter(e => e.questionId === lastQuestionId);
-      return playersAnswerEvents;
+    getLastQuestionAnswers() {
+      return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId());
     },
     getPlayersId() {
       return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
@@ -563,6 +553,15 @@ const Game = Class.create({
     getQuestionIdByOrder(order) {
       const question = this.quiz.questions.find(q => q.order === order);
       return question ? question._id : undefined;
+    },
+    getPlayersAnswersByQuestion(qId) {
+      const playersAnswerEvents = this.gameLog
+        .filter(e => e.nameType === eventTypes.PlayerAnswer)
+        .filter(e => e.questionId === qId);
+      return playersAnswerEvents;
+    },
+    isAllPlayerAnsweredToQuestion(qId) {
+      return size(this.getPlayersAnswersByQuestion(qId)) === size(this.getPlayersId());
     },
   },
 });

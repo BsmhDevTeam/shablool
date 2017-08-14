@@ -3,7 +3,7 @@ import { sinon } from 'meteor/practicalmeteor:sinon';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Factory } from 'meteor/dburles:factory';
 import { assert, expect } from 'chai';
-import { first } from 'underscore';
+import { first, sortBy } from 'underscore';
 import { eventTypes } from '/imports/startup/both/constants';
 import Game from '../games.js';
 import './methods';
@@ -154,8 +154,9 @@ describe('games methods', function() {
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      game.questionStart(first(game.quiz.questions)._id);
-      game.questionStart(first(game.quiz.questions)._id);
+      const questionId = first(game.quiz.questions)._id;
+      game.questionStart(questionId);
+      game.questionStart(questionId);
       const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionStart,
       );
@@ -176,15 +177,16 @@ describe('games methods', function() {
       expect(questionStart).to.have.lengthOf(0);
     });
 
-    it('should not start quesion if another question is allready running', function() {
-      console.log('blaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    it('should not start quesion if another question is already running', function() {
       const game = Factory.create('game');
       asUser('player');
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      game.questionStart(first(game.quiz.questions)._id);
-      game.questionStart(game.quiz.questions[1]._id);
+      const firstQuestionId = first(game.quiz.questions)._id
+      const secondQuestionId = game.quiz.questions[1]._id
+      game.questionStart(firstQuestionId);
+      game.questionStart(secondQuestionId);
       const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionStart,
       );
@@ -415,19 +417,20 @@ describe('games methods', function() {
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      game.questionStart(first(game.quiz.questions)._id);
+      const question = first(sortBy(game.quiz.questions, 'order'));
+      game.questionStart(question._id);
       asUser('player1');
       game.playerAnswer(
-        first(game.quiz.questions)._id,
-        first(first(game.quiz.questions).answers)._id,
+        question._id,
+        first(question.answers)._id,
       );
       asUser('player2');
       game.playerAnswer(
-        first(game.quiz.questions)._id,
-        first(first(game.quiz.questions).answers)._id,
+        question._id,
+        first(question.answers)._id,
       );
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
-        e => e.nameType === eventTypes.QuestionEnd,
+        e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );
       const playerAnswer = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.PlayerAnswer,
@@ -444,14 +447,15 @@ describe('games methods', function() {
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      game.questionStart(first(game.quiz.questions)._id);
+      const question = first(sortBy(game.quiz.questions, 'order'));
+      game.questionStart(question._id);
       asUser('player1');
       game.playerAnswer(
-        first(game.quiz.questions)._id,
-        first(first(game.quiz.questions).answers)._id,
+        question._id,
+        first(question.answers)._id,
       );
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
-        e => e.nameType === eventTypes.QuestionEnd,
+        e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );
       expect(questionEnd).to.have.lengthOf(0);
     });
