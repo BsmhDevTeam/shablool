@@ -41,7 +41,7 @@ const Question = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
-      <audio src="/rap.mp3" autoPlay loop />
+      <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop />
     </div>
   );
 };

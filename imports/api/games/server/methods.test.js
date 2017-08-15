@@ -85,6 +85,38 @@ describe('games methods', function() {
     });
   });
 
+  describe('startGame', function() {
+    it('should start game', function() {
+      const game = Factory.create('game');
+      asUser('player');
+      Meteor.call('joinGame', { code: game.code });
+      asUser('owner');
+      game.startGame();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(gameStart).to.have.lengthOf(1);
+      expect(questionStart).to.have.lengthOf(1);
+    });
+
+    it('should not start game that has no players', function() {
+      const game = Factory.create('game');
+      asUser('owner');
+      game.startGame();
+      const gameStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.GameStart,
+      );
+      const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
+        e => e.nameType === eventTypes.QuestionStart,
+      );
+      expect(gameStart).to.have.lengthOf(0);
+      expect(questionStart).to.have.lengthOf(0);
+    });
+  });
+
   describe('gameStart', function() {
     it('should start game', function() {
       const game = Factory.create('game');

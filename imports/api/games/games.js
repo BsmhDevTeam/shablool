@@ -296,7 +296,7 @@ const Game = Class.create({
       }));
       return answerOrderCount;
     },
-    answerCount() {
+    getLastQuestionAnswerCount() {
       return this.getLastQuestionAnswers().length;
     },
     getLastQuestionAnswers() {

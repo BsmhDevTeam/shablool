@@ -33,5 +33,6 @@ export default ({ game }) => {
     }
   };
   const event = game.getLastEvent().nameType;
+  console.log('event: ', event);
   return mapEventToPages(event);
 };

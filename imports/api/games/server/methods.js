@@ -73,6 +73,13 @@ Game.extend({
             { _id: this._id },
             {
               gameLog: {
+                $elemMatch: {
+                  nameType: eventTypes.GameStart,
+                },
+              },
+            },
+            {
+              gameLog: {
                 $not: {
                   $elemMatch: {
                     nameType: eventTypes.QuestionStart,

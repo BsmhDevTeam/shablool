@@ -1,13 +1,10 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
 import { eventTypes } from '/imports/startup/both/constants';
-import Loading from '/imports/ui/components/loading';
 import Leaders from './both/leaders.js';
 import Question from './both/question.js';
 import QuestionStatistics from './both/question-statistics';
 import Winner from './both/winner';
-import Instructions from './player/instructions.js';
+import Instructions from './player/instructions';
 import AnswerSent from './player/answer-sent.js';
 import GameClose from './both/game-close';
 
@@ -36,6 +33,6 @@ export default ({ game }) => {
         return null;
     }
   };
-  const event = game.getGamePage();
+  const event = game.getGamePage().nameType;
   return mapEventToPages(event);
 };
