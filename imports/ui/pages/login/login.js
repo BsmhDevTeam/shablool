@@ -5,13 +5,13 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 const Login = () => {
   const login = () => {
     Meteor.loginWithGitlab(
-      err => (err ? FlowRouter.go('Game.LoginError') : FlowRouter.go('Game.Home')),
+      err => (err ? FlowRouter.go('Game.LoginError') : FlowRouter.go('Home')),
     );
   };
 
   const isAlreadyLoggedIn = Meteor.loggingIn() || Meteor.userId();
   if (isAlreadyLoggedIn) {
-    FlowRouter.go('Game.Home');
+    FlowRouter.go('Home');
     return null;
   }
 

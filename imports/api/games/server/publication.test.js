@@ -2,9 +2,10 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
+import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
+import Game, { GameInit, GameClose, PlayerReg } from '../games.js';
 import './publication.js';
-import Game, { GameInit, eventTypes, QuestionEnd, GameClose, PlayerReg } from '../games.js';
-import Quiz, { Question, Answer } from '../../quizes/quizes.js';
+
 
 describe('games publication', function() {
   beforeEach(function() {
@@ -226,16 +227,6 @@ describe('games publication', function() {
       const collector = new PublicationCollector({ userId: 'me' });
       collector.collect('games.games-played', (collections) => {
         assert.equal(collections.games.length, 1);
-        done();
-      });
-    });
-  });
-
-  describe('games.open', function() {
-    it('get all open games', function(done) {
-      const collector = new PublicationCollector({ userId: 'me' });
-      collector.collect('games.open', (collections) => {
-        assert.equal(collections.games.length, 2);
         done();
       });
     });
