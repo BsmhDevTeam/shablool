@@ -11,10 +11,7 @@ Meteor.publish('quizes.my-quizes', function() {
 Meteor.publish('quizes.get', function(id) {
   check(id, String);
   return Quiz.find({
-    $and: [
-      { _id: id },
-      { $or: [{ owner: this.userId }, { private: false }] },
-    ],
+    $and: [{ _id: id }, { $or: [{ owner: this.userId }, { private: false }] }],
   });
 });
 

@@ -1,9 +1,5 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
-import Loading from '/imports/ui/components/loading';
-import Game from '/imports/api/games/games';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Leaders = ({ game }) => {
