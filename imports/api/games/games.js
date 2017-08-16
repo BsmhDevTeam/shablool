@@ -395,6 +395,12 @@ const Game = Class.create({
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
+    getUsernameByUserID(uId) {
+      const username = Meteor.users
+        .find({ _id: uId }, { fields: { 'services.gitlab.username': 1 } })
+        .map(p => p.services.gitlab.username);
+      return username;
+    },
     getPlayersName() {
       const playersIds = this.getPlayersId();
       const playersNames = Meteor.users
@@ -561,6 +567,21 @@ const Game = Class.create({
     },
     isAllPlayerAnsweredToQuestion(qId) {
       return size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) === size(Game.findOne({ _id: this._id }).getPlayersId());
+    },
+    getDataForPivotTable() {
+      const game = Game.findOne({ _id: this._id });
+      const playerAnswers = game.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
+        username: game.getUsernameByUserID(playerId),
+        questionOrder: game.quiz.questions.find({ _id: questionId }).order,
+        questionTime: game.quiz.questions.find({ _id: questionId }).time,
+        answerOrder: game.quiz.questions.find({ _id: questionId }).answers.find({ _id: answerId }).order,
+        answerTime: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        score: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+               game.quiz.questions.find({ _id: questionId }).points,
+              game.quiz.questions.find({ _id: questionId }).time),
+      }));
+      return data;
     },
   },
 });
