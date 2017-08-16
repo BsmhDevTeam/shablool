@@ -16,13 +16,19 @@ const GameCardPlayed = ({ game }) => {
             <img className="game-panel-img" src="/img/quiz-default.png" alt="game" />
           </div>
           <div className="col-md-4">
-            <h5 className="game-title">{game.quiz.title}</h5>
+            <h5 className="game-title">
+              {game.quiz.title}
+            </h5>
             <p>
               <span className="game-owner-span">
                 {`מריץ המשחק: ${Meteor.users.findOne(game.quiz.owner).services.gitlab.username}`}
               </span>
             </p>
-            <p><span>{game.createdAt.toLocaleString()}</span></p>
+            <p>
+              <span>
+                {game.createdAt.toLocaleString()}
+              </span>
+            </p>
           </div>
           <div className="col-md-5 game-card-buttons-area">
             <span>
@@ -49,9 +55,7 @@ const GameCardPlayed = ({ game }) => {
                   onClick={showStatistics}
                 >
                   <span className="fa fa-area-chart game-card-link-text-icon" />
-                  <span className="game-card-link-text game-card-link-text">
-                    הצג סטטיסטיקות
-                  </span>
+                  <span className="game-card-link-text game-card-link-text">הצג סטטיסטיקות</span>
                 </a>
               </div>
             </span>

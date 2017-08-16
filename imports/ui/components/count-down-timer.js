@@ -24,7 +24,11 @@ class CountdownTimer extends React.Component {
   };
 
   render() {
-    return <p className="count-down-timer-num">{this.state.secondsRemaining}</p>;
+    return (
+      <p className="count-down-timer-num">
+        {this.state.secondsRemaining}
+      </p>
+    );
   }
 }
 

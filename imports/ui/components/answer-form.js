@@ -43,20 +43,26 @@ const AnswerForm = ({ answer, validate, actions }) => {
             onChange={actions.changeText(answer._id)}
           />
           {textValidation
-            ? <label className="control-label" htmlFor="text">{textValidation}</label>
+            ? <label className="control-label" htmlFor="text">
+              {textValidation}
+            </label>
             : ''}
         </div>
       </div>
       <div className="col-lg-3">
         <div className={`form-group ${pointsValidation ? 'has-error' : ''}`}>
-          <label htmlFor="points" className="control-label col-lg-4">ניקוד</label>
+          <label htmlFor="points" className="control-label col-lg-4">
+            ניקוד
+          </label>
           <input
             value={answer.points}
             className="form-control col-lg-6"
             onChange={actions.changePoints(answer._id)}
           />
           {pointsValidation
-            ? <label className="control-label" htmlFor="points">{pointsValidation}</label>
+            ? <label className="control-label" htmlFor="points">
+              {pointsValidation}
+            </label>
             : ''}
         </div>
       </div>

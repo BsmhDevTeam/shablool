@@ -7,9 +7,8 @@ import Loading from '/imports/ui/components/loading';
 import GameManager from './owner-router.js';
 import GamePlayer from './player-router.js';
 
-
 const GameRouter = ({ game }) =>
-  (game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />);
+  game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />;
 
 GameRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,

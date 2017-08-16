@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { managementTabs } from '/imports/startup/both/constants.js';
 import GameCardManaged from '/imports/ui/components/game-card-managed.js';
 
-
 const GamesManaged = ({ activeTab, gamesManaged }) =>
   <div className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged ? 'active' : ''}`}>
     {gamesManaged.length

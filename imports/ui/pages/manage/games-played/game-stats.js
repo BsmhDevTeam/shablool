@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ManageNavbar from '/imports/ui/components/manage-navbar.js';
 import TwoLinesChart from '/imports/ui/components/two-lines-chart';
 
-const HistoryPlayer = ({ game }) => (
+const HistoryPlayer = ({ game }) =>
   <div id="history">
     <div className="row">
       <ManageNavbar />
@@ -48,8 +48,7 @@ const HistoryPlayer = ({ game }) => (
 
       <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2" />
     </div>
-  </div>
-);
+  </div>;
 
 HistoryPlayer.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,

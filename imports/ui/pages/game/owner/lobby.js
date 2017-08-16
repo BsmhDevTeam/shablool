@@ -17,9 +17,7 @@ export default class GameLobby extends React.Component {
         this.setState({ showNoPlayerAlert: true });
         setTimeout(() => this.setState({ showNoPlayerAlert: false }), 3000);
       };
-      game.applyMethod('startGame', [], (err, result) => {
-        result ? null : showAlert();
-      });
+      game.applyMethod('startGame', [], (err, result) => result ? null : showAlert());
     };
     return (
       <div className="game-lobby">

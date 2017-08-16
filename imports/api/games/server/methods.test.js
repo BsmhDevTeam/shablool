@@ -215,8 +215,8 @@ describe('games methods', function() {
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      const firstQuestionId = first(game.quiz.questions)._id
-      const secondQuestionId = game.quiz.questions[1]._id
+      const firstQuestionId = first(game.quiz.questions)._id;
+      const secondQuestionId = game.quiz.questions[1]._id;
       game.questionStart(firstQuestionId);
       game.questionStart(secondQuestionId);
       const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
@@ -452,15 +452,9 @@ describe('games methods', function() {
       const question = first(sortBy(game.quiz.questions, 'order'));
       game.questionStart(question._id);
       asUser('player1');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       asUser('player2');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );
@@ -482,10 +476,7 @@ describe('games methods', function() {
       const question = first(sortBy(game.quiz.questions, 'order'));
       game.questionStart(question._id);
       asUser('player1');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );

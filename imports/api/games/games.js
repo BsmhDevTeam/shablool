@@ -471,11 +471,12 @@ const Game = Class.create({
       const questionAndTime = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time:
-          (e.createdAt.getTime() / 1000) -
-          (this.gameLog
+          e.createdAt.getTime() / 1000 -
+          this.gameLog
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
-            .createdAt.getTime() / 1000),
+            .createdAt.getTime() /
+            1000,
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndTime;
     },
@@ -512,7 +513,7 @@ const Game = Class.create({
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       const questionStartTime = this.getQuestionStartTime(qId) / 1000;
-      const times = playerAnswerEvents.map(e => (e.createdAt.getTime() / 1000) - questionStartTime);
+      const times = playerAnswerEvents.map(e => e.createdAt.getTime() / 1000 - questionStartTime);
       return avarage(times);
     },
     getAvarageQuestionAndTime() {
@@ -560,7 +561,10 @@ const Game = Class.create({
       return playersAnswerEvents;
     },
     isAllPlayerAnsweredToQuestion(qId) {
-      return size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) === size(Game.findOne({ _id: this._id }).getPlayersId());
+      return (
+        size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) ===
+        size(Game.findOne({ _id: this._id }).getPlayersId())
+      );
     },
   },
 });

@@ -1,6 +1,6 @@
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
-import { assert } from 'meteor/practicalmeteor:chai';
+import { assert } from 'chai';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
 import './publication.js';
 import Quiz, { Question, Answer } from '../quizes.js';

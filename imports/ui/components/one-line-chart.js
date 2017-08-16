@@ -12,42 +12,44 @@ import {
 } from 'recharts';
 
 const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
-  const CustomizedXAxisTick = ({ x, y, payload }) => (
+  const CustomizedXAxisTick = ({ x, y, payload }) =>
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dy={16}>
         {payload.value}
       </text>
-    </g>
-  );
+    </g>;
   CustomizedXAxisTick.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
     payload: PropTypes.instanceOf(Object),
   };
 
-  const CustomizedYAxisTick = ({ x, y, payload }) => (
+  const CustomizedYAxisTick = ({ x, y, payload }) =>
     <g transform={`translate(${x},${y})`}>
       <text textAnchor="middle" fill="#666" dx={-16} dy={3}>
-        {Math.abs(payload.value)}{payload.value < 0 ? '-' : ''}
+        {Math.abs(payload.value)}
+        {payload.value < 0 ? '-' : ''}
       </text>
-    </g>
-  );
+    </g>;
   CustomizedYAxisTick.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
     payload: PropTypes.instanceOf(Object),
   };
 
-  const CustomizedTolltip = ({ payload, label, active }) => (active
+  const CustomizedTolltip = ({ payload, label, active }) =>
+    active
       ? <div className="panel panel-body">
         <div className="tooltip-area">
-          <p>שאלה #{label}</p>
+          <p>
+              שאלה #{label}
+          </p>
           <p style={{ color: payload[0].color }}>
-              ממוצע: {payload[0].payload.score || (payload[0].payload.time).toFixed(3)}
+              ממוצע: {payload[0].payload.score || payload[0].payload.time.toFixed(3)}
           </p>
         </div>
       </div>
-      : null);
+      : null;
 
   CustomizedTolltip.propTypes = {
     label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -63,12 +65,7 @@ const OneLinesChart = ({ data, dataKeyX, dataKeyY }) => {
         <CartesianGrid strokeDasharray="3 3" />
         <Legend verticalAlign="bottom" />
         <Tooltip content={<CustomizedTolltip />} />
-        <Line
-          type="monotone"
-          dataKey={dataKeyY}
-          stroke="#82ca9d"
-          name="ממוצע"
-        />
+        <Line type="monotone" dataKey={dataKeyY} stroke="#82ca9d" name="ממוצע" />
       </LineChart>
     </ResponsiveContainer>
   );
