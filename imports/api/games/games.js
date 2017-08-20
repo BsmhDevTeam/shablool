@@ -481,8 +481,7 @@ const Game = Class.create({
           this.gameLog
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
-            .createdAt.getTime() /
-            1000,
+            .createdAt.getTime() / 1000,
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndTime;
     },
@@ -567,23 +566,19 @@ const Game = Class.create({
       return playersAnswerEvents;
     },
     isAllPlayerAnsweredToQuestion(qId) {
-      return (
-        size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) ===
-        size(Game.findOne({ _id: this._id }).getPlayersId())
-      );
+      return (size(this.getPlayersAnswersByQuestion(qId)) === this.getPlayersCount());
     },
     getDataForPivotTable() {
-      const game = Game.findOne({ _id: this._id });
-      const playerAnswers = game.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswers = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
       const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
-        username: game.getUsernameByUserID(playerId),
-        questionOrder: game.quiz.questions.find({ _id: questionId }).order,
-        questionTime: game.quiz.questions.find({ _id: questionId }).time,
-        answerOrder: game.quiz.questions.find({ _id: questionId }).answers.find({ _id: answerId }).order,
+        username: this.getUsernameByUserID(playerId),
+        questionOrder: this.quiz.questions.find({ _id: questionId }).order,
+        questionTime: this.quiz.questions.find({ _id: questionId }).time,
+        answerOrder: this.quiz.questions.find({ _id: questionId }).answers.find({ _id: answerId }).order,
         answerTime: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
         score: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
-               game.quiz.questions.find({ _id: questionId }).points,
-              game.quiz.questions.find({ _id: questionId }).time),
+        this.quiz.questions.find({ _id: questionId }).points,
+        this.quiz.questions.find({ _id: questionId }).time),
       }));
       return data;
     },

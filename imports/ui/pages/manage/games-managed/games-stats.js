@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ManageNavbar from '/imports/ui/components/manage-navbar.js';
 import OneLinesChart from '/imports/ui/components/one-line-chart';
+import PivotTable from '/imports/ui/components/pivot-table';
 
 const HistoryManager = ({ game }) =>
   <div id="history">
@@ -16,11 +17,12 @@ const HistoryManager = ({ game }) =>
           <h3 className="chart-title">ממוצע הניקוד</h3>
         </div>
         <div className="row">
-          <OneLinesChart
+          <PivotTable game={game} />
+          {/* <OneLinesChart
             data={game.getAvarageQuestionAndScore()}
             dataKeyX="questionOrder"
             dataKeyY="score"
-          />
+          /> */}
         </div>
       </div>
 
