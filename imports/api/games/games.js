@@ -570,15 +570,16 @@ const Game = Class.create({
     },
     getDataForPivotTable() {
       const playerAnswers = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+
       const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
         username: this.getUsernameByUserID(playerId),
-        questionOrder: this.quiz.questions.find({ _id: questionId }).order,
-        questionTime: this.quiz.questions.find({ _id: questionId }).time,
-        answerOrder: this.quiz.questions.find({ _id: questionId }).answers.find({ _id: answerId }).order,
+        questionOrder: this.quiz.questions.find(q => q._id === questionId).order,
+        questionTime: this.quiz.questions.find(q => q._id === questionId).time,
+        answerOrder: this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).order,
         answerTime: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
         score: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
-        this.quiz.questions.find({ _id: questionId }).points,
-        this.quiz.questions.find({ _id: questionId }).time),
+               this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
+               this.quiz.questions.find(q => q._id === questionId).time),
       }));
       return data;
     },

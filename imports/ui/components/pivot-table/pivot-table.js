@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
+import 'pivottable';
+import 'c3';
+import './dist/c3_renderers.js';
 
 export default class PivotTable extends React.Component {
   componentDidMount() {
     const { game } = this.props;
-    console.log('renderers:', $.pivotUtilities);
     const renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers);
 
     const mps = game.getDataForPivotTable();
-
+    
     $('#output').pivotUI(mps, {
       renderers,
       cols: ['Party'],
@@ -35,7 +37,14 @@ export default class PivotTable extends React.Component {
   render() {
     return (
       <div className="row">
-        <div id="output" />
+        <div id="pivot-table">
+          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" />
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" />
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js" />
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js" />
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" />
+          <div id="output" />
+        </div>
       </div>
     );
   }
