@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
+import Image from '/imports/api/images/images';
 
 const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {
@@ -14,27 +15,33 @@ const QuizCard = ({ quiz, actions }) => {
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
-    FlowRouter.go('Game.Main', { code: game.code });
+    FlowRouter.go('Game.Play', { code: game.code });
   };
+  const quizImage = Image.findOne({ _id: quiz.image });
   return (
     <div className="panel panel-default quiz-card" id={`quiz-card-${quiz._id}`}>
       <div className="panel-body">
         <div className="row">
           <div className="col-md-3">
-            <img
-              className="quiz-panel-img"
-              src="/img/quiz-default.png"
-              alt="quiz"
-            />
+            <div className="quiz-card-img-area">
+              <div className="quiz-panel-img-area">
+                <img
+                  className="quiz-panel-img"
+                  src={quiz.image === 'no-image' ? '/img/default.png' : quizImage.link()}
+                  alt="quiz"
+                />
+              </div>
+            </div>
           </div>
           <div className="col-md-4">
             <h5 className="quiz-title">{quiz.title}</h5>
+            <p><strong>{quiz.questions.length} </strong><span>שאלות</span></p>
             <p>
               <span className="quiz-owner-span">
                 {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).services.gitlab.username}`}
               </span>
             </p>
-            <p><strong>{quiz.questions.length} </strong><span>שאלות</span></p>
+            <p><span>{quiz.createdAt.toLocaleString()}</span></p>
           </div>
           <div className="col-md-5 quiz-card-buttons-area">
             {quiz.owner === Meteor.userId()
@@ -99,7 +106,7 @@ const QuizCard = ({ quiz, actions }) => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            {quiz.getTags().map(t => <TagTemplate key={t._id} tag={t} />)}
+            {quiz.tags.map(t => <TagTemplate key={t} tag={t} />)}
           </div>
         </div>
       </div>
@@ -115,13 +122,13 @@ QuizCard.propTypes = {
 const TagTemplate = ({ tag }) => (
   <h4 className="pull-right tag">
     <span className="label label-info" aria-hidden="true">
-      {tag.name}
+      {tag}
     </span>
   </h4>
 );
 
 TagTemplate.propTypes = {
-  tag: PropTypes.instanceOf(Object).isRequired,
+  tag: PropTypes.string.isRequired,
 };
 
 export default QuizCard;

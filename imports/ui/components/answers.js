@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { eventTypes } from '../../api/games/games';
+import { eventTypes } from '/imports/startup/both/constants';
 
 const glyphIcons = {
   1: 'fa fa-star',
@@ -25,7 +25,10 @@ Answers.propTypes = {
 
 const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
-    game.applyMethod('playerAnswer', [game.lastQuestionToStartId(), answer._id]);
+    game.applyMethod('playerAnswer', [
+      game.lastQuestionToStartId(),
+      answer._id,
+    ]);
   };
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>

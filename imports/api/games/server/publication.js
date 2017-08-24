@@ -1,38 +1,90 @@
-import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
-import Game, { eventTypes } from '../games.js';
+import { Meteor } from "meteor/meteor";
+import { publishComposite } from "meteor/reywood:publish-composite";
+import { eventTypes } from "/imports/startup/both/constants";
+import Game from "../games.js";
 
-Meteor.publish('games.get-by-code', function(code) {
-  check(code, String);
-  return Game.find({ code });
-});
-
-Meteor.publish('games.games-managed', function() {
-  const userId = this.userId;
-  return Game.find({
-    $and: [
-      { 'quiz.owner': userId },
-      { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } },
-    ],
-  });
-});
-
-Meteor.publish('games.games-played', function() {
-  const games = Game.find({
-    $and: [
-      { gameLog: { $elemMatch: { playerId: this.userId } } },
-      { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } },
-    ],
-  });
-  return games;
-});
-
-Meteor.publish('games.open', function() {
-  const games = Game.find(
-    {
-      gameLog: { $not: { $elemMatch: { nameType: eventTypes.GameClose } } },
+// Manager publications :
+publishComposite("games.games-managed", function() {
+  return {
+    find() {
+      const userId = this.userId;
+      return Game.find({
+        $and: [
+          { "quiz.owner": userId },
+          { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } }
+        ]
+      });
     },
-    { fields: { code: 1 , 'quiz.owner': 1 } },
-  );
-  return games;
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { "services.gitlab.username": 1 } }
+          );
+        }
+      }
+    ]
+  };
+});
+
+// Player publications :
+publishComposite("games.games-played", function() {
+  return {
+    find() {
+      return Game.find({
+        $and: [
+          { gameLog: { $elemMatch: { playerId: this.userId } } },
+          { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } }
+        ]
+      });
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { "services.gitlab.username": 1 } }
+          );
+        }
+      }
+    ]
+  };
+});
+
+// Both :
+publishComposite("games.get-by-code.without-points", function(code) {
+  return {
+    find() {
+      return Game.find({ code }, { fields: { "quiz.questions.answers.points": 0 } }); // Limit publication need-to-know only' player and Manager
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { "services.gitlab.username": 1 } }
+          );
+        }
+      }
+    ]
+  };
+});
+
+publishComposite("games.get-by-code", function(code) {
+  return {
+    find() {
+      return Game.find({ code }); // Limit publication need-to-know only' player and Manager
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { "services.gitlab.username": 1 } }
+          );
+        }
+      }
+    ]
+  };
 });

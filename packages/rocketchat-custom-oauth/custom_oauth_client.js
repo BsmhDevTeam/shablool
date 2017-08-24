@@ -46,7 +46,7 @@ export class CustomOAuth {
   }
 
   configureLogin() {
-    const loginWithService = `loginWith${_s.capitalize(this.name)}`;
+    const loginWithService = `loginWith${s.capitalize(this.name)}`;
 
     Meteor[loginWithService] = (options, callback) => {
       // support a callback without options

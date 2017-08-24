@@ -28,18 +28,17 @@ const validatePoints = (points) => {
   return message;
 };
 
-const AnswerForm = ({ answer, index, validate, actions }) => {
+const AnswerForm = ({ answer, validate, actions }) => {
   const textValidation = validate && validateText(answer.text);
   const pointsValidation = validate && validatePoints(answer.points);
   return (
     <div className="form-group">
       <div className="col-lg-9">
         <div className={`form-group ${textValidation ? 'has-error' : ''}`}>
-          <label htmlFor="text" className="control-label col-lg-1">{index}</label>
           <input
             name="text"
             value={answer.text}
-            className="form-control col-lg-11"
+            className="form-control col-lg-12"
             placeholder="הכנס/י תשובה"
             onChange={actions.changeText(answer._id)}
           />
@@ -67,7 +66,6 @@ const AnswerForm = ({ answer, index, validate, actions }) => {
 
 AnswerForm.propTypes = {
   answer: PropTypes.instanceOf(Object).isRequired,
-  index: PropTypes.number.isRequired,
   validate: PropTypes.bool.isRequired,
   actions: PropTypes.instanceOf(Object).isRequired,
 };

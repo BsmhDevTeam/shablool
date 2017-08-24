@@ -4,22 +4,22 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
 
 // Import layouts
-import GameLayout from '../../ui/layouts/game.js';
-import ManageLayout from '../../ui/layouts/manage.js';
-import LoginLayout from '../../ui/layouts/login.js';
+import GameLayout from '/imports/ui/layouts/game.js';
+import ManageLayout from '/imports/ui/layouts/manage.js';
+import LoginLayout from '/imports/ui/layouts/login.js';
 
 // Import pages
-import Home from '../../ui/pages/game-shared/home';
-import Login from '../../ui/pages/login/login';
-import LoginError from '../../ui/pages/login/login-error';
-import CreateQuiz from '../../ui/pages/quiz-management/create-quiz';
-import EditQuiz from '../../ui/pages/quiz-management/edit-quiz.js';
-import Search from '../../ui/pages/quiz-management/search.js';
-import ViewQuiz from '../../ui/pages/quiz-management/view-quiz';
-import Main from '../../ui/pages/quiz-management/main.js';
-import GameRouter from '../../ui/pages/game-shared/game-router';
-import HistoryRouter from '../../ui/pages/game-shared/history-router';
-import NotFound from '../../ui/pages/not-found/not-found';
+import Home from '/imports/ui/pages/game/home';
+import Login from '/imports/ui/pages/login/login';
+import LoginError from '/imports/ui/pages/login/login-error';
+import CreateQuiz from '/imports/ui/pages/manage/my-quizes/create-quiz';
+import EditQuiz from '/imports/ui/pages//manage/my-quizes/edit-quiz.js';
+import Search from '/imports/ui/pages/search/search.js';
+import ViewQuiz from '/imports/ui/pages/search/view-quiz';
+import Main from '/imports/ui/pages/manage';
+import GameRouter from '/imports/ui/pages/game/router';
+import HistoryRouter from '/imports/ui/pages/manage/game-stats-router';
+import NotFound from '/imports/ui/pages/not-found/not-found';
 
 
 const verifyLogin = () => {
@@ -32,23 +32,23 @@ const verifyLogin = () => {
 
 // Set up all routes in the app
 FlowRouter.route('/', {
-  name: 'Game.Home',
+  name: 'Home',
   triggersEnter: [verifyLogin],
   action() {
     mount(GameLayout, { main: <Home /> });
   },
 });
 
-FlowRouter.route('/Game/:code', {
-  name: 'Game.Main',
+FlowRouter.route('/game/:code', {
+  name: 'Game.Play',
   triggersEnter: [verifyLogin],
   action(params) {
     mount(GameLayout, { main: <GameRouter code={params.code} /> });
   },
 });
 
-FlowRouter.route('/Manage/History/:code', {
-  name: 'Manage.History',
+FlowRouter.route('/manage/game/:code', {
+  name: 'Manage.Game',
   triggersEnter: [verifyLogin],
   action(params) {
     mount(GameLayout, { main: <HistoryRouter code={params.code} /> });
