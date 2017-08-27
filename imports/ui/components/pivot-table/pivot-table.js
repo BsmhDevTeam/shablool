@@ -11,7 +11,8 @@ export default class PivotTable extends React.Component {
     const renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers);
 
     const mps = game.getDataForPivotTable();
-    
+    console.log('mps: ', mps);
+
     $('#output').pivotUI(mps, {
       renderers,
       cols: ['Party'],
