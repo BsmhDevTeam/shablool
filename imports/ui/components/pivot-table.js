@@ -3,23 +3,28 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 import 'pivottable';
 import 'c3';
-import './dist/c3_renderers.js';
+import '/node_modules/pivottable/dist/c3_renderers.js';
+import '/node_modules/pivottable/dist/pivot.fr.js';
+import '/node_modules/pivottable/dist/pivot.fr.min.js';
+import '/node_modules/pivottable/dist/pivot.fr.js.map';
+import '/node_modules/pivottable/dist/pivot.fr.min.js.map';
 
 export default class PivotTable extends React.Component {
   componentDidMount() {
     const { game } = this.props;
-    const renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers);
 
     const mps = game.getDataForPivotTable();
     console.log('mps: ', mps);
 
     $('#output').pivotUI(mps, {
-      renderers,
-      cols: ['Party'],
-      rows: ['Province'],
-      rendererName: 'Horizontal Stacked Bar Chart',
-      rowOrder: 'value_z_to_a',
-      colOrder: 'value_z_to_a',
+      renderers: $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers),
+      cols: ['questionOrder'],
+      rows: ['username'],
+      rendererName: 'Bar Chart',
+      aggregatorName: 'Sum',
+      rowOrder: 'key_a_to_z',
+      colOrder: 'key_a_to_z',
+      localeStrings: 'fr',
       rendererOptions: {
         c3: {
           data: {
@@ -33,7 +38,7 @@ export default class PivotTable extends React.Component {
           },
         },
       },
-    });
+    }, false, 'fr');
   }
   render() {
     return (
