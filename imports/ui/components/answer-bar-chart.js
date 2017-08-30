@@ -19,15 +19,14 @@ const colorsJson = {
 const AnswerBar = ({ game }) => {
   const data = game.answersGroupCount();
 
-  const CustomizedAxisTick = ({ x, y, payload }) => (
+  const CustomizedAxisTick = ({ x, y, payload }) =>
     <g transform={`translate(${x + 9.5},${y + 15})`}>
       <text
         dangerouslySetInnerHTML={{
           __html: `&#x${glyphIconsJson[payload.value]};`,
         }}
       />
-    </g>
-  );
+    </g>;
   CustomizedAxisTick.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,

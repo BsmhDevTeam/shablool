@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { sinon } from 'meteor/practicalmeteor:sinon';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { Factory } from 'meteor/dburles:factory';
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import { first, sortBy } from 'underscore';
 import { eventTypes } from '/imports/startup/both/constants';
 import Game from '../games.js';
@@ -15,9 +15,8 @@ const asUser = (user) => {
   });
 };
 
-describe('games methods', function() {
+describe('Game Methods', function() {
   beforeEach(function() {
-    resetDatabase();
     sinon.stub(Meteor, 'userId', function() {
       return 'owner'; // User id
     });
@@ -29,14 +28,14 @@ describe('games methods', function() {
   });
 
   describe('initGame', function() {
-    it('create correctly', function() {
+    it('should create game', function() {
       const game = Factory.create('game');
       const created = Game.find({ _id: game._id });
       const collectionName = created._getCollectionName();
       const count = created.count();
 
-      assert.equal(collectionName, 'games');
-      assert.equal(count, 1);
+      expect(collectionName).to.equal('games');
+      expect(count).to.equal(1);
     });
   });
 
@@ -215,8 +214,8 @@ describe('games methods', function() {
       Meteor.call('joinGame', { code: game.code });
       asUser('owner');
       game.gameStart();
-      const firstQuestionId = first(game.quiz.questions)._id
-      const secondQuestionId = game.quiz.questions[1]._id
+      const firstQuestionId = first(game.quiz.questions)._id;
+      const secondQuestionId = game.quiz.questions[1]._id;
       game.questionStart(firstQuestionId);
       game.questionStart(secondQuestionId);
       const questionStart = Game.findOne({ _id: game._id }).gameLog.filter(
@@ -452,15 +451,9 @@ describe('games methods', function() {
       const question = first(sortBy(game.quiz.questions, 'order'));
       game.questionStart(question._id);
       asUser('player1');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       asUser('player2');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );
@@ -482,10 +475,7 @@ describe('games methods', function() {
       const question = first(sortBy(game.quiz.questions, 'order'));
       game.questionStart(question._id);
       asUser('player1');
-      game.playerAnswer(
-        question._id,
-        first(question.answers)._id,
-      );
+      game.playerAnswer(question._id, first(question.answers)._id);
       const questionEnd = Game.findOne({ _id: game._id }).gameLog.filter(
         e => e.nameType === eventTypes.QuestionEnd && e.questionId === question._id,
       );

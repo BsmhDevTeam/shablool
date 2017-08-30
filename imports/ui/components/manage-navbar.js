@@ -12,17 +12,17 @@ export default () => {
     const now = new Date();
     const hour = now.getHours();
     switch (true) {
-      case (hour >= 22):
+      case hour >= 22:
         return 'לילה טוב';
-      case (hour >= 0 && hour < 6):
+      case hour >= 0 && hour < 6:
         return 'לילה טוב';
-      case (hour >= 6 && hour < 12):
+      case hour >= 6 && hour < 12:
         return 'בוקר טוב';
-      case (hour >= 12 && hour < 15):
+      case hour >= 12 && hour < 15:
         return 'צהריים טובים';
-      case (hour >= 15 && hour < 18):
+      case hour >= 15 && hour < 18:
         return 'אחר הצהריים טובים';
-      case (hour >= 18 && hour < 22):
+      case hour >= 18 && hour < 22:
         return 'ערב טוב';
       default:
         return 'שלום';
@@ -44,21 +44,14 @@ export default () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand navbar-link-element"><img className="small-logo" src="/img/SmallLogoWhite.svg" alt="logo" /></a>
+          <a href="/" className="navbar-brand navbar-link-element">
+            <img className="small-logo" src="/img/SmallLogoWhite.svg" alt="logo" />
+          </a>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
-          <form
-            className="js-search navbar-form navbar-right"
-            role="search"
-            onSubmit={search}
-          >
+          <form className="js-search navbar-form navbar-right" role="search" onSubmit={search}>
             <div className="form-group">
-              <input
-                className="form-control"
-                placeholder="חפש שאלון"
-                name="query"
-                type="text"
-              />
+              <input className="form-control" placeholder="חפש שאלון" name="query" type="text" />
             </div>
             <button type="submit" className="btn btn-default">
               <span className="glyphicon glyphicon-search" />

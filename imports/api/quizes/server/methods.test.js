@@ -1,4 +1,4 @@
-import { assert } from 'meteor/practicalmeteor:chai';
+import { assert } from 'chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import uuidV4 from 'uuid/v4';
 import Quiz, { Question, Answer } from '../quizes.js';

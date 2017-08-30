@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const GameNavbar = ({ text, num }) => (
+const GameNavbar = ({ text, num }) =>
   <nav className="navbar navbar-default navbar-fixed-top navbar-game">
     <div className="container-fluid navabr-message-area">
       <div className="navbar-bis-header">
@@ -9,12 +9,13 @@ const GameNavbar = ({ text, num }) => (
           <span>
             {text}
           </span>
-          <strong>{num}</strong>
+          <strong>
+            {num}
+          </strong>
         </p>
       </div>
     </div>
-  </nav>
-);
+  </nav>;
 
 GameNavbar.propTypes = {
   text: PropTypes.string.isRequired,

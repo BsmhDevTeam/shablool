@@ -395,6 +395,12 @@ const Game = Class.create({
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
+    getUsernameByUserID(uId) {
+      const username = Meteor.users
+        .find({ _id: uId }, { fields: { 'services.gitlab.username': 1 } })
+        .map(p => p.services.gitlab.username);
+      return username;
+    },
     getPlayersName() {
       const playersIds = this.getPlayersId();
       const playersNames = Meteor.users
@@ -471,11 +477,11 @@ const Game = Class.create({
       const questionAndTime = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time:
-          (e.createdAt.getTime() / 1000) -
-          (this.gameLog
+          e.createdAt.getTime() / 1000 -
+          this.gameLog
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
-            .createdAt.getTime() / 1000),
+            .createdAt.getTime() / 1000,
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndTime;
     },
@@ -512,7 +518,7 @@ const Game = Class.create({
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       const questionStartTime = this.getQuestionStartTime(qId) / 1000;
-      const times = playerAnswerEvents.map(e => (e.createdAt.getTime() / 1000) - questionStartTime);
+      const times = playerAnswerEvents.map(e => e.createdAt.getTime() / 1000 - questionStartTime);
       return avarage(times);
     },
     getAvarageQuestionAndTime() {
@@ -560,7 +566,26 @@ const Game = Class.create({
       return playersAnswerEvents;
     },
     isAllPlayerAnsweredToQuestion(qId) {
-      return size(Game.findOne({ _id: this._id }).getPlayersAnswersByQuestion(qId)) === size(Game.findOne({ _id: this._id }).getPlayersId());
+      return (size(this.getPlayersAnswersByQuestion(qId)) === this.getPlayersCount());
+    },
+    getDataForPivotTable() {
+      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswers = this.isManager()
+        ? playerAnswerEvents
+        : playerAnswerEvents.filter(e => e.playerId === Meteor.userId());
+
+      const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
+        משתמש: this.getUsernameByUserID(playerId),
+        'מספר השאלה': this.quiz.questions.find(q => q._id === questionId).order,
+        'זמן השאלה': this.quiz.questions.find(q => q._id === questionId).time,
+        'מספר התשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).order,
+        'זמן התשובה': calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        'נקודות תשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
+        נקודות: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+               this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
+               this.quiz.questions.find(q => q._id === questionId).time),
+      }));
+      return data;
     },
   },
 });

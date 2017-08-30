@@ -1,10 +1,5 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
-import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import Game from '/imports/api/games/games';
-import Loading from '/imports/ui/components/loading';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Winner = ({ game }) => {
