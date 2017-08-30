@@ -4,7 +4,7 @@ import $ from 'jquery';
 import 'pivottable';
 import 'c3';
 import '/node_modules/pivottable/dist/c3_renderers.js';
-import '/node_modules/pivottable/dist/pivot.he.js';
+import './locales/pivot.he.js';
 
 export default class PivotTable extends React.Component {
   componentDidMount() {

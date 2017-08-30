@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ManageNavbar from '/imports/ui/components/manage-navbar.js';
-import PivotTable from '/imports/ui/components/pivot-table';
+import PivotTable from '/imports/ui/components/pivot-table/pivot-table';
 
 const HistoryManager = ({ game }) =>
   <div id="history">
