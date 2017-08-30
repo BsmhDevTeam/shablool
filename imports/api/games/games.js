@@ -575,12 +575,13 @@ const Game = Class.create({
         : playerAnswerEvents.filter(e => e.playerId === Meteor.userId());
 
       const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
-        username: this.getUsernameByUserID(playerId),
-        questionOrder: this.quiz.questions.find(q => q._id === questionId).order,
-        questionTime: this.quiz.questions.find(q => q._id === questionId).time,
-        answerOrder: this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).order,
-        answerTime: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
-        score: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        משתמש: this.getUsernameByUserID(playerId),
+        'מספר השאלה': this.quiz.questions.find(q => q._id === questionId).order,
+        'זמן השאלה': this.quiz.questions.find(q => q._id === questionId).time,
+        'מספר התשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).order,
+        'זמן התשובה': calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        'נקודות תשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
+        נקודות: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
                this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
                this.quiz.questions.find(q => q._id === questionId).time),
       }));

@@ -4,27 +4,22 @@ import $ from 'jquery';
 import 'pivottable';
 import 'c3';
 import '/node_modules/pivottable/dist/c3_renderers.js';
-import '/node_modules/pivottable/dist/pivot.fr.js';
-import '/node_modules/pivottable/dist/pivot.fr.min.js';
-import '/node_modules/pivottable/dist/pivot.fr.js.map';
-import '/node_modules/pivottable/dist/pivot.fr.min.js.map';
+import '/node_modules/pivottable/dist/pivot.he.js';
 
 export default class PivotTable extends React.Component {
   componentDidMount() {
     const { game } = this.props;
 
     const mps = game.getDataForPivotTable();
-    console.log('mps: ', mps);
 
     $('#output').pivotUI(mps, {
-      renderers: $.extend($.pivotUtilities.renderers, $.pivotUtilities.c3_renderers),
-      cols: ['questionOrder'],
-      rows: ['username'],
-      rendererName: 'Bar Chart',
-      aggregatorName: 'Sum',
+      renderers: $.extend($.pivotUtilities.locales.he.renderers, $.pivotUtilities.c3_renderers),
+      cols: ['מספר השאלה'],
+      rows: ['משתמש'],
+      rendererName: 'גרף עמודות',
+      aggregatorName: 'סכום',
       rowOrder: 'key_a_to_z',
       colOrder: 'key_a_to_z',
-      localeStrings: 'fr',
       rendererOptions: {
         c3: {
           data: {
@@ -38,7 +33,7 @@ export default class PivotTable extends React.Component {
           },
         },
       },
-    }, false, 'fr');
+    }, false, 'he');
   }
   render() {
     return (
