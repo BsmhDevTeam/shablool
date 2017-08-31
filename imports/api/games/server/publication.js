@@ -88,3 +88,72 @@ publishComposite('games.get-by-code', function(code) {
     ],
   };
 });
+
+publishComposite('games.get-by-code.by-question', function(code, questionId) {
+  return {
+    find() {
+      return Game.aggregate([
+        {
+          $project: {
+            'quiz.questions': {
+              $filter: {
+                input: '$quiz.questions',
+                as: 'qu',
+                cond: {
+                  $eq: ['$$qu._id', questionId],
+                },
+              },
+            },
+          },
+        },
+      ]);
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { 'services.gitlab.username': 1 } },
+          );
+        },
+      },
+    ],
+  };
+});
+
+publishComposite('games.get-by-code.by-question.without-points', function(code, questionId) {
+  return {
+    find() {
+      return Game.aggregate([
+        {
+          $project: {
+            'quiz.questions': {
+              $filter: {
+                input: '$quiz.questions',
+                as: 'qu',
+                cond: {
+                  $eq: ['$$qu._id', questionId],
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            'questions.answers.points': 0,
+          },
+        },
+      ]);
+    },
+    children: [
+      {
+        find(game) {
+          return Meteor.users.find(
+            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { fields: { 'services.gitlab.username': 1 } },
+          );
+        },
+      },
+    ],
+  };
+});
