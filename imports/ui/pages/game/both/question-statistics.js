@@ -42,7 +42,7 @@ const QuestionStatistics = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
-      <audio src="/gong.mp3" autoPlay />
+      {game.isManager() ? <audio src="/gong.mp3" autoPlay /> : ''}
     </div>
   );
 };
