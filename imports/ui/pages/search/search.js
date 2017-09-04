@@ -124,10 +124,8 @@ SearchContainer.propTypes = {
 };
 
 export default createContainer(({ query = '' }) => {
-  Meteor.subscribe('tags.all');
   const searchHandle = Meteor.subscribe('quizes.search', query);
-  const nameHandle = Meteor.subscribe('users.names');
-  const loading = !searchHandle.ready() || !nameHandle.ready();
+  const loading = !searchHandle.ready();
   const results = Quiz.find().fetch();
   return {
     loading,

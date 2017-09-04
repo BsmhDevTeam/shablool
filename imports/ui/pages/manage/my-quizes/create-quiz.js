@@ -252,19 +252,4 @@ class CreateQuiz extends React.Component {
   }
 }
 
-const CreateQuizContainer = ({ loading }) => {
-  if (loading) return <Loading />;
-  return <CreateQuiz />;
-};
-
-CreateQuizContainer.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
-
-export default createContainer(() => {
-  const imagesHandle = Meteor.subscribe('images.all');
-  const loading = !imagesHandle.ready();
-  return {
-    loading,
-  };
-}, CreateQuizContainer);
+export default CreateQuiz;

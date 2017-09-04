@@ -287,8 +287,7 @@ EditQuizContainer.propTypes = {
 
 export default createContainer(({ id }) => {
   const quizHandle = Meteor.subscribe('quizes.get', id);
-  const imagesHandle = Meteor.subscribe('images.all');
-  const loading = !imagesHandle.ready() && !quizHandle.ready();
+  const loading = !quizHandle.ready();
   return {
     loading,
   };
