@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Class } from 'meteor/jagi:astronomy';
 import { Factory } from 'meteor/dburles:factory';
-import { eventTypes } from '/imports/startup/both/constants';
+import { eventTypes, noImage } from '/imports/startup/both/constants';
 import {
   max,
   countBy,
@@ -586,6 +586,9 @@ const Game = Class.create({
                this.quiz.questions.find(q => q._id === questionId).time),
       }));
       return data;
+    },
+    getImagesId() {
+      return this.quiz.questions.map(q => q.image).filter(e => e !== noImage);
     },
   },
 });

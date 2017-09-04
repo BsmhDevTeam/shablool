@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Question } from '/imports/api/quizes/quizes.js';
 import Image from '/imports/api/images/images';
+import { noImage } from '/imports/startup/both/constants';
 import AnswerForm from './answer-form.js';
 
 // validations
@@ -55,7 +56,7 @@ class QuestionForm extends React.Component {
     };
     const removeImage = (e) => {
       e.stopPropagation();
-      question.image = 'no-image';
+      question.image = noImage;
       this.setState({ files: [] });
     };
     return (
@@ -127,7 +128,7 @@ class QuestionForm extends React.Component {
                         accept="image/jpeg, image/png, image/jpg"
                         onDrop={files => onDrop(files)}
                       >
-                        {this.state.files.length > 0 || question.image !== 'no-image'
+                        {this.state.files.length > 0 || question.image !== noImage
                           ? <div className="image-and-button-area">
                             <button
                               type="button"

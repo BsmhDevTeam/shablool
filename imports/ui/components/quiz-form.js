@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import Quiz from '/imports/api/quizes/quizes.js';
 import Image from '/imports/api/images/images';
+import { noImage } from '/imports/startup/both/constants';
 import QuestionForm from './question-form.js';
 
 const dropStyle = {
@@ -64,7 +65,7 @@ class QuizForm extends React.Component {
     };
     const removeImage = (e) => {
       e.stopPropagation();
-      quiz.image = 'no-image';
+      quiz.image = noImage;
       this.setState({ files: [] });
     };
     return (
@@ -150,7 +151,7 @@ class QuizForm extends React.Component {
                       activeStyle={activeStyle}
                       rejectStyle={rejectStyle}
                     >
-                      {this.state.files.length > 0 || quiz.image !== 'no-image'
+                      {this.state.files.length > 0 || quiz.image !== noImage
                         ? <div className="image-and-button-area">
                           <button
                             type="button"

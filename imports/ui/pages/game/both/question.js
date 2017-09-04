@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
 import GameNavbar from '/imports/ui/components/game-navbar';
 import CountdownTimer from '/imports/ui/components/count-down-timer';
+import { noImage } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images';
 
 const Question = ({ game }) => {
@@ -36,7 +37,7 @@ const Question = ({ game }) => {
           <div className="question-image-area">
             <img
               className="question-image"
-              src={question.image === 'no-image' ? '/img/default.png' : questionImage.link()}
+              src={question.image === noImage ? '/img/default.png' : questionImage.link()}
               alt="defaultImg"
             />
           </div>

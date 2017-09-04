@@ -3,6 +3,7 @@ import { Class } from 'meteor/jagi:astronomy';
 import faker from 'faker';
 import { Factory } from 'meteor/dburles:factory';
 import { range } from 'underscore';
+import { noImage } from '/imports/startup/both/constants';
 
 const Quizes = new Mongo.Collection('quizes');
 
@@ -95,7 +96,7 @@ export const Question = Class.create({
     image: {
       type: String,
       default() {
-        return 'no-image';
+        return noImage;
       },
     },
     time: {
@@ -161,7 +162,7 @@ const Quiz = Class.create({
     image: {
       type: String,
       default() {
-        return 'no-image';
+        return noImage;
       },
     },
     tags: {
@@ -192,7 +193,11 @@ const Quiz = Class.create({
 
   meteorMethods: {},
 
-  helpers: {},
+  helpers: {
+    getImagesId() {
+      return this.questions.map(q => q.image).concat(this.image).filter(e => e !== noImage);
+    },
+  },
 });
 
 export default Quiz;
@@ -215,6 +220,6 @@ const mockQuestion = order => (new Question({
 Factory.define('quiz', Quiz, {
   title: () => faker.lorem.sentence(3),
   questions: () => range(1, 5).map(mockQuestion),
-  tags: () => [],
-  owner: 'owner',
+  tags: () => ['tag'],
+  owner: () => 'owner',
 });
