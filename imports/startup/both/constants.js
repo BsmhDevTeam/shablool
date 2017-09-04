@@ -60,3 +60,5 @@ export const managementTabs = {
   gamesManaged: 'GAMES_MANAGED',
   gamesPlayed: 'GAMES_PLAYED',
 };
+
+export const noImage = 'NO_IMAGE';

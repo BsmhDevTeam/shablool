@@ -1,26 +1,67 @@
 import { Meteor } from 'meteor/meteor';
+import { publishComposite } from 'meteor/reywood:publish-composite';
 import { check } from 'meteor/check';
+import Image from '/imports/api/images/images.js';
 import Quiz from '../quizes.js';
 
 // Owner publications :
-Meteor.publish('quizes.my-quizes', function() {
-  return Quiz.find({ owner: this.userId });
+publishComposite('quizes.my-quizes', function() {
+  return {
+    find() {
+      return Quiz.find({ owner: this.userId });
+    },
+    children: [
+      {
+        find(quiz) {
+          return Image.find({ _id: { $in: quiz.getImagesId() } });
+        },
+      },
+    ],
+  };
 });
 
 // Public/Owner publications :
-Meteor.publish('quizes.get', function(id) {
-  check(id, String);
-  return Quiz.find({
-    $and: [{ _id: id }, { $or: [{ owner: this.userId }, { private: false }] }],
-  });
+publishComposite('quizes.get', function(id) {
+  return {
+    find() {
+      check(id, String);
+      return Quiz.find({
+        $and: [
+          { _id: id },
+          { $or: [{ owner: this.userId }, { private: false }] },
+        ],
+      });
+    },
+    children: [
+      {
+        find(quiz) {
+          return Image.find({ _id: { $in: quiz.getImagesId() } });
+        },
+      },
+    ],
+  };
 });
 
-Meteor.publish('quizes.search', function(query) {
-  check(query, String);
-  return Quiz.find({
-    $and: [
-      { title: { $regex: query, $options: 'i' } },
-      { $or: [{ owner: this.userId }, { private: false }] },
+publishComposite('quizes.search', function(query) {
+  return {
+    find() {
+      check(query, String);
+      return Quiz.find({
+        $and: [
+          { title: { $regex: query, $options: 'i' } },
+          { $or: [{ owner: this.userId }, { private: false }] },
+        ],
+      });
+    },
+    children: [
+      {
+        find(quiz) {
+          return Meteor.users.find(
+            { _id: quiz.owner },
+            { fields: { 'services.gitlab.username': 1 } },
+          );
+        },
+      },
     ],
-  });
+  };
 });

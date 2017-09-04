@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Image from '/imports/api/images/images';
+import { noImage } from '/imports/startup/both/constants';
 
 const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {
@@ -27,7 +28,7 @@ const QuizCard = ({ quiz, actions }) => {
               <div className="quiz-panel-img-area">
                 <img
                   className="quiz-panel-img"
-                  src={quiz.image === 'no-image' ? '/img/default.png' : quizImage.link()}
+                  src={quiz.image === noImage ? '/img/default.png' : quizImage.link()}
                   alt="quiz"
                 />
               </div>

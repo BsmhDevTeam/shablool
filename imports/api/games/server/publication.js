@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 import { eventTypes } from '/imports/startup/both/constants';
+import Image from '/imports/api/images/images.js';
 import Game from '../games.js';
+
 
 // Manager publications :
 publishComposite('games.games-managed', function() {
@@ -53,10 +55,20 @@ publishComposite('games.games-played', function() {
 });
 
 // Both :
-publishComposite('games.get-by-code.without-points', function(code) {
+publishComposite('games.get-by-code', function(code) {
   return {
     find() {
-      return Game.find({ code }, { fields: { 'quiz.questions.answers.points': 0 } }); // Limit publication need-to-know only' player and Manager
+      return Game.find({
+        $and: [
+          { code },
+          {
+            $or: [
+              { 'quiz.owner': this.userId },
+              { gameLog: { $elemMatch: { playerId: this.userId } } },
+            ],
+          },
+        ],
+      }); // TODO: Limit publication need-to-know only' player and Manager
     },
     children: [
       {
@@ -67,14 +79,21 @@ publishComposite('games.get-by-code.without-points', function(code) {
           );
         },
       },
+      {
+        find(game) {
+          return Image.find({ _id: { $in: game.getImagesId() } });
+        },
+      },
     ],
   };
 });
 
-publishComposite('games.get-by-code', function(code) {
+/*
+publishComposite('games.get-by-code.without-points', function(code) {
   return {
     find() {
-      return Game.find({ code }); // Limit publication need-to-know only' player and Manager
+      // TODO: Limit publication need-to-know only' player and Manager
+      return Game.find({ code }, { fields: { 'quiz.questions.answers.points': 0 } });
     },
     children: [
       {
@@ -157,3 +176,4 @@ publishComposite('games.get-by-code.by-question.without-points', function(code, 
     ],
   };
 });
+*/

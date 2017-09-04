@@ -29,9 +29,8 @@ GameRouterContainer.defaultProps = {
 };
 
 export default createContainer(({ code }) => {
-  const imagesHandle = Meteor.subscribe('images.all');
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready() || !imagesHandle.ready();
+  const loading = !gameHandle.ready();
   const game = Game.findOne({ code });
   return { loading, game };
 }, GameRouterContainer);
