@@ -7,11 +7,13 @@ import Quiz from '../quizes.js';
 // Owner publications :
 publishComposite('quizes.my-quizes', function() {
   return {
+    collectionName: 'quizes',
     find() {
       return Quiz.find({ owner: this.userId });
     },
     children: [
       {
+        collectionName: 'images',
         find(quiz) {
           return Image.find({ _id: { $in: quiz.getImagesId() } });
         },
@@ -23,6 +25,7 @@ publishComposite('quizes.my-quizes', function() {
 // Public/Owner publications :
 publishComposite('quizes.get', function(id) {
   return {
+    collectionName: 'quizes',
     find() {
       check(id, String);
       return Quiz.find({
@@ -34,6 +37,7 @@ publishComposite('quizes.get', function(id) {
     },
     children: [
       {
+        collectionName: 'images',
         find(quiz) {
           return Image.find({ _id: { $in: quiz.getImagesId() } });
         },
@@ -44,6 +48,7 @@ publishComposite('quizes.get', function(id) {
 
 publishComposite('quizes.search', function(query) {
   return {
+    collectionName: 'quizes',
     find() {
       check(query, String);
       return Quiz.find({
@@ -55,11 +60,18 @@ publishComposite('quizes.search', function(query) {
     },
     children: [
       {
+        collectionName: 'users',
         find(quiz) {
           return Meteor.users.find(
             { _id: quiz.owner },
             { fields: { 'services.gitlab.username': 1 } },
           );
+        },
+      },
+      {
+        collectionName: 'images',
+        find(quiz) {
+          return Image.find({ _id: quiz.image });
         },
       },
     ],

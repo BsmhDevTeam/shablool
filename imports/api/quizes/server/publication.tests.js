@@ -62,7 +62,7 @@ describe('quizes publication', function() {
       });
     });
     it('send other user private quiz by id', function(done) {
-      const quiz = Factory.create('quiz');
+      const quiz = Factory.create('quiz', { private: true });
       const collector = new PublicationCollector({ userId: 'not-owner' });
       collector.collect('quizes.get', quiz._id, (collections) => {
         expect(collections.quizes).to.equal(undefined);

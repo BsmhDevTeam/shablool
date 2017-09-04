@@ -8,6 +8,7 @@ import Game from '../games.js';
 // Manager publications :
 publishComposite('games.games-managed', function() {
   return {
+    collectionName: 'games',
     find() {
       const userId = this.userId;
       return Game.find({
@@ -19,6 +20,7 @@ publishComposite('games.games-managed', function() {
     },
     children: [
       {
+        collectionName: 'users',
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
@@ -33,6 +35,7 @@ publishComposite('games.games-managed', function() {
 // Player publications :
 publishComposite('games.games-played', function() {
   return {
+    collectionName: 'games',
     find() {
       return Game.find({
         $and: [
@@ -43,6 +46,7 @@ publishComposite('games.games-played', function() {
     },
     children: [
       {
+        collectionName: 'users',
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
@@ -57,6 +61,7 @@ publishComposite('games.games-played', function() {
 // Both :
 publishComposite('games.get-by-code', function(code) {
   return {
+    collectionName: 'games',
     find() {
       return Game.find({
         $and: [
@@ -72,6 +77,7 @@ publishComposite('games.get-by-code', function(code) {
     },
     children: [
       {
+        collectionName: 'users',
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
@@ -80,6 +86,7 @@ publishComposite('games.get-by-code', function(code) {
         },
       },
       {
+        collectionName: 'images',
         find(game) {
           return Image.find({ _id: { $in: game.getImagesId() } });
         },
