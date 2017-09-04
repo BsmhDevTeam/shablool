@@ -50,7 +50,7 @@ const Question = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
-      <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop />
+      {game.isManager() ? <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop /> : ''}
     </div>
   );
 };
