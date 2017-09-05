@@ -1,19 +1,21 @@
 {
-  "name": "we-start",
+  "name": "shablool",
   "private": true,
   "scripts": {
     "start": "meteor run",
     "lint": "eslint .",
-    "pretest": "npm run lint --silent",
     "test": "meteor test --driver-package practicalmeteor:mocha"
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
+    "c3": "^0.4.17",
     "chai": "^4.1.1",
     "eslint-plugin-meteor": "^4.1.0",
     "faker": "^4.1.0",
+    "jquery": "^3.2.1",
     "meteor-node-stubs": "^0.2.11",
     "mocha": "^3.4.2",
+    "pivottable": "^2.14.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-addons-pure-render-mixin": "^15.5.2",
@@ -38,7 +40,8 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.1.4",
-    "eslint-plugin-react": "^6.10.3"
+    "eslint-plugin-react": "^6.10.3",
+    "selenium-webdriver": "3.0.0-beta-2"
   },
   "eslintConfig": {
     "extends": "@meteorjs/eslint-config-meteor"

@@ -1,11 +1,6 @@
-import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { createContainer } from 'meteor/react-meteor-data';
-import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
 import GameNavbar from '/imports/ui/components/game-navbar';
-import Loading from '/imports/ui/components/loading';
-import Game from '/imports/api/games/games';
 import AnswerBar from '/imports/ui/components/answer-bar-chart';
 
 const QuestionStatistics = ({ game }) => {
@@ -22,13 +17,19 @@ const QuestionStatistics = ({ game }) => {
         <GameNavbar text={question.text} num="" />
       </div>
       {game.isManager()
-        ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={showLeaders}>
+        ? <a
+          href="javascript:void(0)"
+          className="btn btn-primary show-leaders-btn"
+          onClick={showLeaders}
+        >
             לטבלת המובילים
           </a>
         : ''}
       <div className="row">
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
-          <p className="count-down-timer-num">{game.getQuestionTimeLeft(question._id)}</p>
+          <p className="count-down-timer-num">
+            {game.getQuestionTimeLeft(question._id)}
+          </p>
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <AnswerBar game={game} />
@@ -41,7 +42,7 @@ const QuestionStatistics = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
-      <audio src="/gong.mp3" autoPlay />
+      {game.isManager() ? <audio src="/gong.mp3" autoPlay /> : ''}
     </div>
   );
 };

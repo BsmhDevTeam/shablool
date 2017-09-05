@@ -1,3 +1,4 @@
+import { noImage } from '/imports/startup/both/constants';
 import Quiz from '../quizes';
 
 Quiz.extend({
@@ -14,7 +15,7 @@ Quiz.extend({
       return this.remove();
     },
     removeImage() {
-      this.image = 'no-image';
+      this.image = noImage;
       return this.save();
     },
   },

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import { joinGameResults } from '/imports/startup/both/constants';
 
 class Home extends React.Component {
   constructor(props) {
@@ -23,11 +22,12 @@ class Home extends React.Component {
         setTimeout(() => this.setState({ badGameCode: false }), 3000);
       };
 
-      Meteor.call('joinGame', {
-        code: gameCode,
-      }, (err, res) => (
-        res ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode })
-        ),
+      Meteor.call(
+        'joinGame',
+        {
+          code: gameCode,
+        },
+        (err, res) => (res ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode })),
       );
     };
 
@@ -35,7 +35,10 @@ class Home extends React.Component {
       <div id="home">
         <div className="game-background" />
         <div className="row">
-          <div className="col-xl-2 col-xl-offset-5 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12" id="logo-area">
+          <div
+            className="col-xl-2 col-xl-offset-5 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12"
+            id="logo-area"
+          >
             <img className="logo" src="/img/Logo.svg" alt="logo" />
           </div>
         </div>
@@ -53,11 +56,7 @@ class Home extends React.Component {
                   />
                 </div>
                 <div className="row">
-                  <button
-                    className="btn btn-primary"
-                    type="submit"
-                    id="start-game-btn"
-                  >
+                  <button className="btn btn-primary" type="submit" id="start-game-btn">
                     התחל משחק!
                   </button>
                 </div>

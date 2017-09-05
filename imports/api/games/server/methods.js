@@ -199,7 +199,8 @@ Game.extend({
           },
         },
       );
-      return this.isAllPlayerAnsweredToQuestion(qId) && this.questionEnd(qId);
+      const isEveryoneAnswered = Game.findOne(this._id).isAllPlayerAnsweredToQuestion(qId);
+      return isEveryoneAnswered && this.questionEnd(qId);
     },
     nextQuestion() {
       // start question

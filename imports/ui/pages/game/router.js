@@ -7,9 +7,8 @@ import Loading from '/imports/ui/components/loading';
 import GameManager from './owner-router.js';
 import GamePlayer from './player-router.js';
 
-
 const GameRouter = ({ game }) =>
-  (game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />);
+  game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />;
 
 GameRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
@@ -30,9 +29,8 @@ GameRouterContainer.defaultProps = {
 };
 
 export default createContainer(({ code }) => {
-  const imagesHandle = Meteor.subscribe('images.all');
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready() || !imagesHandle.ready();
+  const loading = !gameHandle.ready();
   const game = Game.findOne({ code });
   return { loading, game };
 }, GameRouterContainer);

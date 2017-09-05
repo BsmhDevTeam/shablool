@@ -1,12 +1,6 @@
-#history {
-    padding-top: 100px;
-
-    //for the pivot-table
+#pivot-table {
     body {
         font-family: Verdana;
-    }
-    .c3 {
-        direction: ltr;
     }
     .c3-line, .c3-focused {
         stroke-width: 3px !important;
@@ -67,13 +61,11 @@
     .pvtAggregator { margin-bottom: 5px ;}
 
     .pvtAxisContainer, .pvtVals {
-        border: 1px solid #e7e7e7;
-        background: #fff;
+        border: 1px solid gray;
+        background: #EEE;
         padding: 5px;
         min-width: 20px;
         min-height: 20px;
-        box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-        border-collapse: unset !important;
     }
     .pvtAxisContainer li {
         padding: 8px 6px;
@@ -90,13 +82,13 @@
 
     .pvtAxisContainer li span.pvtAttr {
         -webkit-text-size-adjust: 100%;
-        background: #000000;
+        background: #F3F3F3;
+        border: 1px solid #DEDEDE;
         padding: 2px 5px;
         white-space:nowrap;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         border-radius: 5px;
-        color: #fff;
     }
 
     .pvtTriangle {
@@ -139,4 +131,5 @@
     .pvtCheckContainer p{ margin: 5px; }
 
     .pvtRendererArea { padding: 5px;}
+
 }

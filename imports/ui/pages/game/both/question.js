@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
 import GameNavbar from '/imports/ui/components/game-navbar';
 import CountdownTimer from '/imports/ui/components/count-down-timer';
+import { noImage } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images';
 
 const Question = ({ game }) => {
@@ -20,7 +21,11 @@ const Question = ({ game }) => {
         <GameNavbar text={question.text} num="" />
       </div>
       {game.isManager()
-        ? <a href="javascript:void(0)" className="btn btn-primary show-leaders-btn" onClick={skipQuestion}>
+        ? <a
+          href="javascript:void(0)"
+          className="btn btn-primary show-leaders-btn"
+          onClick={skipQuestion}
+        >
             עבור שאלה
           </a>
         : ''}
@@ -30,7 +35,11 @@ const Question = ({ game }) => {
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <div className="question-image-area">
-            <img className="question-image" src={question.image === 'no-image' ? '/img/default.png' : questionImage.link()} alt="defaultImg" />
+            <img
+              className="question-image"
+              src={question.image === noImage ? '/img/default.png' : questionImage.link()}
+              alt="defaultImg"
+            />
           </div>
         </div>
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
@@ -41,7 +50,7 @@ const Question = ({ game }) => {
         </div>
       </div>
       <Answers answers={question.answers} game={game} />
-      <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop />
+      {game.isManager() ? <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop /> : ''}
     </div>
   );
 };
