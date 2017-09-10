@@ -39,11 +39,9 @@ export default class PivotTable extends React.Component {
     return (
       <div className="row">
         <div id="pivot-table">
-          <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.css" />
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js" />
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.11/c3.min.js" />
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js" />
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" />
+          <link rel="stylesheet" type="text/css" href="/libs/c3/c3.min.css" />
+          <script type="text/javascript" src="/libs/d3/d3.min.js" />
+          <script type="text/javascript" src="/libs/c3/c3.min.js" />
           <div id="output" />
         </div>
       </div>
