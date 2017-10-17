@@ -55,35 +55,16 @@ Give an example
 
 ```
 +---api
-|   +---games                                               
-|   |   |   games.js                                         # Definition of games collections
-|   |   |   games.test.js
-|   |   |   
-|   |   \---server
-|   |           methods.js                                   # Writing to games collections
-|   |           methods.test.js                                              
-|   |           publication.js                               # Reading from games collections
-|   |           publication.test.js                          # Test of reading games collections
-|   |           
-|   +---images
-|   |   |   images.js                                       
-|   |   |   
-|   |   \---server
-|   |           publication.js                               # Reading from images collections
-|   |           
-|   +---quizes
-|   |   |   quizes.js
-|   |   |   
-|   |   \---server
-|   |           methods.js
-|   |           methods.test.js
-|   |           publication.js
-|   |           publication.tests.js
-|   |           
-|   \---users
-|       \---server
-|               methods.js
-|               publications.js
+|  +---games                                               
+|      |   games.js                                         # Definition of games collections
+|      |   games.test.js
+|      |   
+|      \---server
+|              methods.js                                   # Writing to games collections
+|              methods.test.js                                              
+|              publication.js                               # Reading from games collections
+|              publication.test.js                          # Test of reading games collections
+|             
 |               
 +---startup
 |   +---both
@@ -102,21 +83,6 @@ Give an example
 |           
 \---ui
     +---components
-    |   |   answer-bar-chart.js
-    |   |   answer-form.js
-    |   |   answers.js
-    |   |   count-down-timer.js
-    |   |   game-card-managed.js
-    |   |   game-card-played.js
-    |   |   game-navbar.js
-    |   |   loading.js
-    |   |   manage-navbar.js
-    |   |   one-line-chart.js
-    |   |   question-form.js
-    |   |   quiz-card.js
-    |   |   quiz-form.js
-    |   |   snackbar.js
-    |   |   two-lines-chart.js
     |   |   
     |   \---pivot-table
     |       |   pivot-table.js
@@ -133,79 +99,25 @@ Give an example
     |       manage.js
     |       
     +---pages                                                # Entry points for rendering used by the router
-    |   +---game
-    |   |   |   home.js
-    |   |   |   owner-router.js
-    |   |   |   player-router.js
-    |   |   |   router.js
-    |   |   |   
-    |   |   +---both                                         #  Game pages for owner and player
-    |   |   |       game-close.js
-    |   |   |       leaders.js
-    |   |   |       question-statistics.js
-    |   |   |       question.js
-    |   |   |       winner.js
-    |   |   |       
-    |   |   +---owner                                        # Game pages for owner
-    |   |   |       lobby.js
-    |   |   |       
-    |   |   \---player                                       # Game pages for player  
-    |   |           answer-sent.js
-    |   |           instructions.js
-    |   |           
-    |   +---login
-    |   |       login-error.js
-    |   |       login.js
-    |   |       
-    |   +---manage
-    |   |   |   game-stats-router.js
-    |   |   |   index.js
-    |   |   |   
-    |   |   +---games-managed
-    |   |   |       games-stats.js
-    |   |   |       index.js
-    |   |   |       
-    |   |   +---games-played
-    |   |   |       game-stats.js
-    |   |   |       index.js
-    |   |   |       
-    |   |   \---my-quizes
-    |   |           create-quiz.js
-    |   |           edit-quiz.js
-    |   |           index.js
-    |   |           
-    |   +---not-found
-    |   |       not-found.js
-    |   |       
-    |   \---search
-    |           search.js
-    |           view-quiz.js
-    |           
-    \---stylesheets
-            answer-sent.less
-            game-card.less
-            game-close.less
-            game-layout.less
-            game-lobby.less
-            game-navbar.less
-            history.less
-            home.less
-            instructions.less
-            leaders.less
-            loading.less
-            login-layout.less
-            manage-layout.less
-            manage-navbar.less
-            manage.less
-            not-found.less
-            pivot-table.less
-            question.less
-            quiz-card.less
-            quiz-form.less
-            right-answer.less
-            snackbar.less
-            view-quiz.less
-            winner.less
+       +---game
+          |   home.js
+          |   owner-router.js
+          |   player-router.js
+          |   router.js
+          |   
+          +---both                                         #  Game pages for owner and player
+          |       game-close.js
+          |       leaders.js
+          |       question-statistics.js
+          |       question.js
+          |       winner.js
+          |       
+          +---owner                                        # Game pages for owner
+          |       lobby.js
+          |       
+          \---player                                       # Game pages for player  
+                  answer-sent.js
+                  instructions.js
 
 ```
 
