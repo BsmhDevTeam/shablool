@@ -21,8 +21,14 @@ const QuizCard = ({ quiz, actions }) => {
   const quizImage = Image.findOne({ _id: quiz.image });
   return (
     <div className="panel panel-default quiz-card" id={`quiz-card-${quiz._id}`}>
-      <div className="panel-body">
+      <div className="panel-body panel-style">
         <div className="row">
+          <div className="corner-ribbon top-right white">
+            {quiz.private
+             ? <i className="fa fa-lock lock-icon" aria-hidden="true" />
+             : <i className="fa fa-unlock unlock-icon" aria-hidden="true" />
+            }
+          </div>
           <div className="col-md-3">
             <div className="quiz-card-img-area">
               <div className="quiz-panel-img-area">
