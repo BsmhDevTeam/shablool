@@ -1,4 +1,8 @@
 .quiz-card {
+  .panel-style {
+    position: relative;
+    overflow: hidden;
+  }
   .quiz-card-img-area {
     padding-top: 20px;
   }
@@ -52,5 +56,81 @@
   }
   .tag {
     margin: 2px;
+  }
+
+  /* The ribbons */
+
+.corner-ribbon{
+  width: 100px;
+  top: 25px;
+  text-align: center;
+  line-height: normal;
+  letter-spacing: 1px;
+  color: #f0f0f0;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+}
+
+/* Custom styles */
+
+.corner-ribbon.sticky{
+  position: fixed;
+}
+
+.corner-ribbon.shadow{
+  box-shadow: 0 0 3px rgba(0,0,0,.3);
+}
+
+/* Different positions */
+.corner-ribbon.top-left{
+  top: 15px;
+  left: -30px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.corner-ribbon.top-right{
+  top: 15px;
+  right: -30px;
+  left: auto;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.corner-ribbon.bottom-left{
+  top: auto;
+  bottom: 25px;
+  left: -50px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.corner-ribbon.bottom-right{
+  top: auto;
+  right: -50px;
+  bottom: 25px;
+  left: auto;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+/* Colors */
+  .corner-ribbon.white{background: #f0f0f0; color: #555;}
+  .corner-ribbon.black{background: #333;}
+  .corner-ribbon.grey{background: #999;}
+  .corner-ribbon.blue{background: #39d;}
+  .corner-ribbon.green{background: #2c7;}
+  .corner-ribbon.turquoise{background: #1b9;}
+  .corner-ribbon.purple{background: #95b;}
+  .corner-ribbon.red{background: #e43;}
+  .corner-ribbon.orange{background: #e82;}
+  .corner-ribbon.yellow{background: #ec0;}
+
+  .lock-icon {
+    color: #e43;
+  }
+  .unlock-icon {
+    color: #2c7;
   }
 }
