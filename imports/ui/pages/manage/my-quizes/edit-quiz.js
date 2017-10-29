@@ -275,9 +275,14 @@ EditQuiz.propTypes = {
   quiz: PropTypes.instanceOf(Object).isRequired,
 };
 
-const EditQuizContainer = ({ loading }) => {
+const EditQuizContainer = ({ loading, id }) => {
   if (loading) return <Loading />;
-  const quiz = Quiz.findOne();
+  const quiz = Quiz.findOne({
+    $and: [
+      { _id: id },
+      { $or: [{ owner: Meteor.userId() }, { private: false }] },
+    ],
+  });
   return <EditQuiz quiz={{ ...quiz }} />;
 };
 
@@ -290,5 +295,6 @@ export default createContainer(({ id }) => {
   const loading = !quizHandle.ready();
   return {
     loading,
+    id,
   };
 }, EditQuizContainer);
