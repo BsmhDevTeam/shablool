@@ -329,7 +329,7 @@ Meteor.methods({
           gameLog: new PlayerReg({ playerId: Meteor.userId() }),
         },
       },
-      (err, res) => res > 0,
     );
+    return Game.find({code}).count() === 0  ? true : false; 
   },
 });
