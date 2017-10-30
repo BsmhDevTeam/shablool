@@ -5,6 +5,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Game from '/imports/api/games/games';
 import Image from '/imports/api/images/images';
 import { noImage } from '/imports/startup/both/constants';
+import moment from 'moment';
+import 'moment/locale/he';
 
 const QuizCard = ({ quiz, actions }) => {
   const showDeleteAlert = () => {
@@ -17,6 +19,10 @@ const QuizCard = ({ quiz, actions }) => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
     FlowRouter.go('Game.Play', { code: game.code });
+  };
+  const fromNow = () => {
+    moment.locale('he');
+    return moment(new Date(quiz.createdAt)).fromNow();
   };
   const quizImage = Image.findOne({ _id: quiz.image });
   return (
@@ -57,7 +63,7 @@ const QuizCard = ({ quiz, actions }) => {
             </p>
             <p>
               <span>
-                {quiz.createdAt.toLocaleString()}
+                {fromNow()}
               </span>
             </p>
           </div>
