@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import { joinGameResults } from '/imports/startup/both/constants';
 
 class Home extends React.Component {
   constructor(props) {
@@ -27,7 +28,7 @@ class Home extends React.Component {
         {
           code: gameCode,
         },
-        (err, res) => (res ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode })),
+        (err, res) => (res === joinGameResults.noGame) ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode }),
       );
     };
 

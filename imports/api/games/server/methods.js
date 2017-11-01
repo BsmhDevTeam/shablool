@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { max } from 'underscore';
 import { check } from 'meteor/check';
-import { eventTypes } from '/imports/startup/both/constants';
+import { eventTypes, joinGameResults } from '/imports/startup/both/constants';
 import Game, {
   PlayerReg,
   GameStart,
@@ -296,40 +296,57 @@ Meteor.methods({
   // Methods without instance:
   joinGame({ code }) {
     check(code, String);
-    Game.update(
-      {
-        $and: [
-          { code },
-          {
-            gameLog: {
-              $not: {
-                $elemMatch: {
-                  nameType: eventTypes.GameStart,
+
+    const currGame = Game.findOne({code});   
+
+    if (currGame === undefined){       
+      return joinGameResults.noGame;
+    }
+    else if (currGame.isManager()){              
+      return joinGameResults.isManager;
+    }
+    else if (currGame.isUserRegistered()){                   
+      return joinGameResults.alreadyRegistered;
+    }
+    else if (currGame.gameLog.find(event => event.nameType === eventTypes.GameStart)){                
+      return joinGameResults.gameStarted;      
+    }
+    else {
+      Game.update(
+        {
+          $and: [
+            { code },
+            {
+              gameLog: {
+                $not: {
+                  $elemMatch: {
+                    nameType: eventTypes.GameStart,
+                  },
                 },
               },
             },
-          },
-          {
-            gameLog: {
-              $not: {
-                $elemMatch: {
-                  nameType: eventTypes.PlayerReg,
-                  playerId: Meteor.userId(),
+            {
+              gameLog: {
+                $not: {
+                  $elemMatch: {
+                    nameType: eventTypes.PlayerReg,
+                    playerId: Meteor.userId(),
+                  },
                 },
               },
             },
-          },
-          {
-            'quiz.owner': { $ne: Meteor.userId() },
-          },
-        ],
-      },
-      {
-        $push: {
-          gameLog: new PlayerReg({ playerId: Meteor.userId() }),
+            {
+              'quiz.owner': { $ne: Meteor.userId() },
+            },
+          ],
         },
-      },
-    );
-    return Game.find({code}).count() === 0  ? true : false; 
+        {
+          $push: {
+            gameLog: new PlayerReg({ playerId: Meteor.userId() }),
+          },
+        },
+      );                         
+      return joinGameResults.regSucc;
+    }
   },
 });
