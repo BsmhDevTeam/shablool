@@ -30,7 +30,7 @@ const Answer = ({ answer, index, game }) => {
 
   const isSelected = game.gameLog.find(
     event => event.nameType === eventTypes.PlayerAnswer &&
-    answer._id === event.answerId) && !game.isManager() ? 'selected-answer' : '';
+    answer._id === event.answerId && event.playerId === Meteor.userId()) ? 'selected-answer' : '';
 
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>
