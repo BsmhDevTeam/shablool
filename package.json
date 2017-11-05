@@ -15,7 +15,6 @@
     "jquery": "^3.2.1",
     "meteor-node-stubs": "^0.2.11",
     "mocha": "^3.4.2",
-    "moment": "^2.19.1",
     "pivottable": "^2.14.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
