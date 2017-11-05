@@ -51,12 +51,14 @@ publishComposite('quizes.search', function(query) {
     collectionName: 'quizes',
     find() {
       check(query, String);
-      return Quiz.find({
+      return Quiz.find({ $or: [{
         $and: [
           { title: { $regex: query, $options: 'i' } },
-          { $or: [{ owner: this.userId }, { private: false }] },
+          { $or: [{ owner: this.userId }, { private: false }] },        
         ],
-      });
+      },
+         { tags: { $elemMatch: { $regex: query, $options: 'i' } } },  
+      ] });
     },
     children: [
       {
