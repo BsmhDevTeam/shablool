@@ -11,7 +11,7 @@ const GameCardManaged = ({ game }) => {
   };
   const fromNow = () => {
     moment.locale('he');
-    return moment(new Date(quiz.createdAt)).fromNow();
+    return moment(new Date(game.createdAt)).fromNow();
   };
   return (
     <div className="panel panel-default game-card">
