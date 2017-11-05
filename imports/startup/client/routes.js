@@ -1,7 +1,8 @@
+
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
-import { mount } from 'react-mounter';
+import { Router, Route, Redirect } from 'react-router';
+import createBrowserHistory from 'history/createBrowserHistory';
 
 // Import layouts
 import GameLayout from '/imports/ui/layouts/game.js';
@@ -21,96 +22,35 @@ import GameRouter from '/imports/ui/pages/game/router';
 import HistoryRouter from '/imports/ui/pages/manage/game-stats-router';
 import NotFound from '/imports/ui/pages/not-found/not-found';
 
+const browserHistory = createBrowserHistory();
 
 const verifyLogin = () => {
   if (Meteor.loggingIn() || Meteor.userId()) {
     return;
   }
-  FlowRouter.go('/Login');
+  return (<Redirect to="/Login" />);
 };
 
+const renderRoutes = () => (
+  <Router history={browserHistory}>
+    <Route component={ManageLayout}>
+      <Route path="/CreateQuiz" component={CreateQuiz} onEnter={verifyLogin} />
+      <Route path="/Manage" component={Main} onEnter={verifyLogin} />
+      <Route path="/EditQuiz/:_id" component={EditQuiz} onEnter={verifyLogin} />
+      <Route path="/search/:query?" component={Search} onEnter={verifyLogin} />
+      <Route path="/ViewQuiz/:_id" component={ViewQuiz} onEnter={verifyLogin} />
+    </Route>
+    <Route component={LoginLayout}>
+      <Route path="/Login" component={Login} />
+      <Route path="/LoginError" component={LoginError} />
+    </Route>
+    <Route component={GameLayout}>
+      <Route exact path="/" component={Home} onEnter={verifyLogin} />
+      <Route path="/game/:code" component={GameRouter} onEnter={verifyLogin} />
+      <Route path="/manage/game/:code" component={HistoryRouter} onEnter={verifyLogin} />
+      <Route path="*" component={NotFound} />
+    </Route>
+  </Router>
+);
 
-// Set up all routes in the app
-FlowRouter.route('/', {
-  name: 'Home',
-  triggersEnter: [verifyLogin],
-  action() {
-    mount(GameLayout, { main: <Home /> });
-  },
-});
-
-FlowRouter.route('/game/:code', {
-  name: 'Game.Play',
-  triggersEnter: [verifyLogin],
-  action(params) {
-    mount(GameLayout, { main: <GameRouter code={params.code} /> });
-  },
-});
-
-FlowRouter.route('/manage/game/:code', {
-  name: 'Manage.Game',
-  triggersEnter: [verifyLogin],
-  action(params) {
-    mount(GameLayout, { main: <HistoryRouter code={params.code} /> });
-  },
-});
-
-FlowRouter.route('/CreateQuiz', {
-  name: 'Manage.CreateQuiz',
-  triggersEnter: [verifyLogin],
-  action() {
-    mount(ManageLayout, { main: <CreateQuiz /> });
-  },
-});
-
-FlowRouter.route('/Manage', {
-  name: 'Manage.Home',
-  triggersEnter: [verifyLogin],
-  action() {
-    mount(ManageLayout, { main: <Main /> });
-  },
-});
-
-FlowRouter.route('/EditQuiz/:_id', {
-  name: 'Menage.EditQuiz',
-  triggersEnter: [verifyLogin],
-  action(params) {
-    mount(ManageLayout, { main: <EditQuiz id={params._id} /> });
-  },
-});
-
-FlowRouter.route('/search/:query?', {
-  name: 'Manage.Search',
-  triggersEnter: [verifyLogin],
-  action(params) {
-    mount(ManageLayout, { main: <Search query={params.query} /> });
-  },
-});
-
-FlowRouter.route('/ViewQuiz/:_id', {
-  name: 'Manage.ViewQuiz',
-  triggersEnter: [verifyLogin],
-  action(params) {
-    mount(ManageLayout, { main: <ViewQuiz id={params._id} /> });
-  },
-});
-
-FlowRouter.route('/Login', {
-  name: 'Game.Login',
-  action() {
-    mount(LoginLayout, { main: <Login /> });
-  },
-});
-
-FlowRouter.route('/LoginError', {
-  name: 'Game.LoginError',
-  action() {
-    mount(LoginLayout, { main: <LoginError /> });
-  },
-});
-
-FlowRouter.notFound = {
-  action() {
-    mount(GameLayout, { main: <NotFound /> });
-  },
-};
+export default renderRoutes;
