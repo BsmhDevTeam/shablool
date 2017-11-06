@@ -105,5 +105,21 @@ describe('quizes publication', function() {
         done();
       });
     });
+    it('search quiz by tags', function(done) {
+      const quiz = Factory.create('quiz', { title: 'title', tags: ['ONE', 'SECOND'] });
+      const collector = new PublicationCollector({ userId: 'not-owner' });
+      collector.collect('quizes.search', 'SECOND', (collections) => {
+        expect(collections.quizes.length).to.equal(1);
+        done();
+      });
+    });
+    it('search private quiz by tags', function(done) {
+      const quiz = Factory.create('quiz', { title: 'title', tags: ['ONE', 'SECOND'], private: true });
+      const collector = new PublicationCollector({ userId: 'not-owner' });
+      collector.collect('quizes.search', 'SECOND', (collections) => {
+        expect(collections.quizes).to.equal(undefined);
+        done();
+      });
+    });
   });
 });
