@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link, Redirect } from 'react-router-dom';
 import Game from '/imports/api/games/games';
 import Image from '/imports/api/images/images';
 import { noImage } from '/imports/startup/both/constants';
@@ -18,7 +18,7 @@ const QuizCard = ({ quiz, actions }) => {
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
-    FlowRouter.go('Game.Play', { code: game.code });
+    return (<Redirect to={`/game/${game.code}`} />);
   };
   const fromNow = () => {
     moment.locale('he');
@@ -72,7 +72,6 @@ const QuizCard = ({ quiz, actions }) => {
               ? <span>
                 <div className="col-md-4">
                   <a
-                    href="javascript:void(0)"
                     className="delete quiz-card-link"
                     onClick={showDeleteAlert}
                   >
@@ -96,7 +95,6 @@ const QuizCard = ({ quiz, actions }) => {
               : <span>
                 <div className="col-md-6">
                   <a
-                    href="javascript:void(0)"
                     className="delete quiz-card-link"
                     onClick={forkQuiz}
                   >
@@ -105,10 +103,10 @@ const QuizCard = ({ quiz, actions }) => {
                   </a>
                 </div>
                 <div className="col-md-6">
-                  <a href={`/ViewQuiz/${quiz._id}`} className="quiz-card-link">
+                  <Link to={`/ViewQuiz/${quiz._id}`} className="quiz-card-link">
                     <span className="glyphicon glyphicon-info-sign quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">צפה בפרטים</span>
-                  </a>
+                  </Link>
                 </div>
               </span>}
           </div>

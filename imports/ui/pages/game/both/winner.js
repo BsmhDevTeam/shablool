@@ -1,11 +1,11 @@
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Redirect } from 'react-router-dom';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
 const Winner = ({ game }) => {
   const backToHome = () => {
     const _ = game.isManager() ? game.applyMethod('closeGame', []) : null;
-    FlowRouter.go('Home');
+    return (<Redirect to="/" />);
   };
 
   return (

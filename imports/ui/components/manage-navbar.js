@@ -1,12 +1,12 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link, Redirect } from 'react-router-dom';
 
 export default () => {
   const search = (e) => {
     e.preventDefault();
     const query = e.target.query.value;
-    FlowRouter.go('Manage.Search', { query });
+    return (<Redirect to={`/search/${query}`} />);
   };
   const getWelcomeByHours = () => {
     const now = new Date();
@@ -44,9 +44,9 @@ export default () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a href="/" className="navbar-brand navbar-link-element">
+          <Link to="/" className="navbar-brand navbar-link-element">
             <img className="small-logo" src="/img/SmallLogoWhite.svg" alt="logo" />
-          </a>
+          </Link>
         </div>
         <div className="collapse navbar-collapse" id="manage-nav">
           <form className="js-search navbar-form navbar-right" role="search" onSubmit={search}>
@@ -59,12 +59,12 @@ export default () => {
           </form>
           <ul className="nav navbar-nav navbar-left">
             <li className="manage-nav-li">
-              <a href="/Manage" className="navbar-link-element">
+              <Link to="/Manage" className="navbar-link-element">
                 <span>
                   {getWelcomeByHours()}, {Meteor.user().services.gitlab.username}{' '}
                 </span>
                 <span className="glyphicon glyphicon-user" />
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

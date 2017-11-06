@@ -1,7 +1,8 @@
 
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { Router, Route, Redirect } from 'react-router';
+import { render } from 'react-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 // Import layouts
@@ -24,33 +25,31 @@ import NotFound from '/imports/ui/pages/not-found/not-found';
 
 const browserHistory = createBrowserHistory();
 
-const verifyLogin = () => {
+const verifyLogin = ({ history }) => {
   if (Meteor.loggingIn() || Meteor.userId()) {
     return;
   }
-  return (<Redirect to="/Login" />);
+  history.push('/Login');
 };
 
-const renderRoutes = () => (
+const router = () => (
   <Router history={browserHistory}>
-    <Route component={ManageLayout}>
-      <Route path="/CreateQuiz" component={CreateQuiz} onEnter={verifyLogin} />
-      <Route path="/Manage" component={Main} onEnter={verifyLogin} />
-      <Route path="/EditQuiz/:_id" component={EditQuiz} onEnter={verifyLogin} />
-      <Route path="/search/:query?" component={Search} onEnter={verifyLogin} />
-      <Route path="/ViewQuiz/:_id" component={ViewQuiz} onEnter={verifyLogin} />
-    </Route>
-    <Route component={LoginLayout}>
-      <Route path="/Login" component={Login} />
-      <Route path="/LoginError" component={LoginError} />
-    </Route>
-    <Route component={GameLayout}>
-      <Route exact path="/" component={Home} onEnter={verifyLogin} />
-      <Route path="/game/:code" component={GameRouter} onEnter={verifyLogin} />
-      <Route path="/manage/game/:code" component={HistoryRouter} onEnter={verifyLogin} />
-      <Route path="*" component={NotFound} />
-    </Route>
+    <Switch>
+      <Route path="/CreateQuiz" render={() => <ManageLayout main={CreateQuiz} />} onEnter={verifyLogin} />
+      <Route path="/Manage" render={() => <ManageLayout main={Main} />} onEnter={verifyLogin} />
+      <Route path="/EditQuiz/:_id" render={() => <ManageLayout main={EditQuiz} />} onEnter={verifyLogin} />
+      <Route path="/search/:query?" render={() => <ManageLayout main={Search} />} onEnter={verifyLogin} />
+      <Route path="/ViewQuiz/:_id" render={() => <ManageLayout main={ViewQuiz} />} onEnter={verifyLogin} />
+      <Route path="/manage/game/:code" render={() => <ManageLayout main={HistoryRouter} />} onEnter={verifyLogin} />
+      <Route path="/Login" render={() => <LoginLayout main={Login} />} />
+      <Route path="/LoginError" render={() => <LoginLayout main={LoginError} />} />
+      <Route exact path="/" render={() => <GameLayout main={Home} />} onEnter={verifyLogin} />
+      <Route path="/game/:code" render={() => <GameLayout main={GameRouter} />} onEnter={verifyLogin} />
+      <Route path="*" render={() => <GameLayout main={NotFound} />} />
+    </Switch>
   </Router>
 );
 
-export default renderRoutes;
+Meteor.startup(() => {
+  render(router(), document.getElementById('app'));
+});

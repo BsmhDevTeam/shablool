@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Redirect } from 'react-router-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -230,7 +230,7 @@ class EditQuiz extends React.Component {
 
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && FlowRouter.go('Manage.Home'));
+      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && (<Redirect to="/Manage" />));
     };
 
     const uploadImages = (e) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link, Redirect } from 'react-router-dom';
 
 class Home extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class Home extends React.Component {
         {
           code: gameCode,
         },
-        (err, res) => (res ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode })),
+        (err, res) => (res ? notifyUser() : (<Redirect to={`/game/${gameCode}`} />)),
       );
     };
 
@@ -65,7 +65,7 @@ class Home extends React.Component {
           </div>
         </div>
         <p id="center-home-massage">
-          <a href="/Manage">נהל או צור משחק חדש</a>
+          <Link to="/Manage">נהל או צור משחק חדש</Link>
         </p>
         <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>
           לא נמצא משחק
