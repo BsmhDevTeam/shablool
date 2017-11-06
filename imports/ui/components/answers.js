@@ -1,4 +1,5 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { eventTypes } from '/imports/startup/both/constants';
 
@@ -27,6 +28,11 @@ const Answer = ({ answer, index, game }) => {
   const selectAnswer = () => {
     game.applyMethod('playerAnswer', [game.lastQuestionToStartId(), answer._id]);
   };
+
+  const isSelected = game.gameLog.find(
+    event => event.nameType === eventTypes.PlayerAnswer &&
+    answer._id === event.answerId && event.playerId === Meteor.userId()) ? 'selected-answer' : '';
+
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>
     !isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd ? 'wrong-answer' : '';
@@ -36,7 +42,7 @@ const Answer = ({ answer, index, game }) => {
       <div className="answer-btn-area">
         <button
           type="button"
-          className={`btn btn-answer-${index} answer-button ${calculateOpacity()}`}
+          className={`btn btn-answer-${index} answer-button ${calculateOpacity()} ${isSelected}`}
           onClick={selectAnswer}
         >
           <div className="col-md-1 col-xs-1 col-sm-1 col-lg-1 col-xg-1">
