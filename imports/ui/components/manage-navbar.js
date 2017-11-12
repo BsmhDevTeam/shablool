@@ -9,7 +9,6 @@ export default () => {
     FlowRouter.go('Manage.Search', { query });
   };
   const getWelcomeByHours = () => {
-    console.log(Meteor.user());
     const now = new Date();
     const hour = now.getHours();
     switch (true) {
@@ -62,7 +61,7 @@ export default () => {
             <li className="manage-nav-li">
               <a href="/Manage" className="navbar-link-element">
                 <span>
-                  {getWelcomeByHours()}, {Meteor.user().username}{' '}
+                  {getWelcomeByHours()}, {Meteor.user().services.gitlab.username}{' '}
                 </span>
                 <span className="glyphicon glyphicon-user" />
               </a>
