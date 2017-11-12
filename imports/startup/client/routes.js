@@ -63,7 +63,7 @@ const randonUserNames = [
   'Phoebe Buffay',
   'Rihanna',
   'Eminem',
-  'Snoop Dog',
+  'Snoop Dogg',
   'Daenerys Targaryen',
   'Bill Gates',
 ];
