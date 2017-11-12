@@ -336,7 +336,7 @@ const Game = Class.create({
     scoreListByName() {
       const scoreListById = this.scoreListById();
       const scoreByUserName = scoreListById.map(o => ({
-        userName: Meteor.users.findOne(o.playerId).username,
+        userName: Meteor.users.findOne(o.playerId).services.gitlab.username,
         userScore: o.userScore,
       })); // => [{userName: name, userScore: score}, ...]
       return scoreByUserName;
@@ -397,15 +397,15 @@ const Game = Class.create({
     },
     getUsernameByUserID(uId) {
       const username = Meteor.users
-        .find({ _id: uId }, { fields: { 'username': 1 } })
-        .map(p => p.username);
+        .find({ _id: uId }, { fields: { 'services.gitlab.username': 1 } })
+        .map(p => p.services.gitlab.username);
       return username;
     },
     getPlayersName() {
       const playersIds = this.getPlayersId();
       const playersNames = Meteor.users
-        .find({ _id: { $in: playersIds } }, { fields: { 'username': 1 } })
-        .map(p => p.username);
+        .find({ _id: { $in: playersIds } }, { fields: { 'services.gitlab.username': 1 } })
+        .map(p => p.services.gitlab.username);
       return playersNames;
     },
     getLastEvent() {
