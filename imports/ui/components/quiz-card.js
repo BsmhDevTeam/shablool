@@ -58,7 +58,7 @@ const QuizCard = ({ quiz, actions }) => {
             </p>
             <p>
               <span className="quiz-owner-span">
-                {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).services.gitlab.username}`}
+                {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).username}`}
               </span>
             </p>
             <p>
