@@ -16,6 +16,7 @@ class Search extends React.Component {
       quizForked: false,
       showDeleteQuizAlert: false,
       quizToDelete: null,
+      QuizzesToDisplay: 5,
     };
   }
   render() {
@@ -49,6 +50,10 @@ class Search extends React.Component {
       showDeleteAlert,
       forkQuiz,
     };
+    const MoreQuizzesToDisplay = (e) => {
+      e.preventDefault();
+      this.setState({ QuizzesToDisplay: this.state.QuizzesToDisplay + 5 }); 
+    };
     return results.length === 0
       ? <div className="row">
         <img
@@ -64,13 +69,13 @@ class Search extends React.Component {
       </div>
       : <div id="search">
         <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
-        {results.map(quiz => (
+        {results.map((quiz, index) => (index < this.state.QuizzesToDisplay ?
           <div key={quiz._id}>
             <div className="row">
               <QuizCard quiz={quiz} actions={actions} />
             </div>
           </div>
-          ))}
+          : null))}
         <div
           id="snackbar"
           className={
@@ -103,6 +108,7 @@ class Search extends React.Component {
           onEscapeKey={() => this.setState({ showDeleteQuizAlert: false })}
           onOutsideClick={() => this.setState({ showDeleteQuizAlert: false })}
         />
+        {this.state.QuizzesToDisplay < results.length ? <button type="button" className="btn btn-primary" id="show-more" onClick={MoreQuizzesToDisplay} >הצג עוד</button> : '' }
       </div>;
   }
 }
