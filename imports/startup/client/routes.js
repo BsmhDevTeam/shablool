@@ -29,23 +29,23 @@ const verifyLogin = ({ history }) => {
   if (Meteor.loggingIn() || Meteor.userId()) {
     return;
   }
-  history.push('/Login');
+  return;
 };
 
 const router = () => (
   <Router history={browserHistory}>
     <Switch>
-      <Route path="/CreateQuiz" render={() => <ManageLayout main={CreateQuiz} />} onEnter={verifyLogin} />
-      <Route path="/Manage" render={() => <ManageLayout main={Main} />} onEnter={verifyLogin} />
-      <Route path="/EditQuiz/:_id" render={() => <ManageLayout main={EditQuiz} />} onEnter={verifyLogin} />
-      <Route path="/search/:query?" render={() => <ManageLayout main={Search} />} onEnter={verifyLogin} />
-      <Route path="/ViewQuiz/:_id" render={() => <ManageLayout main={ViewQuiz} />} onEnter={verifyLogin} />
-      <Route path="/manage/game/:code" render={() => <ManageLayout main={HistoryRouter} />} onEnter={verifyLogin} />
-      <Route path="/Login" render={() => <LoginLayout main={Login} />} />
-      <Route path="/LoginError" render={() => <LoginLayout main={LoginError} />} />
-      <Route exact path="/" render={() => <GameLayout main={Home} />} onEnter={verifyLogin} />
-      <Route path="/game/:code" render={() => <GameLayout main={GameRouter} />} onEnter={verifyLogin} />
-      <Route path="*" render={() => <GameLayout main={NotFound} />} />
+      <Route path="/CreateQuiz" render={() => <ManageLayout><CreateQuiz /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/Manage" render={() => <ManageLayout><Main /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/EditQuiz/:_id" render={() => <ManageLayout><EditQuiz /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/search/:query?" render={() => <ManageLayout><Search /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/ViewQuiz/:_id" render={() => <ManageLayout><ViewQuiz /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/manage/game/:code" render={() => <ManageLayout><HistoryRouter /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/Login" render={() => <LoginLayout><Login /></LoginLayout>} />
+      <Route path="/LoginError" render={() => <LoginLayout><LoginError /></LoginLayout>} />
+      <Route exact path="/" render={() => <GameLayout><Home /></GameLayout>} onEnter={verifyLogin} />
+      <Route path="/game/:code" render={() => <GameLayout><GameRouter /></GameLayout>} onEnter={verifyLogin} />
+      <Route path="*" render={() => <GameLayout><NotFound /></GameLayout>} />
     </Switch>
   </Router>
 );

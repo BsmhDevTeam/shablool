@@ -1,9 +1,9 @@
 import React from 'react';
 
-const GameLayout = ({ main }) =>
+const GameLayout = ({ children }) =>
   <div id="game-layout">
     <div className="container">
-      {main}
+      {children}
     </div>
   </div>;
 

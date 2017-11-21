@@ -1,8 +1,8 @@
 import React from 'react';
 
-export default ({ main }) =>
+export default ({ children }) =>
   <div id="login-layout">
     <div className="container">
-      {main}
+      {children}
     </div>
   </div>;
