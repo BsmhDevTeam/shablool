@@ -1,12 +1,12 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
-export default () => {
+const manageNavbar = ({ history }) => {
   const search = (e) => {
     e.preventDefault();
     const query = e.target.query.value;
-    return (<Redirect to={`/search/${query}`} />);
+    history.push(`/search/${query}`);
   };
   const getWelcomeByHours = () => {
     const now = new Date();
@@ -72,3 +72,5 @@ export default () => {
     </nav>
   );
 };
+
+export default withRouter(manageNavbar);

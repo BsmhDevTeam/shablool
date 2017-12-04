@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class Home extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class Home extends React.Component {
         {
           code: gameCode,
         },
-        (err, res) => (res ? notifyUser() : (<Redirect to={`/game/${gameCode}`} />)),
+        (err, res) => (res ? notifyUser() : this.props.history.push(`/game/${gameCode}`)),
       );
     };
 
@@ -75,4 +75,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default withRouter(Home);

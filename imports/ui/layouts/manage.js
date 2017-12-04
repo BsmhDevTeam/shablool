@@ -17,7 +17,6 @@ const ManageLayout = ({ children }) =>
   </div>;
 
 const ManageLayoutContainer = ({ loading, children }) => {
-  console.log(children);
   if (loading) return <Loading />;
   return <ManageLayout children={children} />;
 };

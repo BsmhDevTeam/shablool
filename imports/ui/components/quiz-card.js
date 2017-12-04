@@ -1,14 +1,14 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Game from '/imports/api/games/games';
 import Image from '/imports/api/images/images';
 import { noImage } from '/imports/startup/both/constants';
 import moment from 'moment';
 import 'moment/locale/he';
 
-const QuizCard = ({ quiz, actions }) => {
+const QuizCard = ({ quiz, actions, history }) => {
   const showDeleteAlert = () => {
     actions.showDeleteAlert(quiz);
   };
@@ -18,7 +18,7 @@ const QuizCard = ({ quiz, actions }) => {
   const initGame = () => {
     const game = new Game({ quiz });
     game.applyMethod('initGame', []);
-    return (<Redirect to={`/game/${game.code}`} />);
+    history.push(`/game/${game.code}`);
   };
   const fromNow = () => {
     moment.locale('he');
@@ -80,10 +80,10 @@ const QuizCard = ({ quiz, actions }) => {
                   </a>
                 </div>
                 <div className="col-md-4">
-                  <a href={`/EditQuiz/${quiz._id}`} className="star quiz-card-link">
+                  <Link to={`/EditQuiz/${quiz._id}`} className="star quiz-card-link">
                     <span className="glyphicon glyphicon-pencil quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">ערוך שאלון</span>
-                  </a>
+                  </Link>
                 </div>
                 <div className="col-md-4 quiz-card-start-button-area">
                   <button className="btn btn-primary start-game-btn" onClick={initGame}>
@@ -137,4 +137,4 @@ TagTemplate.propTypes = {
   tag: PropTypes.string.isRequired,
 };
 
-export default QuizCard;
+export default withRouter(QuizCard);

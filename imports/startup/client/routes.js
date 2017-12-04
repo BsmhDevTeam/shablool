@@ -26,10 +26,13 @@ import NotFound from '/imports/ui/pages/not-found/not-found';
 const browserHistory = createBrowserHistory();
 
 const verifyLogin = ({ history }) => {
+  console.log('hmm');
   if (Meteor.loggingIn() || Meteor.userId()) {
+    console.log('yes');
     return;
   }
-  return;
+  console.log('no');
+  history.push('/Login');
 };
 
 const router = () => (
@@ -37,14 +40,14 @@ const router = () => (
     <Switch>
       <Route path="/CreateQuiz" render={() => <ManageLayout><CreateQuiz /></ManageLayout>} onEnter={verifyLogin} />
       <Route path="/Manage" render={() => <ManageLayout><Main /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/EditQuiz/:_id" render={() => <ManageLayout><EditQuiz /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/search/:query?" render={() => <ManageLayout><Search /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/ViewQuiz/:_id" render={() => <ManageLayout><ViewQuiz /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/manage/game/:code" render={() => <ManageLayout><HistoryRouter /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/EditQuiz/:_id" render={(props) => <ManageLayout><EditQuiz id={props.match.params._id} /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/search/:query?" render={(props) => <ManageLayout><Search query={props.match.params.query}  /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/ViewQuiz/:_id" render={(props) => <ManageLayout><ViewQuiz id={props.match.params._id} /></ManageLayout>} onEnter={verifyLogin} />
+      <Route path="/manage/game/:code" render={(props) => <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>} onEnter={verifyLogin} />
       <Route path="/Login" render={() => <LoginLayout><Login /></LoginLayout>} />
       <Route path="/LoginError" render={() => <LoginLayout><LoginError /></LoginLayout>} />
       <Route exact path="/" render={() => <GameLayout><Home /></GameLayout>} onEnter={verifyLogin} />
-      <Route path="/game/:code" render={() => <GameLayout><GameRouter /></GameLayout>} onEnter={verifyLogin} />
+      <Route path="/game/:code" render={(props) => <GameLayout><GameRouter code={props.match.params.code} /></GameLayout>} onEnter={verifyLogin} />
       <Route path="*" render={() => <GameLayout><NotFound /></GameLayout>} />
     </Switch>
   </Router>

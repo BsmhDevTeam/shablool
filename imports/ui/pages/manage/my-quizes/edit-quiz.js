@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -230,7 +230,7 @@ class EditQuiz extends React.Component {
 
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && (<Redirect to="/Manage" />));
+      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && this.props.history.push('/Manage'));
     };
 
     const uploadImages = (e) => {
@@ -290,11 +290,11 @@ EditQuizContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default createContainer(({ id }) => {
+export default withRouter(createContainer(({ id }) => {
   const quizHandle = Meteor.subscribe('quizes.get', id);
   const loading = !quizHandle.ready();
   return {
     loading,
     id,
   };
-}, EditQuizContainer);
+}, EditQuizContainer));
