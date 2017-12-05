@@ -46,7 +46,8 @@ publishComposite('quizes.get', function(id) {
   };
 });
 
-publishComposite('quizes.search', function(query) {
+publishComposite('quizes.search', function(query, numOfQuizzes) {
+  const numberOfQuizzes = parseInt(numOfQuizzes, 10);
   return {
     collectionName: 'quizes',
     find() {
@@ -56,8 +57,8 @@ publishComposite('quizes.search', function(query) {
           { $or: [{ title: { $regex: query, $options: 'i' } },
           { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
           { $or: [{ owner: this.userId }, { private: false }] },
-        ],      
-      });
+        ],
+      }, { limit: numberOfQuizzes });
     },
     children: [
       {
