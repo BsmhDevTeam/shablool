@@ -17,6 +17,7 @@ export const joinGameResults = {
   isManager: 'IS_MANAGER',
   noGame: 'NO_GAME',
   regSucc: 'REG_SUCC',
+  gameStarted: 'GAME_STARTED',
 };
 
 export const startGameResults = {

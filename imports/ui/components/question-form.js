@@ -65,6 +65,14 @@ class QuestionForm extends React.Component {
           <div className="panel panel-default">
             <div className="panel-heading">
               <div className="form-group">
+              <div className="col-lg-1">
+                  <button
+                    className="btn btn-danger btn-lg"
+                    onClick={actions.removeQuestion(question._id)}
+                  >
+                    <span className="glyphicon glyphicon-remove" aria-hidden="true" />
+                  </button>
+                </div>
                 <div className="col-lg-8">
                   <div className={`form-group ${textValidation ? 'has-error' : ''}`}>
                     <input
@@ -97,14 +105,6 @@ class QuestionForm extends React.Component {
                       </label>
                       : ''}
                   </div>
-                </div>
-                <div className="col-lg-1">
-                  <button
-                    className="btn btn-danger btn-lg"
-                    onClick={actions.removeQuestion(question._id)}
-                  >
-                    <span className="glyphicon glyphicon-minus" aria-hidden="true" />
-                  </button>
                 </div>
               </div>
             </div>
