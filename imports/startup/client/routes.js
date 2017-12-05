@@ -2,7 +2,7 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 
 // Import layouts
@@ -25,30 +25,65 @@ import NotFound from '/imports/ui/pages/not-found/not-found';
 
 const browserHistory = createBrowserHistory();
 
-const verifyLogin = ({ history }) => {
-  console.log('hmm');
-  if (Meteor.loggingIn() || Meteor.userId()) {
-    console.log('yes');
-    return;
+const verifyLogin = () => {
+  if (!Meteor.loggingIn() || !Meteor.userId()) {
+    return false;
   }
-  console.log('no');
-  history.push('/Login');
+  return true;
 };
 
 const router = () => (
   <Router history={browserHistory}>
     <Switch>
-      <Route path="/CreateQuiz" render={() => <ManageLayout><CreateQuiz /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/Manage" render={() => <ManageLayout><Main /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/EditQuiz/:_id" render={(props) => <ManageLayout><EditQuiz id={props.match.params._id} /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/search/:query?" render={(props) => <ManageLayout><Search query={props.match.params.query}  /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/ViewQuiz/:_id" render={(props) => <ManageLayout><ViewQuiz id={props.match.params._id} /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/manage/game/:code" render={(props) => <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>} onEnter={verifyLogin} />
-      <Route path="/Login" render={() => <LoginLayout><Login /></LoginLayout>} />
-      <Route path="/LoginError" render={() => <LoginLayout><LoginError /></LoginLayout>} />
-      <Route exact path="/" render={() => <GameLayout><Home /></GameLayout>} onEnter={verifyLogin} />
-      <Route path="/game/:code" render={(props) => <GameLayout><GameRouter code={props.match.params.code} /></GameLayout>} onEnter={verifyLogin} />
-      <Route path="*" render={() => <GameLayout><NotFound /></GameLayout>} />
+      <Route
+        path="/EditQuiz/:_id"
+        render={(props) => (verifyLogin() ? (
+          <ManageLayout><EditQuiz id={props.match.params._id} /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
+      />
+      <Route
+        path="/CreateQuiz"
+        render={() => <ManageLayout><CreateQuiz /></ManageLayout>}
+      />
+      <Route
+        path="/Manage"
+        render={() => <ManageLayout><Main /></ManageLayout>}
+      />
+      <Route
+        path="/search/:query?"
+        render={(props) => <ManageLayout><Search query={props.match.params.query} /></ManageLayout>}
+      />
+      <Route
+        path="/ViewQuiz/:_id"
+        render={(props) => <ManageLayout><ViewQuiz id={props.match.params._id} /></ManageLayout>}
+      />
+      <Route
+        path="/manage/game/:code"
+        render={(props) => <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>}
+      />
+      <Route
+        path="/Login"
+        render={() => <LoginLayout><Login /></LoginLayout>}
+      />
+      <Route
+        path="/LoginError"
+        render={() => <LoginLayout><LoginError /></LoginLayout>}
+      />
+      <Route
+        exact
+        path="/"
+        render={() => <GameLayout><Home /></GameLayout>}
+      />
+      <Route
+        path="/game/:code"
+        render={(props) => <GameLayout><GameRouter code={props.match.params.code} /></GameLayout>}
+      />
+      <Route
+        path="*"
+        render={() => <GameLayout><NotFound /></GameLayout>}
+      />
     </Switch>
   </Router>
 );
