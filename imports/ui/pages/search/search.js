@@ -29,6 +29,7 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
           <InfiniteScroll
             loadMore={actionsForUI.MoreQuizzesToDisplay}
             hasMore={!(results.length < state.quizzesToDisplay)}
+            loader={<Loading />}
           >
             {results.map(quiz => (
               <div key={quiz._id}>
