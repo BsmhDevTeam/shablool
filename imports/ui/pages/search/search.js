@@ -27,7 +27,10 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
         : <div id="search">
           <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
           <InfiniteScroll
-            loadMore={actionsForUI.MoreQuizzesToDisplay}
+            loadMore={() => {
+              actionsForUI.MoreQuizzesToDisplay();
+              actionsForUI.CheckResults(results.length);
+            }}
             hasMore={!(results.length < state.quizzesToDisplay)}
             loader={<Loading />}
           >
@@ -48,6 +51,16 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
             {state.quizDeleted
                 ? 'השאלון נמחק בהצלחה'
                 : 'השאלון הועתק בהצלחה'}
+          </div>
+          <div
+            id="snackbar"
+            className={
+                state.noMoreQuizzes ? 'show' : ''
+              }
+          >
+            {state.noMoreQuizzes
+                ? 'אין עוד שאלונים להצגה'
+                : null}
           </div>
           <SweetAlert
             show={state.showDeleteQuizAlert}
@@ -101,13 +114,14 @@ export default class Search extends React.Component {
     this.state = {
       quizDeleted: false,
       quizForked: false,
+      noMoreQuizzes: false,
       showDeleteQuizAlert: false,
       quizToDelete: null,
       quizzesToDisplay: 10,
       formerQuery: null,
     };
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     const { query } = this.props;
     const newQuery = () => {
       this.setState({ quizzesToDisplay: 10 });
@@ -119,6 +133,14 @@ export default class Search extends React.Component {
   render() {
     const showDeleteAlert = (quiz) => {
       this.setState({ quizToDelete: quiz, showDeleteQuizAlert: true });
+    };
+
+    const CheckResults = (results) => {
+      const notifyUser = () => {
+        this.setState({ noMoreQuizzes: true });
+        setTimeout(() => this.setState({ noMoreQuizzes: false }), 3000);
+      };
+      if (results < this.state.quizzesToDisplay) notifyUser();
     };
     const deleteQuiz = () => {
       this.state.quizToDelete.applyMethod('delete', []);
@@ -162,6 +184,7 @@ export default class Search extends React.Component {
       MoreQuizzesToDisplay,
       RemoveQuizAlert,
       ConfirmOrCancel,
+      CheckResults,
     };
 
     return <DBProvider query={query} state={this.state} actions={actions} actionsForUI={actionsForUI} />;
