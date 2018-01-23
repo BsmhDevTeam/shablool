@@ -108,7 +108,6 @@ export default class Search extends React.Component {
     this.state = {
       quizDeleted: false,
       quizForked: false,
-      noMoreQuizzes: false,
       showDeleteQuizAlert: false,
       quizToDelete: null,
       quizzesToDisplay: 10,
