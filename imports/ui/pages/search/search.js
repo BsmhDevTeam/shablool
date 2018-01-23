@@ -138,7 +138,7 @@ export default class Search extends React.Component {
     const CheckResults = (results) => {
       const notifyUser = () => {
         this.setState({ noMoreQuizzes: true });
-        setTimeout(() => this.setState({ noMoreQuizzes: false }), 3000);
+        setTimeout(() => this.setState({ noMoreQuizzes: false }), 2000);
       };
       if (results < this.state.quizzesToDisplay) notifyUser();
     };
