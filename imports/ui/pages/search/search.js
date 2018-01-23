@@ -27,10 +27,7 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
         : <div id="search">
           <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
           <InfiniteScroll
-            loadMore={() => {
-              actionsForUI.MoreQuizzesToDisplay();
-              actionsForUI.CheckResults(results.length);
-            }}
+            loadMore={actionsForUI.MoreQuizzesToDisplay}
             hasMore={!(results.length < state.quizzesToDisplay)}
             loader={<Loading />}
           >
@@ -53,14 +50,11 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
                 : 'השאלון הועתק בהצלחה'}
           </div>
           <div
-            id="snackbar"
             className={
-                state.noMoreQuizzes ? 'show' : ''
+              results.length < state.quizzesToDisplay ? 'show infinite-scroll-text' : ''
               }
           >
-            {state.noMoreQuizzes
-                ? 'אין עוד שאלונים להצגה'
-                : null}
+            { 'אין עוד שאלונים להצגה' }
           </div>
           <SweetAlert
             show={state.showDeleteQuizAlert}
@@ -134,14 +128,6 @@ export default class Search extends React.Component {
     const showDeleteAlert = (quiz) => {
       this.setState({ quizToDelete: quiz, showDeleteQuizAlert: true });
     };
-
-    const CheckResults = (results) => {
-      const notifyUser = () => {
-        this.setState({ noMoreQuizzes: true });
-        setTimeout(() => this.setState({ noMoreQuizzes: false }), 2000);
-      };
-      if (results < this.state.quizzesToDisplay) notifyUser();
-    };
     const deleteQuiz = () => {
       this.state.quizToDelete.applyMethod('delete', []);
       const notifyUser = () => {
@@ -184,7 +170,6 @@ export default class Search extends React.Component {
       MoreQuizzesToDisplay,
       RemoveQuizAlert,
       ConfirmOrCancel,
-      CheckResults,
     };
 
     return <DBProvider query={query} state={this.state} actions={actions} actionsForUI={actionsForUI} />;
