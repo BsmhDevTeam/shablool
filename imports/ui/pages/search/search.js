@@ -7,6 +7,7 @@ import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuizCard from '/imports/ui/components/quiz-card.js';
 import Loading from '/imports/ui/components/loading';
+import Loader from 'react-loading-components';
 import InfiniteScroll from 'react-infinite-scroller';
 
 const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) => {
@@ -29,7 +30,9 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
           <InfiniteScroll
             loadMore={actionsForUI.MoreQuizzesToDisplay}
             hasMore={!(results.length < state.quizzesToDisplay)}
-            loader={<Loading />}
+            loader={<div className="loader">
+              <Loader type="three_dots" width={100} height={100} fill="#000000" /> </div>}
+            threshold={15}
           >
             {results.map(quiz => (
               <div key={quiz._id}>

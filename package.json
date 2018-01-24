@@ -23,6 +23,7 @@
     "react-dropzone": "^3.13.4",
     "react-file-drag-and-drop": "^0.1.6",
     "react-infinite-scroller": "^1.1.1",
+    "react-loading-components": "^1.1.12",
     "react-mounter": "^1.2.0",
     "recharts": "^1.0.0-alpha.1",
     "sinon": "^2.3.7",
