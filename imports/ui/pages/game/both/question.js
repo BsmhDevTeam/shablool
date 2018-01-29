@@ -5,6 +5,7 @@ import GameNavbar from '/imports/ui/components/game-navbar';
 import CountdownTimer from '/imports/ui/components/count-down-timer';
 import { noImage } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images';
+import { Line } from 'rc-progress';
 
 const Question = ({ game }) => {
   const question = game.lastQuestionToStart();
@@ -18,6 +19,7 @@ const Question = ({ game }) => {
     <div id="question">
       <div className="question-background" />
       <div className="row">
+        <Line percent={(question.order / game.quiz.questions.length) * 100} strokeColor="#85b8fe" />
         <GameNavbar text={question.text} num="" />
       </div>
       {game.isManager()

@@ -17,6 +17,7 @@
     "moment": "^2.19.1",
     "pivottable": "^2.14.0",
     "prop-types": "^15.5.10",
+    "rc-progress": "^2.2.5",
     "react": "^15.6.1",
     "react-addons-pure-render-mixin": "^15.5.2",
     "react-dom": "^15.6.1",
