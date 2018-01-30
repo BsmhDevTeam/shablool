@@ -51,6 +51,7 @@ const Question = ({ game }) => {
         </div>
       </div>
       <div>
+        <div className="number-of-question"> 7/8 </div>
         <Line
           className="progress-bar-location"
           percent={(question.order / game.quiz.questions.length) * 100}
