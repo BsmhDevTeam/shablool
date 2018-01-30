@@ -19,7 +19,6 @@ const Question = ({ game }) => {
     <div id="question">
       <div className="question-background" />
       <div className="row">
-        <Line percent={(question.order / game.quiz.questions.length) * 100} strokeColor="#85b8fe" />
         <GameNavbar text={question.text} num="" />
       </div>
       {game.isManager()
@@ -50,6 +49,13 @@ const Question = ({ game }) => {
           </p>
           <p className="answer-count">תשובות</p>
         </div>
+      </div>
+      <div>
+        <Line
+          className="progress-bar-location"
+          percent={(question.order / game.quiz.questions.length) * 100}
+          strokeColor="#85b8fe"
+        />
       </div>
       <Answers answers={question.answers} game={game} />
       {game.isManager() ? <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop /> : ''}
