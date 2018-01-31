@@ -32,7 +32,7 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
             hasMore={!(results.length < state.quizzesToDisplay)}
             loader={<div className="loader">
               <Loader type="three_dots" width={100} height={100} fill="#000000" /> </div>}
-            threshold={15}
+            threshold={20}
           >
             {results.map(quiz => (
               <div key={quiz._id}>
@@ -52,13 +52,11 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
                 ? 'השאלון נמחק בהצלחה'
                 : 'השאלון הועתק בהצלחה'}
           </div>
-          <div
-            className={
-              results.length < state.quizzesToDisplay ? 'show infinite-scroll-text' : ''
-              }
+          { results.length < state.quizzesToDisplay ? <div
+            className={'show infinite-scroll-text'}
           >
             { 'אין עוד שאלונים להצגה' }
-          </div>
+          </div> : '' }
           <SweetAlert
             show={state.showDeleteQuizAlert}
             title="מחיקת שאלון"
