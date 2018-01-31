@@ -11,6 +11,7 @@ import LoginLayout from '/imports/ui/layouts/login.js';
 // Import pages
 import Home from '/imports/ui/pages/game/home';
 import Login from '/imports/ui/pages/login/login';
+import Register from '/imports/ui/pages/login/register';
 import LoginError from '/imports/ui/pages/login/login-error';
 import CreateQuiz from '/imports/ui/pages/manage/my-quizes/create-quiz';
 import EditQuiz from '/imports/ui/pages//manage/my-quizes/edit-quiz.js';
@@ -20,65 +21,19 @@ import Main from '/imports/ui/pages/manage';
 import GameRouter from '/imports/ui/pages/game/router';
 import HistoryRouter from '/imports/ui/pages/manage/game-stats-router';
 import NotFound from '/imports/ui/pages/not-found/not-found';
-import { Accounts } from 'meteor/accounts-base';
-
-
-const randonUserNames = [
-  'Segev Fucking Lahav',
-  'LeBron James',
-  'Steve Jobs',
-  'Elon Mask',
-  'Erez Tal',
-  'Britney Spears',
-  'Eyal Kitzis',
-  'Benjamin Netanyahu',
-  'Lidor',
-  'Kliger',
-  'Dorian',
-  'Nethanel',
-  'Yuval the confused',
-  'Jon Snow',
-  'Harry Potter',
-  'Walter White',
-  'King of BSMH',
-  'Cyber Cyber Cyber',
-  'Dedi Dadon',
-  'Shimi',
-  'Margol',
-  'Omer Adam',
-  'Dolce & Gabbana',
-  'Cristiano Ronaldo',
-  'The Rasar',
-  'Slash',
-  'Jimi Hendrix',
-  'Steph Curry',
-  'Charlie Sheen',
-  'Sheldon Cooper',
-  'Chandler Bing',
-  'Joey Tribbiani',
-  'Lionel Messi',
-  'Rachel Green',
-  'Ross Geller',
-  'Monica Geller',
-  'Phoebe Buffay',
-  'Rihanna',
-  'Eminem',
-  'Snoop Dogg',
-  'Daenerys Targaryen',
-  'Bill Gates',
-];
 
 const verifyLogin = () => {
   if (Meteor.loggingIn() || Meteor.userId()) {
     return;
   }
-  Accounts.createUser({
-    username: randonUserNames[Math.floor(Math.random() * randonUserNames.length)],
-    password: 'Aa123456',
-  });
-  FlowRouter.go('Home');
+  FlowRouter.go('/Login');
 };
 
+const verifyNotLogin = () => {
+    if (Meteor.loggingIn() || Meteor.userId()) {
+        FlowRouter.go('/');
+    }
+};
 
 // Set up all routes in the app
 FlowRouter.route('/', {
@@ -147,8 +102,17 @@ FlowRouter.route('/ViewQuiz/:_id', {
 
 FlowRouter.route('/Login', {
   name: 'Game.Login',
+  triggersEnter: [verifyNotLogin],
   action() {
     mount(LoginLayout, { main: <Login /> });
+  },
+});
+
+FlowRouter.route('/Register', {
+  name: 'Game.Register',
+  triggersEnter: [verifyNotLogin],
+  action() {
+    mount(LoginLayout, { main: <Register /> });
   },
 });
 
