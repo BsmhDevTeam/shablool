@@ -8,10 +8,13 @@ import Quiz from '/imports/api/quizes/quizes.js';
 import QuizCard from '/imports/ui/components/quiz-card.js';
 import Loading from '/imports/ui/components/loading';
 import Loader from 'react-loading-components';
-import InfiniteScroll from 'react-infinite-scroller';
+import LimitedInfiniteScroll from 'react-limited-infinite-scroll';
 
-const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) => {
+const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI, numberOfQuizzes }) => {
   if (results.length === 0 && loading) return <Loading />;
+  console.log('numberOfQuizzes ' + numberOfQuizzes);
+  console.log('results.length ' + results.length);
+  
   return results.length === 0
         ? <div className="row">
           <img
@@ -27,7 +30,7 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
         </div>
         : <div id="search">
           <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
-          <InfiniteScroll
+          {/* <InfiniteScroll
             loadMore={actionsForUI.MoreQuizzesToDisplay}
             hasMore={!(results.length < state.quizzesToDisplay)}
             loader={<div className="loader">
@@ -41,7 +44,26 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
                 </div>
               </div>
           ))}
-          </InfiniteScroll>
+          </InfiniteScroll> */}
+          <LimitedInfiniteScroll 
+            threshold={20}
+            hasMore={results.length != numberOfQuizzes}
+            spinLoader={<div className="loader">
+            <Loader type="three_dots" width={100} height={100} fill="#000000" /> </div>}
+            noMore={<div
+              className={'show infinite-scroll-text'}
+            >
+              { 'אין עוד שאלונים להצגה' }
+            </div>} 
+            loadNext={actionsForUI.MoreQuizzesToDisplay}>
+            {results.map(quiz => (
+              <div key={quiz._id}>
+                <div className="row">
+                  <QuizCard quiz={quiz} actions={actions} />
+                </div>
+              </div>
+          ))}
+          </LimitedInfiniteScroll>
           <div
             id="snackbar"
             className={
@@ -52,11 +74,11 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
                 ? 'השאלון נמחק בהצלחה'
                 : 'השאלון הועתק בהצלחה'}
           </div>
-          { results.length < state.quizzesToDisplay ? <div
+          {/* { results.length < state.quizzesToDisplay ? <div
             className={'show infinite-scroll-text'}
           >
             { 'אין עוד שאלונים להצגה' }
-          </div> : '' }
+          </div> : '' } */}
           <SweetAlert
             show={state.showDeleteQuizAlert}
             title="מחיקת שאלון"
@@ -87,12 +109,14 @@ LoaderAndUI.propTypes = {
   state: PropTypes.instanceOf(Object).isRequired,
   actionsForUI: PropTypes.instanceOf(Object).isRequired,
   actions: PropTypes.instanceOf(Object).isRequired,
+  numberOfQuizzes: PropTypes.number.isRequired,
 };
 
-const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => {
-  const searchHandle = Meteor.subscribe('quizes.search', query, state.quizzesToDisplay);
+const DBProvider = createContainer(({ query, state, actions, actionsForUI, numberOfQuizzes }) => {
+  const searchHandle = Meteor.subscribe('quizes.search', query, state.quizzesToDisplay); 
   const loading = !searchHandle.ready();
   const results = Quiz.find().fetch();
+
   return {
     results,
     loading,
@@ -100,10 +124,11 @@ const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => 
     state,
     actions,
     actionsForUI,
+    numberOfQuizzes,
   };
 }, LoaderAndUI);
 
-export default class Search extends React.Component {
+class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -159,7 +184,7 @@ export default class Search extends React.Component {
     const ConfirmOrCancel = () => {
       this.setState({ quizToDelete: null, showDeleteQuizAlert: false });
     };
-    const { query } = this.props;
+    const { query, numberOfQuizzes } = this.props;
     const actions = {
       showDeleteAlert,
       forkQuiz,
@@ -172,14 +197,22 @@ export default class Search extends React.Component {
       ConfirmOrCancel,
     };
 
-    return <DBProvider query={query} state={this.state} actions={actions} actionsForUI={actionsForUI} />;
+    return <DBProvider query={query} state={this.state} actions={actions} actionsForUI={actionsForUI} numberOfQuizzes={numberOfQuizzes} />;
   }
 }
 
 Search.propTypes = {
   query: PropTypes.string,
+  numberOfQuizzes: PropTypes.number,
 };
 
-Search.defaultProps = {
-  query: '',
-};
+const countProvider = createContainer(({ query = '' }) => {
+  const countHandle = Meteor.subscribe('quizes.count', query);
+  const numberOfQuizzes = Counts.get('quizzes-counter');
+  return {
+    query,
+    numberOfQuizzes,
+  };
+}, Search);
+
+export default countProvider;

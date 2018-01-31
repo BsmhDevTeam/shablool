@@ -43,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-meteor": "^4.1.4",
     "eslint-plugin-react": "^6.10.3",
+    "react-limited-infinite-scroll": "^2.0.4",
     "selenium-webdriver": "3.0.0-beta-2"
   },
   "eslintConfig": {

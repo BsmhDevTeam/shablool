@@ -22,6 +22,16 @@ publishComposite('quizes.my-quizes', function() {
   };
 });
 
+Meteor.publish('quizes.count', function(query) {
+  Counts.publish(this, 'quizzes-counter', Quiz.find({ 
+    $and: [
+      { $or: [{ title: { $regex: query, $options: 'i' } },
+      { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
+      { $or: [{ owner: this.userId }, { private: false }] },
+    ],
+  }));
+});
+
 // Public/Owner publications :
 publishComposite('quizes.get', function(id) {
   return {
