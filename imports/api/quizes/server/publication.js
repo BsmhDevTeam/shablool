@@ -46,17 +46,19 @@ publishComposite('quizes.get', function(id) {
   };
 });
 
-publishComposite('quizes.search', function(query) {
+publishComposite('quizes.search', function(query, numOfQuizzes) {
+  const numberOfQuizzes = parseInt(numOfQuizzes, 10);
   return {
     collectionName: 'quizes',
     find() {
       check(query, String);
-      return Quiz.find({
+      return Quiz.find({ 
         $and: [
-          { title: { $regex: query, $options: 'i' } },
+          { $or: [{ title: { $regex: query, $options: 'i' } },
+          { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
           { $or: [{ owner: this.userId }, { private: false }] },
         ],
-      });
+      }, { limit: numberOfQuizzes });
     },
     children: [
       {

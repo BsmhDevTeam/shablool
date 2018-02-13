@@ -51,6 +51,75 @@ Explain what these tests test and why
 ```
 Give an example
 ```
+## Files Structure
+
+```
++---api
+|  +---games                                               
+|      |   games.js                                         # Definition of games collections
+|      |   games.test.js
+|      |   
+|      \---server
+|              methods.js                                   # Writing to games collections
+|              methods.test.js                                              
+|              publication.js                               # Reading from games collections
+|              publication.test.js                          # Test of reading games collections
+|             
+|               
++---startup
+|   +---both
+|   |       constants.js                                     # Constants in the app
+|   |       index.js                                         # Import modules used by both client and server through a single index entry point
+|   |       
+|   +---client
+|   |       index.js                                         # Import client startup through a single index entry point
+|   |       routes.js                                        # Routing in client side
+|   |       
+|   \---server
+|           authentication.js                                # authentication by gitlab
+|           index.js                                         # Import server startup through a single index entry point
+|           register-api.js                                  # Containes all file's server and run them
+|           security.js                                      # Security configuration file
+|           
+\---ui
+    +---components
+    |   |   
+    |   \---pivot-table
+    |       |   pivot-table.js
+    |       |   
+    |       \---locales
+    |               pivot.he.js
+    |               pivot.he.js.map
+    |               pivot.he.min.js
+    |               pivot.he.min.js.map
+    |               
+    +---layouts                                              # Wrapper components for behaviour and visuals
+    |       game.js
+    |       login.js
+    |       manage.js
+    |       
+    +---pages                                                # Entry points for rendering used by the router
+       +---game
+          |   home.js
+          |   owner-router.js
+          |   player-router.js
+          |   router.js
+          |   
+          +---both                                         #  Game pages for owner and player
+          |       game-close.js
+          |       leaders.js
+          |       question-statistics.js
+          |       question.js
+          |       winner.js
+          |       
+          +---owner                                        # Game pages for owner
+          |       lobby.js
+          |       
+          \---player                                       # Game pages for player  
+                  answer-sent.js
+                  instructions.js
+
+```
 
 ## Deployment
 
@@ -58,9 +127,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Meteor](https://www.meteor.com/) - Platform for building web and mobile apps in pure JavaScript
+* [React](https://reactjs.org/) -  JavaScript library for building user interfaces
+* [Astronomy](http://jagi.github.io/meteor-astronomy/) - Model Layer for Meteor collections
 
 ## Contributing
 

@@ -2,12 +2,17 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import moment from 'moment';
+import 'moment/locale/he';
 
 const GameCardManaged = ({ game }) => {
   const showStatistics = () => {
     FlowRouter.go('Manage.Game', { code: game.code });
   };
-
+  const fromNow = () => {
+    moment.locale('he');
+    return moment(new Date(game.createdAt)).fromNow();
+  };
   return (
     <div className="panel panel-default game-card">
       <div className="panel-body">
@@ -26,7 +31,7 @@ const GameCardManaged = ({ game }) => {
             </p>
             <p>
               <span>
-                {game.createdAt.toLocaleString()}
+                {fromNow()}
               </span>
             </p>
           </div>
