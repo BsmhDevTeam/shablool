@@ -297,56 +297,53 @@ Meteor.methods({
   joinGame({ code }) {
     check(code, String);
 
-    const currGame = Game.findOne({code});   
+    const currGame = Game.findOne({ code });
 
-    if (currGame === undefined){       
+    if (!Meteor.userId()) {
+      return joinGameResults.noUserId;
+    } else if (!currGame) {
       return joinGameResults.noGame;
-    }
-    else if (currGame.isManager()){              
+    } else if (currGame.isManager()) {
       return joinGameResults.isManager;
-    }
-    else if (currGame.isUserRegistered()){                   
+    } else if (currGame.isUserRegistered()) {
       return joinGameResults.alreadyRegistered;
+    } else if (currGame.gameLog.find(event => event.nameType === eventTypes.GameStart)) {
+      return joinGameResults.gameStarted;
     }
-    else if (currGame.gameLog.find(event => event.nameType === eventTypes.GameStart)){                
-      return joinGameResults.gameStarted;      
-    }
-    else {
-      Game.update(
-        {
-          $and: [
-            { code },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.GameStart,
-                  },
+    Game.update(
+      {
+        $and: [
+          { code },
+          {
+            gameLog: {
+              $not: {
+                $elemMatch: {
+                  nameType: eventTypes.GameStart,
                 },
               },
             },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.PlayerReg,
-                    playerId: Meteor.userId(),
-                  },
-                },
-              },
-            },
-            {
-              'quiz.owner': { $ne: Meteor.userId() },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new PlayerReg({ playerId: Meteor.userId() }),
           },
+          {
+            gameLog: {
+              $not: {
+                $elemMatch: {
+                  nameType: eventTypes.PlayerReg,
+                  playerId: Meteor.userId(),
+                },
+              },
+            },
+          },
+          {
+            'quiz.owner': { $ne: Meteor.userId() },
+          },
+        ],
+      },
+      {
+        $push: {
+          gameLog: new PlayerReg({ playerId: Meteor.userId() }),
         },
-      );                         
-      return joinGameResults.regSucc;
-    }
+      },
+    );
+    return joinGameResults.regSucc;
   },
 });
