@@ -59,7 +59,6 @@ publishComposite('quizes.get', function(id) {
 });
 
 publishComposite('quizes.search', function(query, numOfQuizzes) {
-  console.log("publish" + numOfQuizzes);
   const numberOfQuizzes = parseInt(numOfQuizzes, 10);
   return {
     collectionName: 'quizes',
