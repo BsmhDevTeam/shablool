@@ -5,6 +5,7 @@ import GameNavbar from '/imports/ui/components/game-navbar';
 import CountdownTimer from '/imports/ui/components/count-down-timer';
 import { noImage } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images';
+import { Line } from 'rc-progress';
 
 const Question = ({ game }) => {
   const question = game.lastQuestionToStart();
@@ -48,6 +49,13 @@ const Question = ({ game }) => {
           </p>
           <p className="answer-count">תשובות</p>
         </div>
+      </div>
+      <div>
+        <Line
+          className="progress-bar-location"
+          percent={(question.order / game.quiz.questions.length) * 100}
+          strokeColor="#85b8fe"
+        />
       </div>
       <Answers answers={question.answers} game={game} />
       {game.isManager() ? <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop /> : ''}
