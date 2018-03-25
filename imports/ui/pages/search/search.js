@@ -35,7 +35,7 @@ const LoaderAndUI = ({ results, loading, query, state,
             hasMore={!(results.length < state.quizzesToDisplay)}
             loader={<div key={uuidV4()} className="loader">
               <Loader type="three_dots" width={100} height={100} fill="#000000" /> </div>}
-            threshold={15}
+            threshold={45}
           >
             {results.map(quiz => (
               <div key={quiz._id}>
