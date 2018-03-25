@@ -10,8 +10,6 @@ app:
     - ROOT_URL=${http://your.domain.com}
     - MONGO_URL=mongodb://mongo:27017/meteor
     - METEOR_SETTINGS=${your.settings.json}
-  volumes:
-    - ${/path/to/some/folder}:/resources
 
 mongo:
   image: mongo:latest

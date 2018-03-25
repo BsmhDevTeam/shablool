@@ -1,15 +1,19 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import { Counts } from 'meteor/ros:publish-counts';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes.js';
 import QuizCard from '/imports/ui/components/quiz-card.js';
 import Loading from '/imports/ui/components/loading';
+import Loader from 'react-loading-components';
 import InfiniteScroll from 'react-infinite-scroller';
+import uuidV4 from 'uuid/v4';
 
-const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) => {
+const LoaderAndUI = ({ results, loading, query, state,
+                      actions, actionsForUI, numberOfQuizzes }) => {
   if (results.length === 0 && loading) return <Loading />;
   return results.length === 0
         ? <div className="row">
@@ -29,7 +33,9 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
           <InfiniteScroll
             loadMore={actionsForUI.MoreQuizzesToDisplay}
             hasMore={!(results.length < state.quizzesToDisplay)}
-            loader={<Loading />}
+            loader={<div key={uuidV4()} className="loader">
+              <Loader type="three_dots" width={100} height={100} fill="#000000" /> </div>}
+            threshold={45}
           >
             {results.map(quiz => (
               <div key={quiz._id}>
@@ -39,6 +45,10 @@ const LoaderAndUI = ({ results, loading, query, state, actions, actionsForUI }) 
               </div>
           ))}
           </InfiniteScroll>
+          {results.length === numberOfQuizzes ?
+            <div className="show infinite-scroll-text">
+              אין עוד שאלונים להצגה
+            </div> : ''}
           <div
             id="snackbar"
             className={
@@ -79,12 +89,22 @@ LoaderAndUI.propTypes = {
   state: PropTypes.instanceOf(Object).isRequired,
   actionsForUI: PropTypes.instanceOf(Object).isRequired,
   actions: PropTypes.instanceOf(Object).isRequired,
+  numberOfQuizzes: PropTypes.number.isRequired,
 };
 
 const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => {
+  Meteor.subscribe('quizes.count', query);
+  const numberOfQuizzes = Counts.get('quizzes-counter');
   const searchHandle = Meteor.subscribe('quizes.search', query, state.quizzesToDisplay);
   const loading = !searchHandle.ready();
-  const results = Quiz.find().fetch();
+  const results = Quiz.find({
+    $and: [
+      { $or: [{ title: { $regex: query, $options: 'i' } },
+      { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
+      { $or: [{ owner: this.userId }, { private: false }] },
+    ],
+  }, { limit: state.quizzesToDisplay }).fetch();
+
   return {
     results,
     loading,
@@ -92,6 +112,7 @@ const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => 
     state,
     actions,
     actionsForUI,
+    numberOfQuizzes,
   };
 }, LoaderAndUI);
 
@@ -107,7 +128,7 @@ export default class Search extends React.Component {
       formerQuery: null,
     };
   }
-  componentWillUpdate() {
+  componentDidUpdate() {
     const { query } = this.props;
     const newQuery = () => {
       this.setState({ quizzesToDisplay: 10 });
@@ -164,12 +185,17 @@ export default class Search extends React.Component {
       ConfirmOrCancel,
     };
 
-    return <DBProvider query={query} state={this.state} actions={actions} actionsForUI={actionsForUI} />;
+    return <DBProvider
+      query={query}
+      state={this.state}
+      actions={actions}
+      actionsForUI={actionsForUI}
+    />;
   }
 }
 
 Search.propTypes = {
-  query: PropTypes.string,
+  query: PropTypes.string.isRequired,
 };
 
 Search.defaultProps = {
