@@ -16,6 +16,7 @@ import {
   size,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
+import getGameLog() from '../GameLogs/gameLogs.js';
 
 const calculateTimeDelta = (t1, t2) => {
   const datesDelta = t1.getTime() - t2.getTime();
@@ -229,12 +230,6 @@ const Game = Class.create({
   collection: new Mongo.Collection('games'),
   fields: {
     quiz: Quiz,
-    gameLog: {
-      type: [Object],
-      default() {
-        return [new GameInit()];
-      },
-    },
     code: {
       type: String,
       default() {
@@ -258,13 +253,16 @@ const Game = Class.create({
   meteorMethods: {},
 
   helpers: {
+    getgetGameLog()() {
+      return getGameLog().find({ gameId: this._id }).fetch().map(o => o.event);
+    }
     isManager() {
       return Meteor.userId() === this.quiz.owner;
     },
     getGamePage() {
       // TODO: rewrite
-      const playerEvents = this.gameLog.filter(e => e.playerId === Meteor.userId());
-      const otherEvents = this.gameLog.filter(
+      const playerEvents = this.getGameLog().filter(e => e.playerId === Meteor.userId());
+      const otherEvents = this.getGameLog().filter(
         e => !(e.nameType === eventTypes.PlayerAnswer || e.nameType === eventTypes.PlayerReg),
       );
       return max(
@@ -303,13 +301,13 @@ const Game = Class.create({
       return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId());
     },
     getPlayersId() {
-      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
+      return this.getGameLog().filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
     },
     getPlayersCount() {
-      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
+      return this.getGameLog().filter(e => e.nameType === eventTypes.PlayerReg).length;
     },
     scoreListById() {
-      const playersAnswers = this.gameLog
+      const playersAnswers = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
         .map(({ playerId, answerId, questionId, createdAt }) => ({
           playerId,
@@ -354,7 +352,7 @@ const Game = Class.create({
       return place + 1;
     },
     getQuestionStartTime(qId) {
-      const questionStartEvent = this.gameLog
+      const questionStartEvent = this.getGameLog()
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
       const questionStartTime = questionStartEvent.createdAt;
@@ -372,7 +370,7 @@ const Game = Class.create({
       return time;
     },
     lastQuestionToStartId() {
-      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+      const questionLog = this.getGameLog().filter(e => e.nameType === eventTypes.QuestionStart);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents.questionId;
@@ -384,7 +382,7 @@ const Game = Class.create({
       return lastQuestion;
     },
     lastQuestionToEndId() {
-      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
+      const questionLog = this.getGameLog().filter(e => e.nameType === eventTypes.QuestionEnd);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents ? lastQuestionEvents.questionId : undefined;
@@ -409,7 +407,7 @@ const Game = Class.create({
       return playersNames;
     },
     getLastEvent() {
-      return last(this.gameLog);
+      return last(this.getGameLog());
     },
     getWinner() {
       return first(this.getLeaders());
@@ -429,10 +427,10 @@ const Game = Class.create({
       return lastQuestionOrder === this.lastQuestionToEnd().order;
     },
     getQuestionTimeLeft(questionId) {
-      const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+      const questionStartEvents = this.getGameLog().filter(e => e.nameType === eventTypes.QuestionStart);
       const questionStartEvent = questionStartEvents.filter(e => e.questionId === questionId);
       // Check if question already ended
-      const questionEndEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
+      const questionEndEvents = this.getGameLog().filter(e => e.nameType === eventTypes.QuestionEnd);
       const questionEndEvent = questionEndEvents.find(e => e.questionId === questionId);
       const isQuestionEnded = !!questionEndEvent;
       // calculate time passed
@@ -450,7 +448,7 @@ const Game = Class.create({
       return order;
     },
     getPlayerQuestionAndScore(pId) {
-      const playerAnswerEvents = this.gameLog
+      const playerAnswerEvents = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
       const questionAndScore = playerAnswerEvents.map(e => ({
@@ -458,7 +456,7 @@ const Game = Class.create({
         score: calculateScore(
           calculateTimeDelta(
             e.createdAt,
-            this.gameLog
+            this.getGameLog()
               .filter(qse => qse.nameType === eventTypes.QuestionStart)
               .find(qse => qse.questionId === e.questionId).createdAt,
           ),
@@ -471,14 +469,14 @@ const Game = Class.create({
       return questionAndScore;
     },
     getPlayerQuestionAndTime(pId) {
-      const playerAnswerEvents = this.gameLog
+      const playerAnswerEvents = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
       const questionAndTime = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time:
           e.createdAt.getTime() / 1000 -
-          this.gameLog
+          this.getGameLog()
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
             .createdAt.getTime() / 1000,
@@ -486,14 +484,14 @@ const Game = Class.create({
       return questionAndTime;
     },
     getAvarageScoreForQuestion(qId) {
-      const playerAnswerEvents = this.gameLog
+      const playerAnswerEvents = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       const scores = playerAnswerEvents.map(e =>
         calculateScore(
           calculateTimeDelta(
             e.createdAt,
-            this.gameLog
+            this.getGameLog()
               .filter(qse => qse.nameType === eventTypes.QuestionStart)
               .find(qse => qse.questionId === e.questionId).createdAt,
           ),
@@ -506,7 +504,7 @@ const Game = Class.create({
       return avarage(scores);
     },
     getAvarageQuestionAndScore() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswerEvents = this.getGameLog().filter(e => e.nameType === eventTypes.PlayerAnswer);
       const questionAndScore = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         score: this.getAvarageScoreForQuestion(e.questionId),
@@ -514,7 +512,7 @@ const Game = Class.create({
       return questionAndScore; // [{questionOrder: o, score: s}, ...]
     },
     getAvarageTimeForQuestion(qId) {
-      const playerAnswerEvents = this.gameLog
+      const playerAnswerEvents = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       const questionStartTime = this.getQuestionStartTime(qId) / 1000;
@@ -522,7 +520,7 @@ const Game = Class.create({
       return avarage(times);
     },
     getAvarageQuestionAndTime() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswerEvents = this.getGameLog().filter(e => e.nameType === eventTypes.PlayerAnswer);
       const questionAndScore = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time: this.getAvarageTimeForQuestion(e.questionId),
@@ -530,7 +528,7 @@ const Game = Class.create({
       return questionAndScore;
     },
     getMaxQuizOrder() {
-      const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+      const questionStartEvents = this.getGameLog().filter(e => e.nameType === eventTypes.QuestionStart);
       return questionStartEvents.length;
     },
     getPlayerScoreAndAvarageScore(pId) {
@@ -560,7 +558,7 @@ const Game = Class.create({
       return question ? question._id : undefined;
     },
     getPlayersAnswersByQuestion(qId) {
-      const playersAnswerEvents = this.gameLog
+      const playersAnswerEvents = this.getGameLog()
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       return playersAnswerEvents;
@@ -569,7 +567,7 @@ const Game = Class.create({
       return (size(this.getPlayersAnswersByQuestion(qId)) === this.getPlayersCount());
     },
     getDataForPivotTable() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswerEvents = this.getGameLog().filter(e => e.nameType === eventTypes.PlayerAnswer);
       const playerAnswers = this.isManager()
         ? playerAnswerEvents
         : playerAnswerEvents.filter(e => e.playerId === Meteor.userId());
@@ -597,5 +595,4 @@ export default Game;
 
 Factory.define('game', Game, {
   quiz: () => Factory.create('quiz', { owner: 'owner' }),
-  gameLog: () => [new GameInit()],
 });

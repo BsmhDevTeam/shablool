@@ -49,6 +49,8 @@
     "extends": "@meteorjs/eslint-config-meteor"
   },
   "babel": {
-    "plugins": ["transform-exponentiation-operator"]
+    "plugins": [
+      "transform-exponentiation-operator"
+    ]
   }
 }

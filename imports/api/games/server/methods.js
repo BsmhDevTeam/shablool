@@ -34,37 +34,19 @@ Game.extend({
       Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
     },
     gameStart() {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.PlayerReg,
-                },
-              },
-            },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.GameStart,
-                  },
-                },
-              },
-            },
-            {
-              'quiz.owner': { $eq: Meteor.userId() },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new GameStart(),
-          },
-        },
-      );
+      const isAnyPlayerReg = !!GameLog.find({
+        $and: [
+          { gameId: $eq: { this._id } },
+          { 'event.nameType': $eq: { eventTypes.PlayerReg }},
+      });
+      const isGameAlreadyStarted = !!GameLog.find({
+        { gameId: $eq: { this._id } },
+        { 'event.nameType': $eq: { eventTypes.GameStart }},
+      });
+      const createGameStartEvent = () => {
+        const gameStart = new GameLog({ gameId: this._id, event: new GameStart() });
+      }
+      isAnyPlayerReg && !isGameAlreadyStarted && this.isManager() && createGameStartEvent();
     },
     questionStart(qId) {
       Game.update(
