@@ -6,6 +6,7 @@ import Game from '/imports/api/games/games';
 import Loading from '/imports/ui/components/loading';
 import GameManager from './owner-router.js';
 import GamePlayer from './player-router.js';
+import GameLog from '../../../api/gamelogs/gamelogs';
 
 const GameRouter = ({ game }) =>
   game.isManager() ? <GameManager game={game} /> : <GamePlayer game={game} />;

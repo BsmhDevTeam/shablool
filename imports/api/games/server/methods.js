@@ -3,6 +3,7 @@ import { max } from 'underscore';
 import { check } from 'meteor/check';
 import { eventTypes, joinGameResults } from '/imports/startup/both/constants';
 import Game, {
+  GameInit,
   PlayerReg,
   GameStart,
   QuestionStart,
@@ -12,11 +13,14 @@ import Game, {
   GameEnd,
   GameClose,
 } from '../games';
+import GameLog from '../../gamelogs/gamelogs';
 
 Game.extend({
   meteorMethods: {
     initGame() {
-      return this.save();
+      this.save();
+      GameLog.insert({ gameId: this._id, event: new GameInit() });
+      return this;
     },
     startGame() {
       // Starting game
@@ -34,19 +38,25 @@ Game.extend({
       Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
     },
     gameStart() {
+      console.log('this: ', this);
       const isAnyPlayerReg = !!GameLog.find({
         $and: [
-          { gameId: $eq: { this._id } },
-          { 'event.nameType': $eq: { eventTypes.PlayerReg }},
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.PlayerReg } },
+        ],
       });
       const isGameAlreadyStarted = !!GameLog.find({
-        { gameId: $eq: { this._id } },
-        { 'event.nameType': $eq: { eventTypes.GameStart }},
+        $and: [
+        { gameId: { $eq: this._id } },
+        { 'event.nameType': { $eq: eventTypes.GameStart } },
+        ],
       });
-      const createGameStartEvent = () => {
-        const gameStart = new GameLog({ gameId: this._id, event: new GameStart() });
-      }
-      isAnyPlayerReg && !isGameAlreadyStarted && this.isManager() && createGameStartEvent();
+      console.log('isAnyPlayerReg: ', isAnyPlayerReg);
+      console.log('isGameAlreadyStarted: ', isGameAlreadyStarted);
+      const addGameStartEvent = () => {
+        GameLog.insert({ gameId: this._id, event: new GameStart() });
+      };
+      isAnyPlayerReg && !isGameAlreadyStarted && this.isManager() && addGameStartEvent();
     },
     questionStart(qId) {
       Game.update(

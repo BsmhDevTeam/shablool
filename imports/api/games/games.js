@@ -16,7 +16,7 @@ import {
   size,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
-import getGameLog() from '../GameLogs/gameLogs.js';
+import GameLog from '../gamelogs/gamelogs.js';
 
 const calculateTimeDelta = (t1, t2) => {
   const datesDelta = t1.getTime() - t2.getTime();
@@ -253,9 +253,9 @@ const Game = Class.create({
   meteorMethods: {},
 
   helpers: {
-    getgetGameLog()() {
-      return getGameLog().find({ gameId: this._id }).fetch().map(o => o.event);
-    }
+    getGameLog() {
+      return GameLog.find({ gameId: this._id }).fetch().map(o => o.event);
+    },
     isManager() {
       return Meteor.userId() === this.quiz.owner;
     },
@@ -301,7 +301,8 @@ const Game = Class.create({
       return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId());
     },
     getPlayersId() {
-      return this.getGameLog().filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
+      return this.getGameLog().filter(e => e.nameType === eventTypes.PlayerReg)
+      .map(e => e.playerId);
     },
     getPlayersCount() {
       return this.getGameLog().filter(e => e.nameType === eventTypes.PlayerReg).length;

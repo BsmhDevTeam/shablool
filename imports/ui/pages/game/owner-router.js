@@ -29,9 +29,10 @@ export default ({ game }) => {
       case eventTypes.GameClose:
         return <GameClose />;
       default:
-        return null;
+        return undefined;
     }
   };
   const event = game.getLastEvent().nameType;
+  console.log('event:', event);
   return mapEventToPages(event);
 };
