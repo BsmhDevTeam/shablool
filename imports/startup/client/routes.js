@@ -1,4 +1,3 @@
-
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
 import { render } from 'react-dom';
@@ -73,7 +72,7 @@ const router = () => (
         ))}
       />
       <Route
-        path="/manage/game/:code"
+        path="/Statistic/:code"
         render={(props) => (verifyLogin() ? (
           <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>
         ) : (
