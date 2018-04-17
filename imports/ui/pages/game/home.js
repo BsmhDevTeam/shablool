@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link, withRouter } from 'react-router-dom';
 import { joinGameResults } from '/imports/startup/both/constants';
 
 class Home extends React.Component {
@@ -28,7 +28,7 @@ class Home extends React.Component {
         {
           code: gameCode,
         },
-        (err, res) => (res === joinGameResults.noGame) ? notifyUser() : FlowRouter.go('Game.Play', { code: gameCode }),
+        (err, res) => (res === joinGameResults.noGame) ? notifyUser() : this.props.history.push(`/game/${gameCode}`),
       );
     };
 
@@ -66,7 +66,7 @@ class Home extends React.Component {
           </div>
         </div>
         <p id="center-home-massage">
-          <a href="/Manage">נהל או צור משחק חדש</a>
+          <Link to="/Manage">נהל או צור משחק חדש</Link>
         </p>
         <div id="snackbar" className={this.state.badGameCode ? 'show' : ''}>
           לא נמצא משחק
@@ -76,4 +76,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default withRouter(Home);

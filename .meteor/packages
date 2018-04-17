@@ -16,7 +16,6 @@ standard-minifier-js@2.1.2        # JS minifier run for production mode
 es5-shim@4.6.15                   # ECMAScript 5 compatibility for older browsers.
 ecmascript@0.8.3                  # Enable ECMAScript2015+ syntax in app code
 
-kadira:flow-router                # FlowRouter is a very simple router for Meteor
 less@2.7.9                        # Leaner CSS language
 
 

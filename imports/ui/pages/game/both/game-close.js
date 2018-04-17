@@ -1,29 +1,23 @@
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link } from 'react-router-dom';
 
-const GameClose = () => {
-  const backToHome = () => {
-    FlowRouter.go('Home');
-  };
-  return (
-    <div id="game-close">
-      <div className="game-background" />
-      <div>
-        <a
-          href="javascript:void(0)"
-          className="btn btn-primary show-leaders-btn"
-          onClick={backToHome}
-        >
-          לדף הבית
-        </a>
-      </div>
-      <div className="row">
-        <div id="title">
-          <h1>המשחק הסתיים</h1>
-        </div>
+const GameClose = () => (
+  <div id="game-close">
+    <div className="game-background" />
+    <div>
+      <Link
+        to="/"
+        className="btn btn-primary show-leaders-btn"
+      >
+        לדף הבית
+      </Link>
+    </div>
+    <div className="row">
+      <div id="title">
+        <h1>המשחק הסתיים</h1>
       </div>
     </div>
+  </div>
   );
-};
 
 export default GameClose;

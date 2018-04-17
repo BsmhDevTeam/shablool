@@ -1,18 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import QuizCard from '/imports/ui/components/quiz-card';
 import { managementTabs } from '/imports/startup/both/constants.js';
 
 const MyQuizes = ({ activeTab, myQuizes, actions }) =>
   <div className={`tab-pane fade in ${activeTab === managementTabs.myQuizes ? 'active' : ''}`}>
     <div className="row">
-      <a href="/CreateQuiz" className="add-question">
+      <Link to="/CreateQuiz" className="add-question">
         <div className="panel panel-default" id="add-quiz-panel">
           <div className="panel-body">
             <span className="glphicon glyphicon-plus" id="add-quiz-plus-icon" />
           </div>
         </div>
-      </a>
+      </Link>
     </div>
     {myQuizes.length
       ? myQuizes.map(quiz =>

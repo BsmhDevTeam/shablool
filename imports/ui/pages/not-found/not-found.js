@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => (
   <div id="not-found">
@@ -10,7 +11,7 @@ const NotFound = () => (
       <div className="not-found-title">
         <h1>אופסססס...</h1>
         <h3>מתנצלים, נראה שהעמוד הזה פשוט לא קיים!</h3>
-        <a href="/" className="gotohomepage">חזור לדף הבית</a>
+        <Link to="/" className="gotohomepage">חזור לדף הבית</Link>
       </div>
     </div>
   </div>

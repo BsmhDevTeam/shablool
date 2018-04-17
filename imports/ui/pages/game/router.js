@@ -29,6 +29,7 @@ GameRouterContainer.defaultProps = {
 };
 
 export default createContainer(({ code }) => {
+  console.log(code);
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
   const loading = !gameHandle.ready();
   const game = Game.findOne({ code });

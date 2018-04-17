@@ -1,15 +1,12 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/he';
 
 
 const GameCardPlayed = ({ game }) => {
-  const showStatistics = () => {
-    FlowRouter.go('Manage.Game', { code: game.code });
-  };
   const fromNow = () => {
     moment.locale('he');
     return moment(new Date(game.createdAt)).fromNow();
@@ -55,14 +52,13 @@ const GameCardPlayed = ({ game }) => {
                 </div>
               </div>
               <div className="col-md-4">
-                <a
-                  href="javascript:void(0)"
+                <Link
+                  to={`/manage/game/${game.code}`}
                   className="star game-card-link"
-                  onClick={showStatistics}
                 >
                   <span className="fa fa-area-chart game-card-link-text-icon" />
                   <span className="game-card-link-text game-card-link-text">הצג סטטיסטיקות</span>
-                </a>
+                </Link>
               </div>
             </span>
           </div>

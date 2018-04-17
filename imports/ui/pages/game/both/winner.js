@@ -1,13 +1,12 @@
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { withRouter } from 'react-router-dom';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
-const Winner = ({ game }) => {
+const Winner = ({ game, history }) => {
   const backToHome = () => {
     const _ = game.isManager() ? game.applyMethod('closeGame', []) : null;
-    FlowRouter.go('Home');
+    history.push('/');
   };
-
   return (
     <div id="winner">
       <div className="game-background" />
@@ -43,4 +42,4 @@ const Winner = ({ game }) => {
   );
 };
 
-export default Winner;
+export default withRouter(Winner);

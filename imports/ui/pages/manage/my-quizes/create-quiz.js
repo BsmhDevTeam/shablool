@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
@@ -215,7 +215,7 @@ class CreateQuiz extends React.Component {
       const quiz = this.state.quiz;
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = new Quiz({ ...quiz, questions, owner: Meteor.userId() }, { cast: true });
-      quiz$.applyMethod('create', [], (err, result) => result && FlowRouter.go('Manage.Home'));
+      quiz$.applyMethod('create', [], (err, result) => result && this.props.history.push('/Manage'));
     };
 
     const uploadImages = (e) => {
@@ -252,4 +252,4 @@ class CreateQuiz extends React.Component {
   }
 }
 
-export default CreateQuiz;
+export default withRouter(CreateQuiz);

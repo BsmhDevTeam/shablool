@@ -1,16 +1,15 @@
 import { Meteor } from 'meteor/meteor';
 import React from 'react';
-import { FlowRouter } from 'meteor/kadira:flow-router';
+import { withRouter } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ history }) => {
   const login = () => {
-    Meteor.loginWithGitlab(err => (err ? FlowRouter.go('Game.LoginError') : FlowRouter.go('Home')));
+    Meteor.loginWithGitlab(err => (err ? history.push('/LoginError') : history.push('/')));
   };
 
   const isAlreadyLoggedIn = Meteor.loggingIn() || Meteor.userId();
   if (isAlreadyLoggedIn) {
-    FlowRouter.go('Home');
-    return null;
+    history.push('/');
   }
 
   return (
@@ -23,4 +22,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
