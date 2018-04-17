@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { publishComposite } from 'meteor/reywood:publish-composite';
+import { Counts } from 'meteor/ros:publish-counts';
 import { check } from 'meteor/check';
 import Image from '/imports/api/images/images.js';
 import Quiz from '../quizes.js';
@@ -20,6 +21,17 @@ publishComposite('quizes.my-quizes', function() {
       },
     ],
   };
+});
+
+Meteor.publish('quizes.count', function(query) {
+  check(query, String);
+  Counts.publish(this, 'quizzes-counter', Quiz.find({
+    $and: [
+      { $or: [{ title: { $regex: query, $options: 'i' } },
+      { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
+      { $or: [{ owner: this.userId }, { private: false }] },
+    ],
+  }), { fastCount: true });
 });
 
 // Public/Owner publications :
@@ -46,17 +58,19 @@ publishComposite('quizes.get', function(id) {
   };
 });
 
-publishComposite('quizes.search', function(query) {
+publishComposite('quizes.search', function(query, numOfQuizzes) {
+  const numberOfQuizzes = parseInt(numOfQuizzes, 10);
   return {
     collectionName: 'quizes',
     find() {
       check(query, String);
       return Quiz.find({
         $and: [
-          { title: { $regex: query, $options: 'i' } },
+          { $or: [{ title: { $regex: query, $options: 'i' } },
+          { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
           { $or: [{ owner: this.userId }, { private: false }] },
         ],
-      });
+      }, { limit: numberOfQuizzes });
     },
     children: [
       {
