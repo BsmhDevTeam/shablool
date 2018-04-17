@@ -26,10 +26,7 @@ import NotFound from '/imports/ui/pages/not-found/not-found';
 const browserHistory = createBrowserHistory();
 
 const verifyLogin = () => {
-  if (!Meteor.loggingIn() || !Meteor.userId()) {
-    return false;
-  }
-  return true;
+  return Meteor.loggingIn() || Meteor.userId();
 };
 
 const router = () => (
@@ -45,40 +42,76 @@ const router = () => (
       />
       <Route
         path="/CreateQuiz"
-        render={() => <ManageLayout><CreateQuiz /></ManageLayout>}
+        render={() => (verifyLogin() ? (
+          <ManageLayout><CreateQuiz /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/Manage"
-        render={() => <ManageLayout><Main /></ManageLayout>}
+        render={() => (verifyLogin() ? (
+          <ManageLayout><Main /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/search/:query?"
-        render={(props) => <ManageLayout><Search query={props.match.params.query} /></ManageLayout>}
+        render={(props) => (verifyLogin() ? (
+          <ManageLayout><Search query={props.match.params.query} /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/ViewQuiz/:_id"
-        render={(props) => <ManageLayout><ViewQuiz id={props.match.params._id} /></ManageLayout>}
+        render={(props) => (verifyLogin() ? (
+          <ManageLayout><ViewQuiz id={props.match.params._id} /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/manage/game/:code"
-        render={(props) => <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>}
+        render={(props) => (verifyLogin() ? (
+          <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/Login"
-        render={() => <LoginLayout><Login /></LoginLayout>}
+        render={() => (!verifyLogin() ? (
+          <LoginLayout><Login /></LoginLayout>
+        ) : (
+          <Redirect to="/" />
+        ))}
       />
       <Route
         path="/LoginError"
-        render={() => <LoginLayout><LoginError /></LoginLayout>}
+        render={() => (!verifyLogin() ? (
+          <LoginLayout><LoginError /></LoginLayout>
+        ) : (
+          <Redirect to="/" />
+        ))}
       />
       <Route
         exact
         path="/"
-        render={() => <GameLayout><Home /></GameLayout>}
+        render={() => (verifyLogin() ? (
+          <GameLayout><Home /></GameLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="/game/:code"
-        render={(props) => <GameLayout><GameRouter code={props.match.params.code} /></GameLayout>}
+        render={(props) => (verifyLogin() ? (
+          <GameLayout><GameRouter code={props.match.params.code} /></GameLayout>
+        ) : (
+          <Redirect to="/Login" />
+        ))}
       />
       <Route
         path="*"

@@ -25,6 +25,7 @@
     "react-file-drag-and-drop": "^0.1.6",
     "react-mounter": "^1.2.0",
     "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "recharts": "^1.0.0-alpha.1",
     "sinon": "^2.3.7",
     "sweetalert": "^1.1.3",
