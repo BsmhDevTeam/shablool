@@ -53,7 +53,7 @@ const GameCardPlayed = ({ game }) => {
               </div>
               <div className="col-md-4">
                 <Link
-                  to={`/manage/game/${game.code}`}
+                  to={`/Statistic/${game.code}`}
                   className="star game-card-link"
                 >
                   <span className="fa fa-area-chart game-card-link-text-icon" />
