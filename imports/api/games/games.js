@@ -254,7 +254,7 @@ const Game = Class.create({
 
   helpers: {
     getGameLog() {
-      return GameLog.find({ gameId: this._id }).fetch().map(o => o.event);
+      return GameLog.find({ gameId: this._id }).map(o => o.event);
     },
     isManager() {
       return Meteor.userId() === this.quiz.owner;
@@ -396,14 +396,14 @@ const Game = Class.create({
     },
     getUsernameByUserID(uId) {
       const username = Meteor.users
-        .find({ _id: uId }, { fields: { 'username': 1 } })
+        .find({ _id: uId }, { fields: { username: 1 } })
         .map(p => p.username);
       return username;
     },
     getPlayersName() {
       const playersIds = this.getPlayersId();
       const playersNames = Meteor.users
-        .find({ _id: { $in: playersIds } }, { fields: { 'username': 1 } })
+        .find({ _id: { $in: playersIds } }, { fields: { username: 1 } })
         .map(p => p.username);
       return playersNames;
     },

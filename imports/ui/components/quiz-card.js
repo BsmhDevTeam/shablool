@@ -31,8 +31,8 @@ const QuizCard = ({ quiz, actions }) => {
         <div className="row">
           <div className="corner-ribbon top-right white">
             {quiz.private
-             ? <i className="fa fa-lock lock-icon" aria-hidden="true" />
-             : <i className="fa fa-unlock unlock-icon" aria-hidden="true" />
+              ? <i className="fa fa-lock lock-icon" aria-hidden="true" />
+              : <i className="fa fa-unlock unlock-icon" aria-hidden="true" />
             }
           </div>
           <div className="col-md-3">

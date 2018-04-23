@@ -38,159 +38,102 @@ Game.extend({
       Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
     },
     gameStart() {
-      console.log('this: ', this);
       const isAnyPlayerReg = !!GameLog.find({
         $and: [
           { gameId: { $eq: this._id } },
           { 'event.nameType': { $eq: eventTypes.PlayerReg } },
         ],
-      });
+      }).count();
       const isGameAlreadyStarted = !!GameLog.find({
         $and: [
-        { gameId: { $eq: this._id } },
-        { 'event.nameType': { $eq: eventTypes.GameStart } },
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.GameStart } },
         ],
-      });
-      console.log('isAnyPlayerReg: ', isAnyPlayerReg);
-      console.log('isGameAlreadyStarted: ', isGameAlreadyStarted);
+      }).count();
       const addGameStartEvent = () => {
         GameLog.insert({ gameId: this._id, event: new GameStart() });
       };
       isAnyPlayerReg && !isGameAlreadyStarted && this.isManager() && addGameStartEvent();
     },
     questionStart(qId) {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.GameStart,
-                },
-              },
-            },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.QuestionStart,
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-            {
-              'quiz.owner': { $eq: Meteor.userId() },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new QuestionStart({ questionId: qId }),
-          },
-        },
-      );
+      const isGameAlreadyStarted = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.GameStart } },
+        ],
+      }).count();
+      const isQuestionStart = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionStart } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const addQuestionStartEvent = () => {
+        GameLog.insert({ gameId: this._id, event: new QuestionStart({ questionId: qId }) });
+      };
+      isGameAlreadyStarted && !isQuestionStart && this.isManager() && addQuestionStartEvent();
     },
     questionEnd(qId) {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.QuestionEnd,
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.QuestionStart,
-                  questionId: qId,
-                },
-              },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new QuestionEnd({ questionId: qId }),
-          },
-        },
-      );
+      const isQuestionStart = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionStart } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const isQuestionEnd = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionEnd } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const addQuestionEndEvent = () => {
+        GameLog.insert({ gameId: this._id, event: new QuestionEnd({ questionId: qId }) });
+      };
+      isQuestionStart && !isQuestionEnd && addQuestionEndEvent();
     },
     skipQuestion(qId) {
-      Game.update(
-        { _id: this._id },
-        {
-          $pushAll: {
-            gameLog: [new QuestionEnd({ questionId: qId }), new ShowLeaders()],
-          },
-        },
-      );
+      GameLog.insert({ gameId: this._id, event: new QuestionEnd({ questionId: qId }) });
+      GameLog.insert({ gameId: this._id, event: new ShowLeaders() });
     },
     playerAnswer(qId, aId) {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.QuestionEnd,
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.QuestionStart,
-                  questionId: qId,
-                },
-              },
-            },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.PlayerAnswer,
-                    playerId: Meteor.userId(),
-                    questionId: qId,
-                  },
-                },
-              },
-            },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.PlayerReg,
-                  playerId: Meteor.userId(),
-                },
-              },
-            },
-            {
-              'quiz.owner': { $ne: Meteor.userId() },
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new PlayerAnswer({
-              playerId: Meteor.userId(),
-              questionId: qId,
-              answerId: aId,
-            }),
-          },
-        },
-      );
+      const isQuestionStart = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionStart } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const isQuestionEnd = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionEnd } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const isPlayerAnswered = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.PlayerAnswer } },
+          { 'event.playerId': { $eq: Meteor.userId() } },
+          { 'event.questionId': { $eq: qId } },
+        ],
+      }).count();
+      const isPlayerReg = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.PlayerReg } },
+          { 'event.playerId': { $eq: Meteor.userId() } },
+        ],
+      }).count();
+      const addPlayerAnswerEvent = () => {
+        GameLog.insert({ gameId: this._id,
+          event: new PlayerAnswer({ playerId: Meteor.userId(), questionId: qId, answerId: aId }),
+        });
+      };
+      isPlayerReg && isQuestionStart && !isPlayerAnswered && !isQuestionEnd && addPlayerAnswerEvent();
       const isEveryoneAnswered = Game.findOne(this._id).isAllPlayerAnsweredToQuestion(qId);
       return isEveryoneAnswered && this.questionEnd(qId);
     },
@@ -207,47 +150,25 @@ Game.extend({
       return true;
     },
     showLeaders() {
-      Game.update(
-        { _id: this._id },
-        {
-          $push: {
-            gameLog: new ShowLeaders(),
-          },
-        },
-      );
+      GameLog.insert({ gameId: this._id, event: new ShowLeaders() });
     },
     endGame() {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.GameEnd,
-                  },
-                },
-              },
-            },
-            {
-              gameLog: {
-                $elemMatch: {
-                  nameType: eventTypes.GameStart,
-                },
-              },
-            },
-            {
-              'quiz.owner': Meteor.userId(),
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new GameEnd(),
-          },
-        },
-      );
+      const isGameEnded = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.GameEnd } },
+        ],
+      }).count();
+      const isGameStarted = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.GameStart } },
+        ],
+      }).count();
+      const addGameEndEvent = () => {
+        GameLog.insert({ gameId: this._id, event: new GameEnd() });
+      };
+      isGameStarted && !isGameEnded && this.isManager() && addGameEndEvent();
     },
     endGameOrNextQuestion() {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
@@ -256,30 +177,16 @@ Game.extend({
         : this.nextQuestion();
     },
     closeGame() {
-      Game.update(
-        {
-          $and: [
-            { _id: this._id },
-            {
-              gameLog: {
-                $not: {
-                  $elemMatch: {
-                    nameType: eventTypes.GameClose,
-                  },
-                },
-              },
-            },
-            {
-              'quiz.owner': Meteor.userId(),
-            },
-          ],
-        },
-        {
-          $push: {
-            gameLog: new GameClose(),
-          },
-        },
-      );
+      const isGameClosed = !!GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.GameClose } },
+        ],
+      }).count();
+      const addGameCloseEvent = () => {
+        GameLog.insert({ gameId: this._id, event: new GameClose() });
+      };
+      !isGameClosed && this.isManager() && addGameCloseEvent();
     },
   },
 });
@@ -299,43 +206,31 @@ Meteor.methods({
       return joinGameResults.isManager;
     } else if (currGame.isUserRegistered()) {
       return joinGameResults.alreadyRegistered;
-    } else if (currGame.gameLog.find(event => event.nameType === eventTypes.GameStart)) {
+    } else if (GameLog.find({
+      $and: [
+        { gameId: { $eq: currGame._id } },
+        { 'event.nameType': { $eq: eventTypes.GameStart } },
+      ],
+    }).count()) {
       return joinGameResults.gameStarted;
     }
-    Game.update(
-      {
-        $and: [
-          { code },
-          {
-            gameLog: {
-              $not: {
-                $elemMatch: {
-                  nameType: eventTypes.GameStart,
-                },
-              },
-            },
-          },
-          {
-            gameLog: {
-              $not: {
-                $elemMatch: {
-                  nameType: eventTypes.PlayerReg,
-                  playerId: Meteor.userId(),
-                },
-              },
-            },
-          },
-          {
-            'quiz.owner': { $ne: Meteor.userId() },
-          },
-        ],
-      },
-      {
-        $push: {
-          gameLog: new PlayerReg({ playerId: Meteor.userId() }),
-        },
-      },
-    );
+    const isGameStarted = !!GameLog.find({
+      $and: [
+        { gameId: { $eq: currGame._id } },
+        { 'event.nameType': { $eq: eventTypes.GameStart } },
+      ],
+    }).count();
+    const isPlayerReg = !!GameLog.find({
+      $and: [
+        { gameId: { $eq: currGame._id } },
+        { 'event.nameType': { $eq: eventTypes.PlayerReg } },
+        { 'event.playerId': { $eq: Meteor.userId() } },
+      ],
+    }).count();
+    const addPlayerRegEvent = () => {
+      GameLog.insert({ gameId: currGame._id, event: new PlayerReg({ playerId: Meteor.userId() }) });
+    };
+    !isGameStarted && !isPlayerReg && !this.isManager && addPlayerRegEvent();
     return joinGameResults.regSucc;
   },
 });

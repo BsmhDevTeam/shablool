@@ -31,7 +31,10 @@ GameRouterContainer.defaultProps = {
 
 export default createContainer(({ code }) => {
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  const loading = !gameHandle.ready();
+  console.log('gameHandle:', gameHandle.ready());
+  const gamelogHandle = Meteor.subscribe('gamelogs.get-by-gameid', code);
+  console.log('gamelogHandle:', gamelogHandle.ready());
+  const loading = !gameHandle.ready() || !gamelogHandle.ready();
   const game = Game.findOne({ code });
   return { loading, game };
 }, GameRouterContainer);
