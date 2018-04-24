@@ -230,7 +230,7 @@ Meteor.methods({
     const addPlayerRegEvent = () => {
       GameLog.insert({ gameId: currGame._id, event: new PlayerReg({ playerId: Meteor.userId() }) });
     };
-    !isGameStarted && !isPlayerReg && !this.isManager() && addPlayerRegEvent();
+    !isGameStarted && !isPlayerReg && !currGame.isManager() && addPlayerRegEvent();
     return joinGameResults.regSucc;
   },
 });

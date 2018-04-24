@@ -298,7 +298,6 @@ const Game = Class.create({
       return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId(gameLog), gameLog);
     },
     getPlayersId(gameLog) {
-      console.log('getPlayersId: ', gameLog);
       return gameLog.filter(e => e.nameType === eventTypes.PlayerReg)
       .map(e => e.playerId);
     },

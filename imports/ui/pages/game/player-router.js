@@ -34,6 +34,5 @@ export default ({ game, gameLog }) => {
     }
   };
   const event = game.getGamePage(gameLog).nameType;
-  console.log('event:', event);
   return mapEventToPages(event);
 };

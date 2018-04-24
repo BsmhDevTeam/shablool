@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 import { eventTypes } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images.js';
@@ -18,16 +17,6 @@ publishComposite('games.games-managed', function() {
       return Game.find({ _id: { $in: myGamesClosedId } });
     },
     children: [
-      {
-        collectionName: 'users',
-        find(game) {
-          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
-            { fields: { username: 1 } },
-          );
-        },
-      },
       {
         collectionName: 'gamelogs',
         find(game) {
@@ -51,16 +40,6 @@ publishComposite('games.games-played', function() {
     },
     children: [
       {
-        collectionName: 'users',
-        find(game) {
-          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
-            { fields: { username: 1 } },
-          );
-        },
-      },
-      {
         collectionName: 'gamelogs',
         find(game) {
           return GameLog.find({ gameId: game._id });
@@ -77,7 +56,6 @@ publishComposite('games.get-by-code', function(code) {
     find() {
       const myGamesRegiteredId = GameLog.find({ 'event.playerId': this.userId })
       .map(o => o.gameId);
-      console.log('myGamesRegiteredId: ', myGamesRegiteredId);
       // TODO: check if game is open
       return Game.find({
         $and: [
@@ -92,16 +70,6 @@ publishComposite('games.get-by-code', function(code) {
       }); // TODO: Limit publication need-to-know only' player and Manager
     },
     children: [
-      {
-        collectionName: 'users',
-        find(game) {
-          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
-            { fields: { username: 1 } },
-          );
-        },
-      },
       {
         collectionName: 'images',
         find(game) {

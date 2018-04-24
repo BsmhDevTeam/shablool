@@ -1,7 +1,5 @@
 meteorDown.init(function(Meteor) {
-  console.log('userId is:', Meteor.userId());
   Meteor.call('joinGame', { code: '635025', userId: Meteor.userId() }, function(error, result) {
-    console.log(result);
   });
 });
 

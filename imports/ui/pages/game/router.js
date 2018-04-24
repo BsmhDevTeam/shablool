@@ -8,41 +8,43 @@ import GameManager from './owner-router.js';
 import GamePlayer from './player-router.js';
 import GameLog from '../../../api/gamelogs/gamelogs';
 
-const GameRouter = ({ game, gameLog }) => {
+const GameRouter = ({ game, gameLog, players }) => {
   return game.isManager() ?
-    <GameManager game={game} gameLog={gameLog} />
-  : <GamePlayer game={game} gameLog={gameLog} />;
+    <GameManager game={game} gameLog={gameLog} players={players} />
+  : <GamePlayer game={game} gameLog={gameLog} players={players} />;
 };
 
 GameRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
   gameLog: PropTypes.arrayOf(Object).isRequired,
+  players: PropTypes.arrayOf(String).isRequired,
 };
 
-const GameRouterContainer = ({ loading, game, gameLog }) => {
+const GameRouterContainer = ({ loading, game, gameLog, players }) => {
   if (loading) return <Loading color={'white'} />;
-  return <GameRouter game={game} gameLog={gameLog} />;
+  return <GameRouter game={game} gameLog={gameLog} players={players} />;
 };
 
 GameRouterContainer.propTypes = {
   game: PropTypes.instanceOf(Object),
   gameLog: PropTypes.arrayOf(Object),
+  players: PropTypes.arrayOf(String),
   loading: PropTypes.bool.isRequired,
 };
 
 GameRouterContainer.defaultProps = {
   game: undefined,
   gameLog: [],
+  players: [],
 };
 
 
 const createGameLogContainer = createContainer(({ loading, game }) => {
   if (loading) return <Loading color={'white'} />;
   const gamelogHandle = Meteor.subscribe('gamelogs.get-by-gameid', game._id);
-  console.log('gamelogHandle:', gamelogHandle.ready());
   const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
-  console.log('gamelogs counter: ', gameLog);
-  return { loading: !gamelogHandle.ready(), game, gameLog }
+  const players = game.getPlayersName(gameLog);
+  return { loading: !gamelogHandle.ready(), game, gameLog, players }
 }, GameRouterContainer);
 
 createGameLogContainer.propTypes = {
@@ -55,11 +57,8 @@ createGameLogContainer.defaultProps = {
 };
 
 export default createContainer(({ code }) => {
-  console.log('code: ', code);
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
-  console.log('gameHandle:', gameHandle.ready());
   const loading = !gameHandle.ready();
   const game = Game.findOne({ code });
-  console.log('game: ', game);
   return { loading, game };
 }, createGameLogContainer);

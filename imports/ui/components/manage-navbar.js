@@ -9,7 +9,6 @@ export default () => {
     FlowRouter.go('Manage.Search', { query });
   };
   const getWelcomeByHours = () => {
-    console.log(Meteor.user());
     const now = new Date();
     const hour = now.getHours();
     switch (true) {
