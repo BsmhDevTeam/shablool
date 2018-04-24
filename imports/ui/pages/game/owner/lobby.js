@@ -10,8 +10,8 @@ export default class GameLobby extends React.Component {
     };
   }
   render() {
-    const { game } = this.props;
-    const players = game.getPlayersName();
+    const { game, gameLog } = this.props;
+    const players = game.getPlayersName(gameLog);
     const startGame = () => {
       const showAlert = () => {
         this.setState({ showNoPlayerAlert: true });
@@ -69,6 +69,7 @@ export default class GameLobby extends React.Component {
 
 GameLobby.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 const PlayersLobby = ({ name }) =>

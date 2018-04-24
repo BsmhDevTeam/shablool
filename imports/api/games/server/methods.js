@@ -197,14 +197,14 @@ Meteor.methods({
     check(code, String);
 
     const currGame = Game.findOne({ code });
-
+    const gameLog = GameLog.find({ gameId: currGame._id }).map(o => o.event);
     if (!Meteor.userId()) {
       return joinGameResults.noUserId;
     } else if (!currGame) {
       return joinGameResults.noGame;
     } else if (currGame.isManager()) {
       return joinGameResults.isManager;
-    } else if (currGame.isUserRegistered()) {
+    } else if (currGame.isUserRegistered(gameLog)) {
       return joinGameResults.alreadyRegistered;
     } else if (GameLog.find({
       $and: [
@@ -230,7 +230,7 @@ Meteor.methods({
     const addPlayerRegEvent = () => {
       GameLog.insert({ gameId: currGame._id, event: new PlayerReg({ playerId: Meteor.userId() }) });
     };
-    !isGameStarted && !isPlayerReg && !this.isManager && addPlayerRegEvent();
+    !isGameStarted && !isPlayerReg && !this.isManager() && addPlayerRegEvent();
     return joinGameResults.regSucc;
   },
 });

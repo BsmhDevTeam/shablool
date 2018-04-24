@@ -21,8 +21,9 @@ publishComposite('games.games-managed', function() {
       {
         collectionName: 'users',
         find(game) {
+          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
           return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
             { fields: { username: 1 } },
           );
         },
@@ -52,8 +53,9 @@ publishComposite('games.games-played', function() {
       {
         collectionName: 'users',
         find(game) {
+          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
           return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
             { fields: { username: 1 } },
           );
         },
@@ -74,7 +76,9 @@ publishComposite('games.get-by-code', function(code) {
     collectionName: 'games',
     find() {
       const myGamesRegiteredId = GameLog.find({ 'event.playerId': this.userId })
-      .fetch().map(o => o.gameId);
+      .map(o => o.gameId);
+      console.log('myGamesRegiteredId: ', myGamesRegiteredId);
+      // TODO: check if game is open
       return Game.find({
         $and: [
           { code },
@@ -91,8 +95,9 @@ publishComposite('games.get-by-code', function(code) {
       {
         collectionName: 'users',
         find(game) {
+          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
           return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
+            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
             { fields: { username: 1 } },
           );
         },
@@ -100,7 +105,8 @@ publishComposite('games.get-by-code', function(code) {
       {
         collectionName: 'images',
         find(game) {
-          return Image.find({ _id: { $in: game.getImagesId() } });
+          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
+          return Image.find({ _id: { $in: game.getImagesId(gameLog) } });
         },
       },
       {

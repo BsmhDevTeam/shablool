@@ -7,13 +7,13 @@ import QuestionStatistics from './both/question-statistics';
 import Winner from './both/winner';
 import GameClose from './both/game-close';
 
-export default ({ game }) => {
+export default ({ game, gameLog }) => {
   const mapEventToPages = (event) => {
     switch (event) {
       case eventTypes.GameInit:
-        return <GameLobby game={game} />;
+        return <GameLobby game={game} gameLog={gameLog} />;
       case eventTypes.PlayerReg:
-        return <GameLobby game={game} />;
+        return <GameLobby game={game} gameLog={gameLog} />;
       case eventTypes.GameStart:
         return <GameLobby game={game} />;
       case eventTypes.QuestionStart:
@@ -32,7 +32,7 @@ export default ({ game }) => {
         return undefined;
     }
   };
-  const event = game.getLastEvent().nameType;
+  const event = game.getLastEvent(gameLog).nameType;
   console.log('event:', event);
   return mapEventToPages(event);
 };

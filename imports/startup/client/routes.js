@@ -30,9 +30,9 @@ const verifyLogin = () => {
 };
 
 const verifyNotLogin = () => {
-    if (Meteor.loggingIn() || Meteor.userId()) {
-        FlowRouter.go('/');
-    }
+  if (Meteor.loggingIn() || Meteor.userId()) {
+    FlowRouter.go('/');
+  }
 };
 
 // Set up all routes in the app
