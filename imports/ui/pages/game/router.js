@@ -44,7 +44,7 @@ const createGameLogContainer = createContainer(({ loading, game }) => {
   const gamelogHandle = Meteor.subscribe('gamelogs.get-by-gameid', game._id);
   const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
   const players = game.getPlayersName(gameLog);
-  return { loading: !gamelogHandle.ready(), game, gameLog, players }
+  return { loading: !gamelogHandle.ready(), game, gameLog, players };
 }, GameRouterContainer);
 
 createGameLogContainer.propTypes = {

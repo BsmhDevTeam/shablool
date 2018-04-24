@@ -18,15 +18,15 @@ export default ({ game, gameLog }) => {
       case eventTypes.GameStart:
         return <Instructions />;
       case eventTypes.QuestionStart:
-        return <Question game={game} />;
+        return <Question game={game} gameLog={gameLog} />;
       case eventTypes.PlayerAnswer:
         return <AnswerSent />;
       case eventTypes.QuestionEnd:
-        return <QuestionStatistics game={game} />;
+        return <QuestionStatistics game={game} gameLog={gameLog} />;
       case eventTypes.ShowLeaders:
-        return <Leaders game={game} />;
+        return <Leaders game={game} gameLog={gameLog} />;
       case eventTypes.GameEnd:
-        return <Winner game={game} />;
+        return <Winner game={game} gameLog={gameLog} />;
       case eventTypes.GameClose:
         return <GameClose />;
       default:

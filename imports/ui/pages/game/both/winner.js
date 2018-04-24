@@ -1,8 +1,9 @@
 import React from 'react';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import PropTypes from 'prop-types';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
-const Winner = ({ game }) => {
+const Winner = ({ game, gameLog }) => {
   const backToHome = () => {
     const _ = game.isManager() ? game.applyMethod('closeGame', []) : null;
     FlowRouter.go('Home');
@@ -23,7 +24,7 @@ const Winner = ({ game }) => {
       </div>
       <div className="row">
         <div className="winner-name">
-          <p>{game.getWinner().userName}</p>
+          <p>{game.getWinner(gameLog).userName}</p>
         </div>
       </div>
       <div className="row">
@@ -36,11 +37,16 @@ const Winner = ({ game }) => {
       </div>
       <div className="row">
         <div className="winner-score">
-          <p>עם {game.getWinner().userScore} נקודות!</p>
+          <p>עם {game.getWinner(gameLog).userScore} נקודות!</p>
         </div>
       </div>
     </div>
   );
+};
+
+Winner.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Winner;

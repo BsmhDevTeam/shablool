@@ -134,7 +134,8 @@ Game.extend({
         });
       };
       isPlayerReg && isQuestionStart && !isPlayerAnswered && !isQuestionEnd && addPlayerAnswerEvent();
-      const isEveryoneAnswered = Game.findOne(this._id).isAllPlayerAnsweredToQuestion(qId);
+      const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
+      const isEveryoneAnswered = this.isAllPlayerAnsweredToQuestion(qId, gameLog);
       return isEveryoneAnswered && this.questionEnd(qId);
     },
     nextQuestion() {

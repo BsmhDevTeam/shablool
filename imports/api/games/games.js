@@ -272,11 +272,12 @@ const Game = Class.create({
       return !!isUserExist;
     },
     answersGroupCount(gameLog) {
+      console.log('answersGroupCount');
       const lastQuestionId = this.lastQuestionToStartId(gameLog); // => qId
       const getAnswerOrder = id =>
         this.quiz.questions.find(q => q._id === lastQuestionId).answers.find(a => a._id === id)
           .order; // answer._id => answer.order
-      const playersAnswerEvents = this.getLastQuestionAnswers() // => [PlayerAnswer, ...]
+      const playersAnswerEvents = this.getLastQuestionAnswers(gameLog) // => [PlayerAnswer, ...]
         .map(e => e.answerId) // => [answerId, ...]
         .map(getAnswerOrder) // => [answerOrder, ...]
         .concat([1, 2, 3, 4]); // => so there will always be 4 columns in the bar chart
@@ -291,10 +292,12 @@ const Game = Class.create({
       }));
       return answerOrderCount;
     },
-    getLastQuestionAnswerCount() {
-      return this.getLastQuestionAnswers().length;
+    getLastQuestionAnswerCount(gameLog) {
+      console.log('getLastQuestionAnswerCount')
+      return this.getLastQuestionAnswers(gameLog).length;
     },
     getLastQuestionAnswers(gameLog) {
+      console.log('getLastQuestionAnswers gameLog: ', gameLog);
       return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId(gameLog), gameLog);
     },
     getPlayersId(gameLog) {
@@ -368,6 +371,7 @@ const Game = Class.create({
       return time;
     },
     lastQuestionToStartId(gameLog) {
+      console.log('lastQuestionToStartId gameLog: ', gameLog);
       const questionLog = gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
@@ -375,6 +379,7 @@ const Game = Class.create({
       return qId;
     },
     lastQuestionToStart(gameLog) {
+      console.log('lastQuestionToStart gameLog: ', gameLog);
       const lastQuestionId = this.lastQuestionToStartId(gameLog);
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
@@ -411,6 +416,7 @@ const Game = Class.create({
       return first(this.getLeaders(gameLog));
     },
     isCurrentQuestionEnded(gameLog) {
+      console.log('isCurrentQuestionEnded');
       const isEnded = this.lastQuestionToStartId(gameLog) === this.lastQuestionToEndId(gameLog);
       return isEnded;
     },
@@ -425,6 +431,7 @@ const Game = Class.create({
       return lastQuestionOrder === this.lastQuestionToEnd(gameLog).order;
     },
     getQuestionTimeLeft(questionId, gameLog) {
+      console.log('getQuestionTimeLeft gameLog: ', gameLog);
       const questionStartEvents = gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const questionStartEvent = questionStartEvents.filter(e => e.questionId === questionId);
       // Check if question already ended
@@ -439,6 +446,7 @@ const Game = Class.create({
       const timeLeft = timePassed.map(
         t => this.quiz.questions.find(q => q._id === questionId).time - t,
       );
+      console.log('finish getQuestionTimeLeft');
       return timeLeft < 0 ? 0 : Math.round(timeLeft);
     },
     getQuestionsOrder(qId) {
@@ -564,7 +572,8 @@ const Game = Class.create({
       return playersAnswerEvents;
     },
     isAllPlayerAnsweredToQuestion(qId, gameLog) {
-      return (size(this.getPlayersAnswersByQuestion(qId, gameLog)) === this.getPlayersCount());
+      console.log('isAllPlayerAnsweredToQuestion gameLog: ', gameLog);
+      return (size(this.getPlayersAnswersByQuestion(qId, gameLog)) === this.getPlayersCount(gameLog));
     },
     getDataForPivotTable(gameLog) {
       const playerAnswerEvents = gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
