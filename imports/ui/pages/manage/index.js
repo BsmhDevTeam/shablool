@@ -12,6 +12,7 @@ import Snackbar from '/imports/ui/components/snackbar';
 import MyQuizes from './my-quizes';
 import GamesManaged from './games-managed';
 import GamesPlayed from './games-played';
+import GameLog from '../../../api/gamelogs/gamelogs';
 
 class Manage extends React.Component {
   constructor(props) {

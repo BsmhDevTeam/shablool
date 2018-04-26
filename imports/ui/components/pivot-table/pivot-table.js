@@ -8,9 +8,9 @@ import './locales/pivot.he.js';
 
 export default class PivotTable extends React.Component {
   componentDidMount() {
-    const { game } = this.props;
+    const { game, gameLog } = this.props;
 
-    const mps = game.getDataForPivotTable();
+    const mps = game.getDataForPivotTable(gameLog);
 
     $('#output').pivotUI(mps, {
       renderers: $.extend($.pivotUtilities.locales.he.renderers, $.pivotUtilities.c3_renderers),
@@ -51,4 +51,5 @@ export default class PivotTable extends React.Component {
 
 PivotTable.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };

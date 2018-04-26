@@ -8,13 +8,15 @@ import HistoryManager from './games-managed/games-stats.js';
 import HistoryPlayer from './games-played/game-stats.js';
 import GameLog from '../../../api/gamelogs/gamelogs';
 
-const HistoryRouter = ({ game }) => {
+const HistoryRouter = ({ game, gameLog }) => {
   const isManager = game.isManager();
-  return isManager ? <HistoryManager game={game} /> : <HistoryPlayer game={game} />;
+  return isManager ? <HistoryManager game={game} gameLog={gameLog} />
+  : <HistoryPlayer game={game} gameLog={gameLog} />;
 };
 
 HistoryRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 const HistoryRouterContainer = ({ loading, game, gameLog }) => {

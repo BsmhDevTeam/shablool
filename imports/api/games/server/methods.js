@@ -172,8 +172,11 @@ Game.extend({
       isGameStarted && !isGameEnded && this.isManager() && addGameEndEvent();
     },
     endGameOrNextQuestion() {
+      console.log('endGameOrNextQuestion');
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
-      return lastQuestionOrder === this.lastQuestionToEnd().order
+      console.log('lastQuestionOrder: ', lastQuestionOrder);
+      const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
+      return lastQuestionOrder === this.lastQuestionToEnd(gameLog).order
         ? this.endGame()
         : this.nextQuestion();
     },
