@@ -3,9 +3,11 @@ import { Class } from 'meteor/jagi:astronomy';
 import { Factory } from 'meteor/dburles:factory';
 import { GameInit } from '../games/games';
 
+export const GameLogCollection = new Mongo.Collection('gamelogs');
+
 const GameLog = Class.create({
   name: 'GameLog',
-  collection: new Mongo.Collection('gamelogs'),
+  collection: GameLogCollection,
   fields: {
     gameId: {
       type: String,
