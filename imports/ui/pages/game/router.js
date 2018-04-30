@@ -8,11 +8,9 @@ import GameManager from './owner-router.js';
 import GamePlayer from './player-router.js';
 import GameLog from '../../../api/gamelogs/gamelogs';
 
-const GameRouter = ({ game, gameLog, players }) => {
-  return game.isManager() ?
+const GameRouter = ({ game, gameLog, players }) => game.isManager() ?
     <GameManager game={game} gameLog={gameLog} players={players} />
   : <GamePlayer game={game} gameLog={gameLog} players={players} />;
-};
 
 GameRouter.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,

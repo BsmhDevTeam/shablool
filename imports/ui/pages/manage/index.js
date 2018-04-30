@@ -6,7 +6,7 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes';
 import Game from '/imports/api/games/games';
-import { managementTabs } from '/imports/startup/both/constants.js';
+import { managementTabs, eventTypes } from '/imports/startup/both/constants.js';
 import Loading from '/imports/ui/components/loading';
 import Snackbar from '/imports/ui/components/snackbar';
 import MyQuizes from './my-quizes';
@@ -122,7 +122,7 @@ ManageContainer.propTypes = {
 
 export default createContainer(() => {
   const myQuizesHandle = Meteor.subscribe('quizes.my-quizes');
-  const gamesPlayedHandle = Meteor.subscribe('games.games-played');
+  const gamesPlayedHandle = Meteor.subscribe('gamelogs.get-games-played');
   const gamesManagedHandle = Meteor.subscribe('games.games-managed');
 
   const loading =
@@ -130,14 +130,37 @@ export default createContainer(() => {
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
   const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
-  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: Meteor.userId() } } })
+  console.log('gamesManaged: ', gamesManaged);
+  const gamesPlayedId = GameLog.find({
+    $and: [
+      { 'event.nameType': eventTypes.PlayerReg },
+      { 'event.playerId': this.userId },
+    ],
+  }).map(o => o._id);
+  const gamePlayedAndClosedId = GameLog.find({
+    $and: [
+      { _id: { $in: gamesPlayedId } },
+      { 'event.nameType': eventTypes.GameClose },
+    ],
+  }).map(o => o.gameId);
+
+  const gamesPlayed = Game.find({ _id: { $in: gamePlayedAndClosedId } })
     .fetch()
     .reverse();
+
+  const gamesPlayedAndGameLogs = gamesPlayed.map(g => ({
+    game: g,
+    gameLog: GameLog.find({ gameId: g.gameId }).fetch(),
+  }));
+  const gamesManagedAndGameLogs = gamesManaged.map(g => ({
+    game: g,
+    gameLog: GameLog.find({ gameId: g.gameId }).fetch(),
+  }));
   return {
     loading,
     myQuizes,
-    gamesPlayed,
-    gamesManaged,
+    gamesPlayed: gamesPlayedAndGameLogs,
+    gamesManaged: gamesManagedAndGameLogs,
   };
 }, ManageContainer);
 

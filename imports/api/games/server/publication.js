@@ -11,9 +11,15 @@ publishComposite('games.games-managed', function() {
     collectionName: 'games',
     find() {
       const userId = this.userId;
-      const myGamesId = Game.find({ 'quiz.owner': userId }).fetch();
-      const myGamesClosedId = GameLog.find({ gameId: { $in: myGamesId },
-        'event.nameType': eventTypes.GameClose }).fetch();
+      const myGamesId = Game.find({ 'quiz.owner': userId }).map(o => o._id);
+      console.log('myGamesId:', myGamesId);
+      const myGamesClosedId = GameLog.find({
+        $and: [
+          { gameId: { $in: myGamesId } },
+          { 'event.nameType': eventTypes.GameClose },
+        ],
+      }).map(o => o.gameId);
+      console.log('myGamesClosedId:', myGamesClosedId);
       return Game.find({ _id: { $in: myGamesClosedId } });
     },
     children: [

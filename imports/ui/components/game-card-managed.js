@@ -5,7 +5,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import moment from 'moment';
 import 'moment/locale/he';
 
-const GameCardManaged = ({ game }) => {
+const GameCardManaged = ({ game, gameLog }) => {
   const showStatistics = () => {
     FlowRouter.go('Manage.Game', { code: game.code });
   };
@@ -41,7 +41,7 @@ const GameCardManaged = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-users game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    <strong>{game.getPlayersCount()}</strong> שחקנים
+                    <strong>{game.getPlayersCount(gameLog)}</strong> שחקנים
                   </span>
                 </div>
               </div>
