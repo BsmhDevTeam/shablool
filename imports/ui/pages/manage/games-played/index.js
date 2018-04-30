@@ -7,8 +7,8 @@ const GamesPlayed = ({ activeTab, gamesPlayed }) =>
   <div className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed ? 'active' : ''}`}>
     {gamesPlayed.length
       ? gamesPlayed.map(game =>
-        <div className="row" key={game._id}>
-          <GameCardPlayed game={game} />
+        <div className="row" key={game.game._id}>
+          <GameCardPlayed game={game.game} gameLog={game.gameLog} />
         </div>,
         )
       : <h3>איך עוד לא השתתפת באף משחק ? אתה לא רציני...</h3>}

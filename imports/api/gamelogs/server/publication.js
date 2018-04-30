@@ -48,11 +48,16 @@ publishComposite('gamelogs.get-games-played', function() {
           { 'event.nameType': eventTypes.PlayerReg },
           { 'event.playerId': this.userId },
         ],
-      }).map(o => o._id);
+      }).map(o => o.gameId);
+      const gamePlayedAndClosedId = GameLog.find({
+        $and: [
+          { gameId: { $in: gamesPlayedId } },
+          { 'event.nameType': eventTypes.GameClose },
+        ],
+      }).map(o => o.gameId);
       return GameLog.find({
         $and: [
-          { _id: { $in: gamesPlayedId } },
-          { 'event.nameType': eventTypes.GameClose },
+          { gameId: { $in: gamePlayedAndClosedId } },
         ],
       });
     },
@@ -65,16 +70,26 @@ publishComposite('gamelogs.get-games-played', function() {
               { 'event.nameType': eventTypes.PlayerReg },
               { 'event.playerId': this.userId },
             ],
-          }).map(o => o._id);
-          const gamePlayedAndClosed = GameLog.find({
+          }).map(o => o.gameId);
+          const gamePlayedAndClosedId = GameLog.find({
             $and: [
-              { _id: { $in: gamesPlayedId } },
+              { gameId: { $in: gamesPlayedId } },
               { 'event.nameType': eventTypes.GameClose },
             ],
+          }).map(o => o.gameId);
+          const gamesPlayedAndClosed = GameLog.find({
+            $and: [
+              { gameId: { $in: gamePlayedAndClosedId } },
+              { 'event.nameType': eventTypes.PlayerReg },
+              { 'event.playerId': this.userId },
+            ],
           });
-          const playersId = gamePlayedAndClosed.map(o => o.event.playerId);
+          const playersId = gamesPlayedAndClosed.map(o => o.event.playerId);
+          const gamelogsId = gamesPlayedAndClosed.map(o => o.gameId);
+          const games = Game.find({ _id: { $in: gamelogsId } }).fetch();
+          const gamesManagers = games.map(g => g.quiz.owner);
           return Meteor.users.find(
-            { _id: { $in: [...playersId] } },
+            { _id: { $in: [...playersId, ...gamesManagers] } },
             { fields: { username: 1 } },
           );
         },
@@ -87,14 +102,14 @@ publishComposite('gamelogs.get-games-played', function() {
               { 'event.nameType': eventTypes.PlayerReg },
               { 'event.playerId': this.userId },
             ],
-          }).map(o => o._id);
-          const gamePlayedAndClosed = GameLog.find({
+          }).map(o => o.gameId);
+          const gamePlayedAndClosedId = GameLog.find({
             $and: [
-              { _id: { $in: gamesPlayedId } },
+              { gameId: { $in: gamesPlayedId } },
               { 'event.nameType': eventTypes.GameClose },
             ],
-          });
-          return Game.find({ _id: { $in: gamePlayedAndClosed } });
+          }).map(o => o.gameId);
+          return Game.find({ _id: { $in: gamePlayedAndClosedId } });
         },
       },
     ],

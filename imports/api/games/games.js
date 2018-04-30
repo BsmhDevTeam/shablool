@@ -297,7 +297,8 @@ const Game = Class.create({
       return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId(gameLog), gameLog);
     },
     getPlayersId(gameLog) {
-      return gameLog.filter(e => e.nameType === eventTypes.PlayerReg)
+      return gameLog
+      .filter(e => e.nameType === eventTypes.PlayerReg)
       .map(e => e.playerId);
     },
     getPlayersCount(gameLog) {
@@ -566,11 +567,12 @@ const Game = Class.create({
       return (size(this.getPlayersAnswersByQuestion(qId, gameLog)) === this.getPlayersCount(gameLog));
     },
     getDataForPivotTable(gameLog) {
-      const playerAnswerEvents = gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+      const playerAnswerEvents = gameLog
+      .filter(e => e.nameType === eventTypes.PlayerAnswer);
+
       const playerAnswers = this.isManager()
         ? playerAnswerEvents
         : playerAnswerEvents.filter(e => e.playerId === Meteor.userId());
-
       const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
         משתמש: this.getUsernameByUserID(playerId),
         'מספר השאלה': this.quiz.questions.find(q => q._id === questionId).order,

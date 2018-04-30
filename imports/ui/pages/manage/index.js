@@ -130,31 +130,29 @@ export default createContainer(() => {
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
   const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
-  console.log('gamesManaged: ', gamesManaged);
+
   const gamesPlayedId = GameLog.find({
     $and: [
       { 'event.nameType': eventTypes.PlayerReg },
-      { 'event.playerId': this.userId },
+      { 'event.playerId': Meteor.userId() },
     ],
-  }).map(o => o._id);
+  }).map(o => o.gameId);
   const gamePlayedAndClosedId = GameLog.find({
     $and: [
-      { _id: { $in: gamesPlayedId } },
+      { gameId: { $in: gamesPlayedId } },
       { 'event.nameType': eventTypes.GameClose },
     ],
   }).map(o => o.gameId);
-
   const gamesPlayed = Game.find({ _id: { $in: gamePlayedAndClosedId } })
     .fetch()
     .reverse();
-
   const gamesPlayedAndGameLogs = gamesPlayed.map(g => ({
     game: g,
-    gameLog: GameLog.find({ gameId: g.gameId }).fetch(),
+    gameLog: GameLog.find({ gameId: g._id }).map(o => o.event),
   }));
   const gamesManagedAndGameLogs = gamesManaged.map(g => ({
     game: g,
-    gameLog: GameLog.find({ gameId: g.gameId }).fetch(),
+    gameLog: GameLog.find({ gameId: g._id }).map(o => o.event),
   }));
   return {
     loading,

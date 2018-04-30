@@ -73,6 +73,7 @@ const GameCardManaged = ({ game, gameLog }) => {
 
 GameCardManaged.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default GameCardManaged;
