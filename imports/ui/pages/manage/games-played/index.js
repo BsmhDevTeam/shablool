@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { managementTabs } from '/imports/startup/both/constants';
 import GameCardPlayed from '/imports/ui/components/game-card-played';
 
-const GamesPlayed = ({ activeTab, gamesPlayed }) =>
+const GamesPlayed = ({ activeTab, gamesPlayedAndGameLogs }) =>
   <div className={`tab-pane fade in ${activeTab === managementTabs.gamesPlayed ? 'active' : ''}`}>
-    {gamesPlayed.length
-      ? gamesPlayed.map(game =>
+    {gamesPlayedAndGameLogs.length
+      ? gamesPlayedAndGameLogs.map(game =>
         <div className="row" key={game.game._id}>
           <GameCardPlayed game={game.game} gameLog={game.gameLog} />
         </div>,
@@ -16,7 +16,7 @@ const GamesPlayed = ({ activeTab, gamesPlayed }) =>
 
 GamesPlayed.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default GamesPlayed;

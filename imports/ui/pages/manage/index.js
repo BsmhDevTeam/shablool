@@ -26,7 +26,7 @@ class Manage extends React.Component {
   }
 
   render() {
-    const { myQuizes, gamesManaged, gamesPlayed } = this.props;
+    const { myQuizes, gamesManagedAndGameLogs, gamesPlayedAndGameLogs } = this.props;
     const { activeTab, showDeleteQuizAlert, quizToDelete, snackbarNotification } = this.state;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
@@ -71,8 +71,8 @@ class Manage extends React.Component {
         <ManageTabs activeTab={activeTab} changeTab={changeTab} />
         <div className="tab-content">
           <MyQuizes activeTab={activeTab} myQuizes={myQuizes} actions={actions} />
-          <GamesManaged activeTab={activeTab} gamesManaged={gamesManaged} />
-          <GamesPlayed activeTab={activeTab} gamesPlayed={gamesPlayed} />
+          <GamesManaged activeTab={activeTab} gamesManagedAndGameLogs={gamesManagedAndGameLogs} />
+          <GamesPlayed activeTab={activeTab} gamesPlayedAndGameLogs={gamesPlayedAndGameLogs} />
         </div>
         {snackbarNotification ? <Snackbar message={snackbarNotification} /> : ''}
         <SweetAlert
@@ -104,20 +104,25 @@ class Manage extends React.Component {
 
 Manage.propTypes = {
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManagedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const ManageContainer = ({ loading, myQuizes, gamesPlayed, gamesManaged }) => {
+const ManageContainer =
+({ loading, myQuizes, gamesPlayedAndGameLogs, gamesManagedAndGameLogs }) => {
   if (loading) return <Loading />;
-  return <Manage myQuizes={myQuizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
+  return (<Manage
+    myQuizes={myQuizes}
+    gamesPlayedAndGameLogs={gamesPlayedAndGameLogs}
+    gamesManagedAndGameLogs={gamesManagedAndGameLogs}
+  />);
 };
 
 ManageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManagedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default createContainer(() => {
@@ -157,8 +162,8 @@ export default createContainer(() => {
   return {
     loading,
     myQuizes,
-    gamesPlayed: gamesPlayedAndGameLogs,
-    gamesManaged: gamesManagedAndGameLogs,
+    gamesPlayedAndGameLogs,
+    gamesManagedAndGameLogs,
   };
 }, ManageContainer);
 
