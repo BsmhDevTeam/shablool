@@ -45,3 +45,4 @@ accounts-password@1.5.0
 meteorhacks:meteor-down
 check
 ejson
+meteortesting:mocha

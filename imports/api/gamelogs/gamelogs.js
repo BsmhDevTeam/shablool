@@ -22,8 +22,5 @@ export default GameLog;
 
 Factory.define('gamelog', GameLog, {
   gameId: () => '123456',
-});
-
-Factory.define('gamelog with GameInit', GameLog, {
   event: () => new GameInit(),
 });

@@ -58,6 +58,7 @@ describe('Game Publications', function() {
   describe('games.games-managed', function() {
     it('should get all closed games owned by me', function(done) {
       const game = Factory.create('game');
+      const gameInit = Factory.create('gamelog', { gameId: game._id });
       game.gameStart();
       game.closeGame();
       const collector = new PublicationCollector({ userId: 'owner' });

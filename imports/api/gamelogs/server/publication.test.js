@@ -4,6 +4,7 @@ import { Factory } from 'meteor/dburles:factory';
 import { expect } from 'chai';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
+import { GameInit } from '../../games/games';
 import './publication.js';
 
 const asUser = (user) => {
@@ -27,8 +28,8 @@ describe('GameLog Publications', function() {
 
   describe('gamelogs.get-by-gameid', function() {
     it('should allow subscription to gamelogs I own', function(done) {
-      const game = Factory.create('game');
-      const gameInitEvent = Factory.create('gamelog with GameInit', { gameId: game._id });
+      const game = Factory.create('game', { _id: '123456' });
+      const gameInitEvent = Factory.create('gamelog');
       asUser('player');
       Meteor.call('joinGame', { code: game.code });
       const collector = new PublicationCollector({ userId: 'owner' });
