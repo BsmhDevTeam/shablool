@@ -69,10 +69,21 @@ Game.extend({
           { 'event.questionId': { $eq: qId } },
         ],
       }).count();
+      const isOtherQuestionRunning = GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionStart } },
+        ],
+      }).count() === GameLog.find({
+        $and: [
+          { gameId: { $eq: this._id } },
+          { 'event.nameType': { $eq: eventTypes.QuestionEnd } },
+        ],
+      }).count();
       const addQuestionStartEvent = () => {
         GameLog.insert({ gameId: this._id, event: new QuestionStart({ questionId: qId }) });
       };
-      isGameAlreadyStarted && !isQuestionStart && this.isManager() && addQuestionStartEvent();
+      isGameAlreadyStarted && !isQuestionStart && isOtherQuestionRunning && this.isManager() && addQuestionStartEvent();
     },
     questionEnd(qId) {
       const isQuestionStart = !!GameLog.find({
