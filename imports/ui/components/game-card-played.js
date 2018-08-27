@@ -6,7 +6,7 @@ import moment from 'moment';
 import 'moment/locale/he';
 
 
-const GameCardPlayed = ({ game }) => {
+const GameCardPlayed = ({ game, gameLog }) => {
   const showStatistics = () => {
     FlowRouter.go('Manage.Game', { code: game.code });
   };
@@ -42,7 +42,7 @@ const GameCardPlayed = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-trophy game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    מיקום <strong>{game.getPlaceByUserId(Meteor.userId())}</strong>
+                    מיקום <strong>{game.getPlaceByUserId(Meteor.userId(), gameLog)}</strong>
                   </span>
                 </div>
               </div>
@@ -50,7 +50,7 @@ const GameCardPlayed = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-calculator game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    <strong>{game.getScoreByUserId(Meteor.userId())} </strong>נקודות
+                    <strong>{game.getScoreByUserId(Meteor.userId(), gameLog)} </strong>נקודות
                   </span>
                 </div>
               </div>
@@ -74,6 +74,7 @@ const GameCardPlayed = ({ game }) => {
 
 GameCardPlayed.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default GameCardPlayed;

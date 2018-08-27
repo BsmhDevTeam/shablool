@@ -51,12 +51,12 @@ publishComposite('quizes.search', function(query) {
     collectionName: 'quizes',
     find() {
       check(query, String);
-      return Quiz.find({ 
+      return Quiz.find({
         $and: [
           { $or: [{ title: { $regex: query, $options: 'i' } },
           { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
           { $or: [{ owner: this.userId }, { private: false }] },
-        ],      
+        ],
       });
     },
     children: [
@@ -65,7 +65,7 @@ publishComposite('quizes.search', function(query) {
         find(quiz) {
           return Meteor.users.find(
             { _id: quiz.owner },
-            { fields: { 'username': 1 } },
+            { fields: { username: 1 } },
           );
         },
       },

@@ -7,31 +7,31 @@ import QuestionStatistics from './both/question-statistics';
 import Winner from './both/winner';
 import GameClose from './both/game-close';
 
-export default ({ game }) => {
+export default ({ game, gameLog, players }) => {
   const mapEventToPages = (event) => {
     switch (event) {
       case eventTypes.GameInit:
-        return <GameLobby game={game} />;
+        return <GameLobby game={game} players={players} />;
       case eventTypes.PlayerReg:
-        return <GameLobby game={game} />;
+        return <GameLobby game={game} players={players} />;
       case eventTypes.GameStart:
-        return <GameLobby game={game} />;
+        return <GameLobby game={game} players={players} />;
       case eventTypes.QuestionStart:
-        return <Question game={game} />;
+        return <Question game={game} gameLog={gameLog} />;
       case eventTypes.PlayerAnswer:
-        return <Question game={game} />;
+        return <Question game={game} gameLog={gameLog} />;
       case eventTypes.QuestionEnd:
-        return <QuestionStatistics game={game} />;
+        return <QuestionStatistics game={game} gameLog={gameLog} />;
       case eventTypes.ShowLeaders:
-        return <Leaders game={game} />;
+        return <Leaders game={game} gameLog={gameLog} />;
       case eventTypes.GameEnd:
-        return <Winner game={game} />;
+        return <Winner game={game} gameLog={gameLog} />;
       case eventTypes.GameClose:
         return <GameClose />;
       default:
-        return null;
+        return undefined;
     }
   };
-  const event = game.getLastEvent().nameType;
+  const event = game.getLastEvent(gameLog).nameType;
   return mapEventToPages(event);
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import GameNavbar from '/imports/ui/components/game-navbar';
 
-const Leaders = ({ game }) => {
+const Leaders = ({ game, gameLog }) => {
   const nextQuestion = () => {
     game.applyMethod('endGameOrNextQuestion', []);
   };
@@ -13,7 +13,7 @@ const Leaders = ({ game }) => {
         ? <div className="row">
           <div className="next-question-button">
             <button className="btn btn-primary" onClick={nextQuestion}>
-              {game.isLastQuestion() ? 'מי ניצח?' : 'שאלה הבאה'}
+              {game.isLastQuestion(gameLog) ? 'מי ניצח?' : 'שאלה הבאה'}
             </button>
           </div>
         </div>
@@ -24,7 +24,7 @@ const Leaders = ({ game }) => {
       <div className="row">
         <table className="table leaders-table">
           <tbody>
-            {game.getLeaders().map((leader, index) =>
+            {game.getLeaders(gameLog).map((leader, index) =>
               <tr className={index === 0 ? 'leader' : ''} key={leader.userName}>
                 <td className="to-the-right">
                   {leader.userScore}
@@ -43,6 +43,7 @@ const Leaders = ({ game }) => {
 
 Leaders.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Leaders;

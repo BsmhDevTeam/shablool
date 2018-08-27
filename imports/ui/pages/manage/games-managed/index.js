@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { managementTabs } from '/imports/startup/both/constants.js';
 import GameCardManaged from '/imports/ui/components/game-card-managed.js';
 
-const GamesManaged = ({ activeTab, gamesManaged }) =>
+const GamesManaged = ({ activeTab, gamesManagedAndGameLogs }) =>
   <div className={`tab-pane fade in ${activeTab === managementTabs.gamesManaged ? 'active' : ''}`}>
-    {gamesManaged.length
-      ? gamesManaged.map(game =>
-        <div className="row" key={game._id}>
-          <GameCardManaged game={game} />
+    {gamesManagedAndGameLogs.length
+      ? gamesManagedAndGameLogs.map(game =>
+        <div className="row" key={game.game._id}>
+          <GameCardManaged game={game.game} gameLog={game.gameLog} />
         </div>,
         )
       : <h3>עדיין לא ארגנת משחק לחברים?</h3>}
@@ -16,7 +16,7 @@ const GamesManaged = ({ activeTab, gamesManaged }) =>
 
 GamesManaged.propTypes = {
   activeTab: PropTypes.string.isRequired,
-  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManagedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default GamesManaged;
