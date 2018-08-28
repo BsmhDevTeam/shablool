@@ -180,6 +180,9 @@ export const ShowLeaders = Class.create({
         return eventTypes.ShowLeaders;
       },
     },
+    questionId: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default() {

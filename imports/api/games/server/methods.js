@@ -117,7 +117,8 @@ Game.extend({
     },
     skipQuestion(qId) {
       GameLog.insert({ gameId: this._id, event: new QuestionEnd({ questionId: qId }) });
-      GameLog.insert({ gameId: this._id, event: new ShowLeaders() });
+      const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
+      GameLog.insert({ gameId: this._id, event: new ShowLeaders({ questionId: this.lastQuestionToEnd(gameLog) }) });
     },
     playerAnswer(qId, aId) {
       const isQuestionStart = !!GameLog.find({
@@ -159,9 +160,9 @@ Game.extend({
       const isEveryoneAnswered = this.isAllPlayerAnsweredToQuestion(qId, gameLog);
       return isEveryoneAnswered && this.questionEnd(qId);
     },
-    nextQuestion() {
+    nextQuestion(gameLog) {
       // start question
-      const qId = this.nextQuestionId();
+      const qId = this.nextQuestionId(gameLog);
       this.questionStart(qId);
       // end question
       const q = this.quiz.questions.find(ques => ques._id === qId);
@@ -172,7 +173,8 @@ Game.extend({
       return true;
     },
     showLeaders() {
-      GameLog.insert({ gameId: this._id, event: new ShowLeaders() });
+      const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
+      GameLog.insert({ gameId: this._id, event: new ShowLeaders({ questionId: this.lastQuestionToEnd(gameLog) }) });
     },
     endGame() {
       const isGameEnded = !!GameLog.find({
@@ -197,7 +199,7 @@ Game.extend({
       const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
       return lastQuestionOrder === this.lastQuestionToEnd(gameLog).order
         ? this.endGame()
-        : this.nextQuestion();
+        : this.nextQuestion(gameLog);
     },
     closeGame() {
       const isGameClosed = !!GameLog.find({
