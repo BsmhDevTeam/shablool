@@ -30,6 +30,9 @@ Game.extend({
       this.set('code', code);
       this.save();
       GameLog.insert({ gameId: this._id, event: new GameInit() });
+      // Closing Game
+      const closeGameToLog = () => this.closeGame();
+      Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
       return this.code;
     },
     startGame() {
@@ -43,9 +46,6 @@ Game.extend({
         this.questionEnd(firstQuestion._id);
       };
       Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
-      // Closing Game
-      const closeGameToLog = () => this.closeGame();
-      Meteor.setTimeout(closeGameToLog, 24 * 60 * 60 * 1000); // close game after 24H
     },
     gameStart() {
       const isAnyPlayerReg = !!GameLog.find({
