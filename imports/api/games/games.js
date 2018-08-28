@@ -16,6 +16,7 @@ import {
   size,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
+import GameLog from '../gamelogs/gamelogs.js';
 
 const calculateTimeDelta = (t1, t2) => {
   const datesDelta = t1.getTime() - t2.getTime();
@@ -36,7 +37,7 @@ const avarage = (arr) => {
   return arr.length > 0 ? sum / arr.length : 0;
 };
 
-const generateCode = (n) => {
+export const generateCode = (n) => {
   const lowerBound = 10 ** (n - 1);
   const upperBound = 10 ** n;
   const randUpperBound = upperBound - lowerBound - 1;
@@ -179,6 +180,9 @@ export const ShowLeaders = Class.create({
         return eventTypes.ShowLeaders;
       },
     },
+    questionId: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default() {
@@ -231,9 +235,6 @@ const Game = Class.create({
     quiz: Quiz,
     code: {
       type: String,
-      default() {
-        return generateCode(6).toString();
-      },
     },
     createdAt: {
       type: Date,

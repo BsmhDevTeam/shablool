@@ -17,8 +17,9 @@ const QuizCard = ({ quiz, actions }) => {
   };
   const initGame = () => {
     const game = new Game({ quiz });
-    game.applyMethod('initGame', []);
-    FlowRouter.go('Game.Play', { code: game.code });
+    game.applyMethod('initGame', [], (error, result) => (result ?
+      FlowRouter.go('Game.Play', { code: result }) :
+      console.log('error: ', error)));
   };
   const fromNow = () => {
     moment.locale('he');
