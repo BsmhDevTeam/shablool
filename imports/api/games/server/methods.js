@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { max } from 'underscore';
+import { max, difference, first } from 'underscore';
 import { check } from 'meteor/check';
 import { eventTypes, joinGameResults } from '/imports/startup/both/constants';
 import Game, {
@@ -12,15 +12,25 @@ import Game, {
   ShowLeaders,
   GameEnd,
   GameClose,
+  generateCode,
 } from '../games';
 import GameLog from '../../gamelogs/gamelogs';
 
 Game.extend({
   meteorMethods: {
     initGame() {
+      const getCode = () => {
+        const code = generateCode(6).toString();
+        const gamesId = Game.find({ code }).fetch().map(g => g._id);
+        const gameInitEvents = GameLog.find({ gameId: { $in: gamesId }, 'event.nameType': eventTypes.GameInit }).count();
+        const gameCloseEvents = GameLog.find({ gameId: { $in: gamesId }, 'event.nameType': eventTypes.GameClose }).count();
+        return gameInitEvents === gameCloseEvents ? code : getCode();
+      };
+      const code = getCode();
+      this.set('code', code);
       this.save();
       GameLog.insert({ gameId: this._id, event: new GameInit() });
-      return this;
+      return this.code;
     },
     startGame() {
       // Starting game
@@ -209,12 +219,17 @@ Meteor.methods({
   joinGame({ code }) {
     check(code, String);
 
-    const currGame = Game.findOne({ code });
+    const gamesId = Game.find({ code }).fetch().map(g => g._id);
+    const gameInitEvents = GameLog.find({ gameId: { $in: gamesId }, 'event.nameType': eventTypes.GameInit }).map(gl => gl.gameId);
+    const gameCloseEvents = GameLog.find({ gameId: { $in: gamesId }, 'event.nameType': eventTypes.GameClose }).map(gl => gl.gameId);
+    const currGameId = first(difference(gameInitEvents, gameCloseEvents));
+    const currGame = Game.findOne({ _id: currGameId });
+    if (!currGame) {
+      return joinGameResults.noGame;
+    }
     const gameLog = GameLog.find({ gameId: currGame._id }).map(o => o.event);
     if (!Meteor.userId()) {
       return joinGameResults.noUserId;
-    } else if (!currGame) {
-      return joinGameResults.noGame;
     } else if (currGame.isManager()) {
       return joinGameResults.isManager;
     } else if (currGame.isUserRegistered(gameLog)) {
