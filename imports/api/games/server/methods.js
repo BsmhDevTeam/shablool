@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { max, difference, first } from 'underscore';
 import { check } from 'meteor/check';
-import { eventTypes, joinGameResults } from '/imports/startup/both/constants';
+import { eventTypes, joinGameResults, startGameResults } from '/imports/startup/both/constants';
 import Game, {
   GameInit,
   PlayerReg,
@@ -37,15 +37,19 @@ Game.extend({
     },
     startGame() {
       // Starting game
-      this.gameStart();
-      // Starting first question
-      const firstQuestion = this.quiz.questions.find(q => q.order === 1);
-      this.questionStart(firstQuestion._id);
-      // Ending question
-      const questionEndToLog = () => {
-        this.questionEnd(firstQuestion._id);
+      const startGameRslt = this.gameStart();
+      const runFirstQuestion = () => {
+        // Starting first question
+        const firstQuestion = this.quiz.questions.find(q => q.order === 1);
+        this.questionStart(firstQuestion._id);
+        // Ending question
+        const questionEndToLog = () => {
+          this.questionEnd(firstQuestion._id);
+        };
+        Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
       };
-      Meteor.setTimeout(questionEndToLog, firstQuestion.time * 1000);
+      startGameRslt === startGameResults.startSucc ? runFirstQuestion() : null;
+      return startGameRslt;
     },
     gameStart() {
       const isAnyPlayerReg = !!GameLog.find({
@@ -64,6 +68,7 @@ Game.extend({
         GameLog.insert({ gameId: this._id, event: new GameStart() });
       };
       isAnyPlayerReg && !isGameAlreadyStarted && this.isManager() && addGameStartEvent();
+      return isAnyPlayerReg ? startGameResults.startSucc : startGameResults.noPlayersReg;
     },
     questionStart(qId) {
       const isGameAlreadyStarted = !!GameLog.find({
