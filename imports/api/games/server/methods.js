@@ -165,7 +165,8 @@ Game.extend({
       const isEveryoneAnswered = this.isAllPlayerAnsweredToQuestion(qId, gameLog);
       return isEveryoneAnswered && this.questionEnd(qId);
     },
-    nextQuestion(gameLog) {
+    nextQuestion() {
+      const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
       // start question
       const qId = this.nextQuestionId(gameLog);
       this.questionStart(qId);
@@ -204,7 +205,7 @@ Game.extend({
       const gameLog = GameLog.find({ gameId: this._id }).map(o => o.event);
       return lastQuestionOrder === this.lastQuestionToEnd(gameLog).order
         ? this.endGame()
-        : this.nextQuestion(gameLog);
+        : this.nextQuestion();
     },
     closeGame() {
       const isGameClosed = !!GameLog.find({
