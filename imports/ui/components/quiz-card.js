@@ -95,7 +95,7 @@ const QuizCard = ({ quiz, actions }) => {
                 </div>
               </span>
               : <span>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <a
                     href="javascript:void(0)"
                     className="delete quiz-card-link"
@@ -105,11 +105,17 @@ const QuizCard = ({ quiz, actions }) => {
                     <span className="quiz-card-link-text quiz-card-link-text">העתק שאלון</span>
                   </a>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <a href={`/ViewQuiz/${quiz._id}`} className="quiz-card-link">
                     <span className="glyphicon glyphicon-info-sign quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">צפה בפרטים</span>
                   </a>
+                </div>
+                <div className="col-md-4 quiz-card-start-button-area">
+                  <button className="btn btn-primary start-game-btn" onClick={initGame}>
+                    <span>התחל משחק! </span>
+                    <span className="glyphicon glyphicon-play" />
+                  </button>
                 </div>
               </span>}
           </div>
