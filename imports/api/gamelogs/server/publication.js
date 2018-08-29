@@ -15,7 +15,7 @@ publishComposite('gamelogs.get-by-gameid', function(gameId) {
           { _id: gameId },
           {
             $or: [
-              { 'quiz.owner': this.userId },
+              { manager: this.userId },
               { _id: { $in: myGamesRegiteredId } },
             ],
           },
@@ -30,7 +30,7 @@ publishComposite('gamelogs.get-by-gameid', function(gameId) {
           const game = Game.findOne({ _id: gameId });
           const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
           return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(gameLog), game.quiz.owner] } },
+            { _id: { $in: [...game.getPlayersId(gameLog), game.manager] } },
             { fields: { username: 1 } },
           );
         },
@@ -87,7 +87,7 @@ publishComposite('gamelogs.get-games-played', function() {
           const playersId = gamesPlayedAndClosed.map(o => o.event.playerId);
           const gamelogsId = gamesPlayedAndClosed.map(o => o.gameId);
           const games = Game.find({ _id: { $in: gamelogsId } }).fetch();
-          const gamesManagers = games.map(g => g.quiz.owner);
+          const gamesManagers = games.map(g => g.manager);
           return Meteor.users.find(
             { _id: { $in: [...playersId, ...gamesManagers] } },
             { fields: { username: 1 } },

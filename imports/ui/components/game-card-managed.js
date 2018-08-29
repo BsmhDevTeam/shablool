@@ -26,7 +26,7 @@ const GameCardManaged = ({ game, gameLog }) => {
             </h5>
             <p>
               <span className="game-owner-span">
-                {`מריץ המשחק: ${Meteor.users.findOne(game.quiz.owner).username}`}
+                {`מריץ המשחק: ${Meteor.users.findOne(game.manager).username}`}
               </span>
             </p>
             <p>

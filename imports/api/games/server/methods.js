@@ -19,6 +19,7 @@ import GameLog from '../../gamelogs/gamelogs';
 Game.extend({
   meteorMethods: {
     initGame() {
+      // recursive function that return a uniqe code (can't be two open games with the same code)
       const getCode = () => {
         const code = generateCode(6).toString();
         const gamesId = Game.find({ code }).fetch().map(g => g._id);
@@ -26,8 +27,11 @@ Game.extend({
         const gameCloseEvents = GameLog.find({ gameId: { $in: gamesId }, 'event.nameType': eventTypes.GameClose }).count();
         return gameInitEvents === gameCloseEvents ? code : getCode();
       };
+      // set the game code
       const code = getCode();
       this.set('code', code);
+      // set the game manager
+      this.set('manager', Meteor.userId());
       this.save();
       GameLog.insert({ gameId: this._id, event: new GameInit() });
       // Closing Game

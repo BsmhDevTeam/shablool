@@ -134,7 +134,7 @@ export default createContainer(() => {
     !myQuizesHandle.ready() || !gamesPlayedHandle.ready() || !gamesManagedHandle.ready();
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
-  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
+  const gamesManaged = Game.find({ manager: Meteor.userId() }).fetch().reverse();
 
   const gamesPlayedId = GameLog.find({
     $and: [
