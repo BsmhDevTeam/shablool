@@ -11,7 +11,7 @@ publishComposite('games.games-managed', function() {
     collectionName: 'games',
     find() {
       const userId = this.userId;
-      const myGamesId = Game.find({ 'quiz.owner': userId }).map(o => o._id);
+      const myGamesId = Game.find({ manager: userId }).map(o => o._id);
       const myGamesClosedId = GameLog.find({
         $and: [
           { gameId: { $in: myGamesId } },
@@ -66,7 +66,7 @@ publishComposite('games.get-by-code', function(code) {
           { code },
           {
             $or: [
-              { 'quiz.owner': this.userId },
+              { manager: this.userId },
               { _id: { $in: myGamesRegiteredId } },
             ],
           },

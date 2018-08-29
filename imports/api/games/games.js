@@ -233,6 +233,9 @@ const Game = Class.create({
   collection: new Mongo.Collection('games'),
   fields: {
     quiz: Quiz,
+    manager: {
+      type: String,
+    },
     code: {
       type: String,
     },
@@ -254,7 +257,7 @@ const Game = Class.create({
 
   helpers: {
     isManager() {
-      return Meteor.userId() === this.quiz.owner;
+      return Meteor.userId() === this.manager;
     },
     getGamePage(gameLog) {
       // TODO: rewrite
