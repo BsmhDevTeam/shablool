@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
@@ -125,7 +125,7 @@ ManageContainer.propTypes = {
   gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default createContainer(() => {
+export default withTracker(() => {
   const myQuizesHandle = Meteor.subscribe('quizes.my-quizes');
   const gamesPlayedHandle = Meteor.subscribe('gamelogs.get-games-played');
   const gamesManagedHandle = Meteor.subscribe('games.games-managed');
@@ -165,7 +165,7 @@ export default createContainer(() => {
     gamesPlayedAndGameLogs,
     gamesManagedAndGameLogs,
   };
-}, ManageContainer);
+})(ManageContainer);
 
 const ManageTabs = ({ activeTab, changeTab }) => (
   <div

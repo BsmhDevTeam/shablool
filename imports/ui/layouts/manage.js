@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import ManageNavbar from '../components/manage-navbar.js';
 import Loading from '../components/loading';
 
@@ -21,11 +21,11 @@ const ManageLayoutContainer = ({ loading, main }) => {
   return <ManageLayout main={main} />;
 };
 
-export default createContainer(({ main }) => {
+export default withTracker(({ main }) => {
   const nameHandle = Meteor.subscribe('users.my-name');
   const loading = !nameHandle.ready();
   return {
     loading,
     main,
   };
-}, ManageLayoutContainer);
+})(ManageLayoutContainer);
