@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import Game from '/imports/api/games/games';
 import Loading from '/imports/ui/components/loading';
@@ -35,12 +35,12 @@ HistoryRouterContainer.defaultProps = {
   gameLog: [],
 };
 
-const createGameLogContainer = createContainer(({ loading, game }) => {
+const createGameLogContainer = withTracker(({ loading, game }) => {
   if (loading) return <Loading color={'white'} />;
   const gamelogHandle = Meteor.subscribe('gamelogs.get-by-gameid', game._id);
   const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
   return { loading: !gamelogHandle.ready(), game, gameLog };
-}, HistoryRouterContainer);
+})(HistoryRouterContainer);
 
 createGameLogContainer.propTypes = {
   game: PropTypes.instanceOf(Object),
@@ -51,9 +51,9 @@ createGameLogContainer.defaultProps = {
   game: undefined,
 };
 
-export default createContainer(({ code }) => {
+export default withTracker(({ code }) => {
   const gameHandle = Meteor.subscribe('games.get-by-code', code);
   const loading = !gameHandle.ready();
   const game = Game.findOne();
   return { loading, game };
-}, createGameLogContainer);
+})(createGameLogContainer);

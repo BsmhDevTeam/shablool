@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Quiz from '/imports/api/quizes/quizes';
@@ -84,11 +84,11 @@ ViewQuizContainer.propTypes = {
   quizId: PropTypes.string.isRequired,
 };
 
-export default createContainer(({ id }) => {
+export default withTracker(({ id }) => {
   const quizHandle = Meteor.subscribe('quizes.get', id);
   const loading = !quizHandle.ready();
   return {
     loading,
     quizId: id,
   };
-}, ViewQuizContainer);
+})(ViewQuizContainer);

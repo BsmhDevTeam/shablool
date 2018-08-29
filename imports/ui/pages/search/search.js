@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
@@ -123,7 +123,7 @@ SearchContainer.propTypes = {
   query: PropTypes.string.isRequired,
 };
 
-export default createContainer(({ query = '' }) => {
+export default withTracker(({ query = '' }) => {
   const searchHandle = Meteor.subscribe('quizes.search', query);
   const loading = !searchHandle.ready();
   const results = Quiz.find().fetch();
@@ -132,4 +132,4 @@ export default createContainer(({ query = '' }) => {
     results,
     query,
   };
-}, SearchContainer);
+})(SearchContainer);
