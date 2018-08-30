@@ -7,6 +7,7 @@ class ManageNavBar extends React.Component {
     super(props);
     this.state = {
       date: new Date(),
+      history: props.history, 
     };
   }
 
@@ -31,7 +32,7 @@ class ManageNavBar extends React.Component {
     const search = (e) => {
       e.preventDefault();
       const query = e.target.query.value;
-      history.push(`/search/${query}`);
+      this.state.history.push(`/search/${query}`);
     };
     const getWelcomeByHours = () => {
       const now = new Date();

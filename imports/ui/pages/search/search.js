@@ -15,8 +15,8 @@ import uuidV4 from 'uuid/v4';
 const LoaderAndUI = ({ results, loading, query, state,
                       actions, actionsForUI, numberOfQuizzes }) => {
   if (results.length === 0 && loading) return <Loading />;
-  return results.length === 0
-        ? <div className="row">
+  return (results.length === 0
+        ? (<div className="row">
           <img
             className="col-md-6"
             src="/img/no-search-results.png"
@@ -27,8 +27,8 @@ const LoaderAndUI = ({ results, loading, query, state,
             src="/img/no-search-results-text.png"
             alt="No Search Results"
           />
-        </div>
-        : <div id="search">
+        </div>)
+        : (<div id="search">
           <h1>תוצאות חיפוש עבור <strong>{query}</strong></h1>
           <InfiniteScroll
             loadMore={actionsForUI.MoreQuizzesToDisplay}
@@ -79,7 +79,8 @@ const LoaderAndUI = ({ results, loading, query, state,
             onEscapeKey={actionsForUI.RemoveQuizAlert}
             onOutsideClick={actionsForUI.RemoveQuizAlert}
           />
-        </div>;
+        </div>)
+  );
 };
 
 LoaderAndUI.propTypes = {
@@ -103,7 +104,7 @@ const DBProvider = withTracker(({ query, state, actions, actionsForUI }) => {
       { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
       { $or: [{ owner: this.userId }, { private: false }] },
     ],
-  })({ limit: state.quizzesToDisplay }).fetch();
+  }, { limit: state.quizzesToDisplay }).fetch();
 
   return {
     results,
@@ -114,9 +115,9 @@ const DBProvider = withTracker(({ query, state, actions, actionsForUI }) => {
     actionsForUI,
     numberOfQuizzes,
   };
-}, LoaderAndUI);
+})(LoaderAndUI);
 
-class Search extends React.Component {
+export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -185,39 +186,21 @@ class Search extends React.Component {
       ConfirmOrCancel,
     };
 
-    return <DBProvider
-      query={query}
-      state={this.state}
-      actions={actions}
-      actionsForUI={actionsForUI}
-    />;
+    return (
+      <DBProvider
+        query={query}
+        state={this.state}
+        actions={actions}
+        actionsForUI={actionsForUI}
+      />
+    );
   }
 }
 
 Search.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object).isRequired,
   query: PropTypes.string.isRequired,
 };
 
-const SearchContainer = ({ results, loading, query }) => {
-  if (loading) return <Loading />;
-  return <Search results={results} query={query} />;
+Search.defaultProps = {
+  query: '',
 };
-
-SearchContainer.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object).isRequired,
-  loading: PropTypes.bool.isRequired,
-  query: PropTypes.string.isRequired,
-};
-
-export default withTracker(({ query = '' }) => {
-  const searchHandle = Meteor.subscribe('quizes.search', query);
-  const loading = !searchHandle.ready();
-  const results = Quiz.find().fetch();
-  return {
-    loading,
-    results,
-    query,
-  };
-})(SearchContainer);
-
