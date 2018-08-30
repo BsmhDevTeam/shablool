@@ -600,4 +600,6 @@ export default Game;
 
 Factory.define('game', Game, {
   quiz: () => Factory.create('quiz', { owner: 'owner' }),
+  manager: 'owner',
+  code: '123456',
 });

@@ -49,29 +49,32 @@ describe('Game Methods', function() {
 
     it('should join game', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       const playersRegs = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.PlayerReg }).fetch();
       expect(playersRegs).to.have.lengthOf(1);
     });
 
     it('should not join twice', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
+      Meteor.call('joinGame', { code });
       const playersRegs = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.PlayerReg }).fetch();
       expect(playersRegs).to.have.lengthOf(1);
     });
 
     it('should not join after game start', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       const playersRegs = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.PlayerReg }).fetch();
       expect(playersRegs).to.have.lengthOf(1);
     });
@@ -80,8 +83,9 @@ describe('Game Methods', function() {
   describe('startGame', function() {
     it('should start game', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.startGame();
       const gameStart = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.GameStart }).fetch();
@@ -104,8 +108,9 @@ describe('Game Methods', function() {
   describe('gameStart', function() {
     it('should start game', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const gameStart = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.GameStart }).fetch();
@@ -122,8 +127,9 @@ describe('Game Methods', function() {
 
     it('should not start game that already started', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.gameStart();
@@ -133,8 +139,9 @@ describe('Game Methods', function() {
 
     it('should not start game if not owner', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const gameStart = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.GameStart }).fetch();
@@ -145,8 +152,9 @@ describe('Game Methods', function() {
   describe('questionStart', function() {
     it('should start question', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -156,8 +164,9 @@ describe('Game Methods', function() {
 
     it('should not start question that already started', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const questionId = first(game.quiz.questions)._id;
@@ -169,8 +178,9 @@ describe('Game Methods', function() {
 
     it('should not start quesion if not owner', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       asUser('player');
@@ -181,8 +191,9 @@ describe('Game Methods', function() {
 
     it('should not start quesion if another question is already running', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const firstQuestionId = first(game.quiz.questions)._id;
@@ -197,8 +208,9 @@ describe('Game Methods', function() {
   describe('questionEnd', function() {
     it('should end question', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -209,8 +221,9 @@ describe('Game Methods', function() {
 
     it('should not end question that already ended', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -222,8 +235,9 @@ describe('Game Methods', function() {
 
     it('should end question that has started allready', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionEnd(first(game.quiz.questions)._id);
@@ -235,8 +249,9 @@ describe('Game Methods', function() {
   describe('playerAnswer', function() {
     it('should log answer', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -253,8 +268,9 @@ describe('Game Methods', function() {
 
     it('should not log answer multiple times to the same question', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -275,8 +291,9 @@ describe('Game Methods', function() {
 
     it('should not log answer for question that has not start yet', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       asUser('player');
@@ -290,8 +307,9 @@ describe('Game Methods', function() {
 
     it('should not log answer for question that has already ended', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -307,8 +325,9 @@ describe('Game Methods', function() {
 
     it('should not log answer if manager has answer', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.questionStart(first(game.quiz.questions)._id);
@@ -325,8 +344,9 @@ describe('Game Methods', function() {
   describe('endGame', function() {
     it('should end game', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.endGame();
@@ -336,8 +356,9 @@ describe('Game Methods', function() {
 
     it('should not end game that has not start yet', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.endGame();
       const endGame = GameLog.find({ gameId: game._id, 'event.nameType': eventTypes.GameEnd }).fetch();
@@ -346,8 +367,9 @@ describe('Game Methods', function() {
 
     it('should not end game twice', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.endGame();
@@ -360,8 +382,9 @@ describe('Game Methods', function() {
   describe('closeGame', function() {
     it('should close game', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.closeGame();
@@ -371,8 +394,9 @@ describe('Game Methods', function() {
 
     it('should not close game twice', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       game.closeGame();
@@ -385,10 +409,11 @@ describe('Game Methods', function() {
   describe('endQuestionIfEveryoneAnswered', function() {
     it('should end question', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player1');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('player2');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const question = first(sortBy(game.quiz.questions, 'order'));
@@ -405,10 +430,11 @@ describe('Game Methods', function() {
 
     it('should not end question', function() {
       const game = Factory.create('game');
+      const code = game.initGame();
       asUser('player1');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('player2');
-      Meteor.call('joinGame', { code: game.code });
+      Meteor.call('joinGame', { code });
       asUser('owner');
       game.gameStart();
       const question = first(sortBy(game.quiz.questions, 'order'));
