@@ -1,8 +1,8 @@
-import { Meteor } from 'meteor/meteor';
 import { publishComposite } from 'meteor/reywood:publish-composite';
 import { eventTypes } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images.js';
 import Game from '../games.js';
+import GameLog from '../../gamelogs/gamelogs';
 
 
 // Manager publications :
@@ -11,21 +11,20 @@ publishComposite('games.games-managed', function() {
     collectionName: 'games',
     find() {
       const userId = this.userId;
-      return Game.find({
+      const myGamesId = Game.find({ manager: userId }).map(o => o._id);
+      const myGamesClosedId = GameLog.find({
         $and: [
-          { 'quiz.owner': userId },
-          { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } },
+          { gameId: { $in: myGamesId } },
+          { 'event.nameType': eventTypes.GameClose },
         ],
-      });
+      }).map(o => o.gameId);
+      return Game.find({ _id: { $in: myGamesClosedId } });
     },
     children: [
       {
-        collectionName: 'users',
+        collectionName: 'gamelogs',
         find(game) {
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
-          );
+          return GameLog.find({ gameId: game._id });
         },
       },
     ],
@@ -37,21 +36,17 @@ publishComposite('games.games-played', function() {
   return {
     collectionName: 'games',
     find() {
-      return Game.find({
-        $and: [
-          { gameLog: { $elemMatch: { playerId: this.userId } } },
-          { gameLog: { $elemMatch: { nameType: eventTypes.GameClose } } },
-        ],
-      });
+      const myGamesRegiteredId = GameLog.find({ 'event.playerId': this.userId })
+      .fetch().map(o => o.gameId);
+      const myGamesRegiteredColsedId = GameLog.find({ gameId: { $in: myGamesRegiteredId },
+        'event.nameType': eventTypes.GameClose }).fetch();
+      return Game.find({ _id: { $in: myGamesRegiteredColsedId } });
     },
     children: [
       {
-        collectionName: 'users',
+        collectionName: 'gamelogs',
         find(game) {
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
-          );
+          return GameLog.find({ gameId: game._id });
         },
       },
     ],
@@ -63,13 +58,16 @@ publishComposite('games.get-by-code', function(code) {
   return {
     collectionName: 'games',
     find() {
+      const myGamesRegiteredId = GameLog.find({ 'event.playerId': this.userId })
+      .map(o => o.gameId);
+      // TODO: check if game is open
       return Game.find({
         $and: [
           { code },
           {
             $or: [
-              { 'quiz.owner': this.userId },
-              { gameLog: { $elemMatch: { playerId: this.userId } } },
+              { manager: this.userId },
+              { _id: { $in: myGamesRegiteredId } },
             ],
           },
         ],
@@ -77,18 +75,16 @@ publishComposite('games.get-by-code', function(code) {
     },
     children: [
       {
-        collectionName: 'users',
+        collectionName: 'images',
         find(game) {
-          return Meteor.users.find(
-            { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
-          );
+          const gameLog = GameLog.find({ gameId: game._id }).map(o => o.event);
+          return Image.find({ _id: { $in: game.getImagesId(gameLog) } });
         },
       },
       {
-        collectionName: 'images',
+        collectionName: 'gamelogs',
         find(game) {
-          return Image.find({ _id: { $in: game.getImagesId() } });
+          return GameLog.find({ gameId: game._id });
         },
       },
     ],

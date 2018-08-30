@@ -78,7 +78,7 @@ publishComposite('quizes.search', function(query, numOfQuizzes) {
         find(quiz) {
           return Meteor.users.find(
             { _id: quiz.owner },
-            { fields: { 'services.gitlab.username': 1 } },
+            { fields: { username: 1 } },
           );
         },
       },

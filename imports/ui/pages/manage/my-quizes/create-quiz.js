@@ -1,13 +1,11 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
 import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
 import QuizForm from '/imports/ui/components/quiz-form.js';
 import Image from '/imports/api/images/images';
-import Loading from '/imports/ui/components/loading.js';
 
 // Utilities
 const newQuestion = () => {
@@ -29,6 +27,7 @@ class CreateQuiz extends React.Component {
       uploads: [],
       uploadsCounter: false,
       validate: false,
+      history: props.history,
     };
   }
 

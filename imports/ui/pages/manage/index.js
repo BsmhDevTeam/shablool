@@ -1,17 +1,18 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import Quiz from '/imports/api/quizes/quizes';
 import Game from '/imports/api/games/games';
-import { managementTabs } from '/imports/startup/both/constants.js';
+import { managementTabs, eventTypes } from '/imports/startup/both/constants.js';
 import Loading from '/imports/ui/components/loading';
 import Snackbar from '/imports/ui/components/snackbar';
 import MyQuizes from './my-quizes';
 import GamesManaged from './games-managed';
 import GamesPlayed from './games-played';
+import GameLog from '../../../api/gamelogs/gamelogs';
 
 class Manage extends React.Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class Manage extends React.Component {
   }
 
   render() {
-    const { myQuizes, gamesManaged, gamesPlayed } = this.props;
+    const { myQuizes, gamesManagedAndGameLogs, gamesPlayedAndGameLogs } = this.props;
     const { activeTab, showDeleteQuizAlert, quizToDelete, snackbarNotification } = this.state;
 
     const changeTab = tabName => () => this.setState({ activeTab: tabName });
@@ -70,8 +71,8 @@ class Manage extends React.Component {
         <ManageTabs activeTab={activeTab} changeTab={changeTab} />
         <div className="tab-content">
           <MyQuizes activeTab={activeTab} myQuizes={myQuizes} actions={actions} />
-          <GamesManaged activeTab={activeTab} gamesManaged={gamesManaged} />
-          <GamesPlayed activeTab={activeTab} gamesPlayed={gamesPlayed} />
+          <GamesManaged activeTab={activeTab} gamesManagedAndGameLogs={gamesManagedAndGameLogs} />
+          <GamesPlayed activeTab={activeTab} gamesPlayedAndGameLogs={gamesPlayedAndGameLogs} />
         </div>
         {snackbarNotification ? <Snackbar message={snackbarNotification} /> : ''}
         <SweetAlert
@@ -103,42 +104,68 @@ class Manage extends React.Component {
 
 Manage.propTypes = {
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManagedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const ManageContainer = ({ loading, myQuizes, gamesPlayed, gamesManaged }) => {
+const ManageContainer =
+({ loading, myQuizes, gamesPlayedAndGameLogs, gamesManagedAndGameLogs }) => {
   if (loading) return <Loading />;
-  return <Manage myQuizes={myQuizes} gamesPlayed={gamesPlayed} gamesManaged={gamesManaged} />;
+  return (<Manage
+    myQuizes={myQuizes}
+    gamesPlayedAndGameLogs={gamesPlayedAndGameLogs}
+    gamesManagedAndGameLogs={gamesManagedAndGameLogs}
+  />);
 };
 
 ManageContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
   myQuizes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesManaged: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gamesPlayed: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesManagedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gamesPlayedAndGameLogs: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default createContainer(() => {
+export default withTracker(() => {
   const myQuizesHandle = Meteor.subscribe('quizes.my-quizes');
-  const gamesPlayedHandle = Meteor.subscribe('games.games-played');
+  const gamesPlayedHandle = Meteor.subscribe('gamelogs.get-games-played');
   const gamesManagedHandle = Meteor.subscribe('games.games-managed');
 
   const loading =
     !myQuizesHandle.ready() || !gamesPlayedHandle.ready() || !gamesManagedHandle.ready();
 
   const myQuizes = Quiz.find().fetch(); // TODO: fix query
-  const gamesManaged = Game.find({ 'quiz.owner': Meteor.userId() }).fetch().reverse();
-  const gamesPlayed = Game.find({ gameLog: { $elemMatch: { playerId: Meteor.userId() } } })
+  const gamesManaged = Game.find({ manager: Meteor.userId() }).fetch().reverse();
+
+  const gamesPlayedId = GameLog.find({
+    $and: [
+      { 'event.nameType': eventTypes.PlayerReg },
+      { 'event.playerId': Meteor.userId() },
+    ],
+  }).map(o => o.gameId);
+  const gamePlayedAndClosedId = GameLog.find({
+    $and: [
+      { gameId: { $in: gamesPlayedId } },
+      { 'event.nameType': eventTypes.GameClose },
+    ],
+  }).map(o => o.gameId);
+  const gamesPlayed = Game.find({ _id: { $in: gamePlayedAndClosedId } })
     .fetch()
     .reverse();
+  const gamesPlayedAndGameLogs = gamesPlayed.map(g => ({
+    game: g,
+    gameLog: GameLog.find({ gameId: g._id }).map(o => o.event),
+  }));
+  const gamesManagedAndGameLogs = gamesManaged.map(g => ({
+    game: g,
+    gameLog: GameLog.find({ gameId: g._id }).map(o => o.event),
+  }));
   return {
     loading,
     myQuizes,
-    gamesPlayed,
-    gamesManaged,
+    gamesPlayedAndGameLogs,
+    gamesManagedAndGameLogs,
   };
-}, ManageContainer);
+})(ManageContainer);
 
 const ManageTabs = ({ activeTab, changeTab }) => (
   <div

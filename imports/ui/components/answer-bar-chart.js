@@ -16,8 +16,8 @@ const colorsJson = {
   4: '#d59c04',
 };
 
-const AnswerBar = ({ game }) => {
-  const data = game.answersGroupCount();
+const AnswerBar = ({ game, gameLog }) => {
+  const data = game.answersGroupCount(gameLog);
 
   const CustomizedAxisTick = ({ x, y, payload }) =>
     <g transform={`translate(${x + 9.5},${y + 15})`}>
@@ -54,6 +54,7 @@ const AnswerBar = ({ game }) => {
 
 AnswerBar.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default AnswerBar;

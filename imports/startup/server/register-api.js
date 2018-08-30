@@ -5,3 +5,4 @@ import '/imports/api/games/server/methods';
 import '/imports/api/users/server/publications';
 import '/imports/api/users/server/methods';
 import '/imports/api/images/server/publication';
+import '/imports/api/gamelogs/server/publication';

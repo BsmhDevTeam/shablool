@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Counts } from 'meteor/ros:publish-counts';
 import PropTypes from 'prop-types';
 import SweetAlert from 'sweetalert-react';
@@ -92,7 +92,7 @@ LoaderAndUI.propTypes = {
   numberOfQuizzes: PropTypes.number.isRequired,
 };
 
-const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => {
+const DBProvider = withTracker(({ query, state, actions, actionsForUI }) => {
   Meteor.subscribe('quizes.count', query);
   const numberOfQuizzes = Counts.get('quizzes-counter');
   const searchHandle = Meteor.subscribe('quizes.search', query, state.quizzesToDisplay);
@@ -103,7 +103,7 @@ const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => 
       { tags: { $elemMatch: { $regex: query, $options: 'i' } } }] },
       { $or: [{ owner: this.userId }, { private: false }] },
     ],
-  }, { limit: state.quizzesToDisplay }).fetch();
+  })({ limit: state.quizzesToDisplay }).fetch();
 
   return {
     results,
@@ -116,7 +116,7 @@ const DBProvider = createContainer(({ query, state, actions, actionsForUI }) => 
   };
 }, LoaderAndUI);
 
-export default class Search extends React.Component {
+class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -195,9 +195,29 @@ export default class Search extends React.Component {
 }
 
 Search.propTypes = {
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
   query: PropTypes.string.isRequired,
 };
 
-Search.defaultProps = {
-  query: '',
+const SearchContainer = ({ results, loading, query }) => {
+  if (loading) return <Loading />;
+  return <Search results={results} query={query} />;
 };
+
+SearchContainer.propTypes = {
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
+  query: PropTypes.string.isRequired,
+};
+
+export default withTracker(({ query = '' }) => {
+  const searchHandle = Meteor.subscribe('quizes.search', query);
+  const loading = !searchHandle.ready();
+  const results = Quiz.find().fetch();
+  return {
+    loading,
+    results,
+    query,
+  };
+})(SearchContainer);
+

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import GameNavbar from '/imports/ui/components/game-navbar';
+import { startGameResults } from '/imports/startup/both/constants';
 
 export default class GameLobby extends React.Component {
   constructor(props) {
@@ -10,14 +11,15 @@ export default class GameLobby extends React.Component {
     };
   }
   render() {
-    const { game } = this.props;
-    const players = game.getPlayersName();
+    const { game, players } = this.props;
     const startGame = () => {
       const showAlert = () => {
         this.setState({ showNoPlayerAlert: true });
         setTimeout(() => this.setState({ showNoPlayerAlert: false }), 3000);
       };
-      game.applyMethod('startGame', [], (err, result) => result ? null : showAlert());
+      game.applyMethod('startGame', [], (err, result) => ((result === startGameResults.noPlayersReg)
+        ? showAlert()
+        : null));
     };
     return (
       <div className="game-lobby">
@@ -69,6 +71,7 @@ export default class GameLobby extends React.Component {
 
 GameLobby.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  players: PropTypes.arrayOf(String).isRequired,
 };
 
 const PlayersLobby = ({ name }) =>

@@ -1,1 +1,1 @@
-FROM jshimko/meteor-launchpad:latest
+FROM abernix/meteord:node-8-onbuild

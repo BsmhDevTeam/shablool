@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Answers from '/imports/ui/components/answers';
 import GameNavbar from '/imports/ui/components/game-navbar';
 import AnswerBar from '/imports/ui/components/answer-bar-chart';
 
-const QuestionStatistics = ({ game }) => {
-  const question = game.lastQuestionToStart();
+const QuestionStatistics = ({ game, gameLog }) => {
+  const question = game.lastQuestionToStart(gameLog);
 
   const showLeaders = () => {
     game.applyMethod('showLeaders', []);
@@ -21,30 +22,35 @@ const QuestionStatistics = ({ game }) => {
           href="javascript:void(0)"
           className="btn btn-primary show-leaders-btn"
           onClick={showLeaders}
-        >
-            לטבלת המובילים
-          </a>
+          >
+          לטבלת המובילים
+        </a>
         : ''}
       <div className="row">
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <p className="count-down-timer-num">
-            {game.getQuestionTimeLeft(question._id)}
+            {game.getQuestionTimeLeft(question._id, gameLog)}
           </p>
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-          <AnswerBar game={game} />
+          <AnswerBar game={game} gameLog={gameLog} />
         </div>
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <p className="answer-count" id="answer-count-number">
-            {game.getLastQuestionAnswerCount()}
+            {game.getLastQuestionAnswerCount(gameLog)}
           </p>
           <p className="answer-count">תשובות</p>
         </div>
       </div>
-      <Answers answers={question.answers} game={game} />
+      <Answers answers={question.answers} game={game} gameLog={gameLog} />
       {game.isManager() ? <audio src="/gong.mp3" autoPlay /> : ''}
     </div>
   );
+};
+
+QuestionStatistics.propTypes = {
+  game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default QuestionStatistics;

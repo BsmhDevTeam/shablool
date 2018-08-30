@@ -1,5 +1,45 @@
 #login-layout {
-    .container {
-        padding: 200px 400px;
+  .container {
+    padding: 200px 400px;
+  }
+  form {
+    max-width: 400px;
+    margin: auto;
+  }
+  .login-background {
+    z-index: -1;
+    -webkit-animation: 24s infinite bgcolorchange;
+    animation: 24s infinite bgcolorchange;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  h1 {
+    color: #fff;
+    text-align: center;
+  }
+  .logo-area {
+    padding-top: 80px;
+    text-align: center;
+    margin: auto;
+  }
+  .btn-custom {
+    width: 100%;
+    background-color: #eb7575;
+    color: #fff;
+    font-size: 18px;
+  }
+  .link-message {
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 15px;
+    a {
+      color: #fff;
     }
+  }
 }

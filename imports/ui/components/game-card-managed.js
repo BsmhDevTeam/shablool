@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment/locale/he';
 
-const GameCardManaged = ({ game }) => {
+const GameCardManaged = ({ game, gameLog }) => {
   const fromNow = () => {
     moment.locale('he');
     return moment(new Date(game.createdAt)).fromNow();
@@ -23,7 +23,7 @@ const GameCardManaged = ({ game }) => {
             </h5>
             <p>
               <span className="game-owner-span">
-                {`מריץ המשחק: ${Meteor.users.findOne(game.quiz.owner).services.gitlab.username}`}
+                {`מריץ המשחק: ${Meteor.users.findOne(game.manager).username}`}
               </span>
             </p>
             <p>
@@ -38,7 +38,7 @@ const GameCardManaged = ({ game }) => {
                 <div className="star game-card-link">
                   <span className="fa fa-users game-card-info-text-icon" />
                   <span className="game-card-link-text game-card-info-text">
-                    <strong>{game.getPlayersCount()}</strong> שחקנים
+                    <strong>{game.getPlayersCount(gameLog)}</strong> שחקנים
                   </span>
                 </div>
               </div>
@@ -69,6 +69,7 @@ const GameCardManaged = ({ game }) => {
 
 GameCardManaged.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default GameCardManaged;

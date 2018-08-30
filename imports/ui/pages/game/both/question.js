@@ -7,8 +7,8 @@ import { noImage } from '/imports/startup/both/constants';
 import Image from '/imports/api/images/images';
 import { Line } from 'rc-progress';
 
-const Question = ({ game }) => {
-  const question = game.lastQuestionToStart();
+const Question = ({ game, gameLog }) => {
+  const question = game.lastQuestionToStart(gameLog);
   const questionImage = Image.findOne({ _id: question.image });
 
   const skipQuestion = () => {
@@ -26,13 +26,13 @@ const Question = ({ game }) => {
           href="javascript:void(0)"
           className="btn btn-primary show-leaders-btn"
           onClick={skipQuestion}
-        >
-            עבור שאלה
-          </a>
+          >
+          עבור שאלה
+        </a>
         : ''}
       <div className="row">
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
-          <CountdownTimer secondsRemaining={game.getQuestionTimeLeft(question._id)} />
+          <CountdownTimer secondsRemaining={game.getQuestionTimeLeft(question._id, gameLog)} />
         </div>
         <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <div className="question-image-area">
@@ -45,7 +45,7 @@ const Question = ({ game }) => {
         </div>
         <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 padding-top">
           <p className="answer-count" id="answer-count-number">
-            {game.getLastQuestionAnswerCount()}
+            {game.getLastQuestionAnswerCount(gameLog)}
           </p>
           <p className="answer-count">תשובות</p>
         </div>
@@ -57,7 +57,7 @@ const Question = ({ game }) => {
           strokeColor="#85b8fe"
         />
       </div>
-      <Answers answers={question.answers} game={game} />
+      <Answers answers={question.answers} game={game} gameLog={gameLog} />
       {game.isManager() ? <audio src={`/game-audio-${Math.floor(Math.random() * 3) + 1}.mp3`} autoPlay loop /> : ''}
     </div>
   );
@@ -65,6 +65,7 @@ const Question = ({ game }) => {
 
 Question.propTypes = {
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Question;

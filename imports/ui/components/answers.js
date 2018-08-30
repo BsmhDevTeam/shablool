@@ -10,11 +10,11 @@ const glyphIcons = {
   4: 'fa fa-heart',
 };
 
-const Answers = ({ answers, game }) =>
+const Answers = ({ answers, game, gameLog }) =>
   <div className="row">
     <div className="answers-btn-area-to-bottom">
       {answers.map((answer, index) =>
-        <Answer answer={answer} index={index + 1} game={game} key={answer._id} />,
+        <Answer answer={answer} index={index + 1} game={game} gameLog={gameLog} key={answer._id} />,
       )}
     </div>
   </div>;
@@ -22,20 +22,21 @@ const Answers = ({ answers, game }) =>
 Answers.propTypes = {
   answers: PropTypes.arrayOf(Object).isRequired,
   game: PropTypes.instanceOf(Object).isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
-const Answer = ({ answer, index, game }) => {
+const Answer = ({ answer, index, game, gameLog }) => {
   const selectAnswer = () => {
-    game.applyMethod('playerAnswer', [game.lastQuestionToStartId(), answer._id]);
+    game.applyMethod('playerAnswer', [game.lastQuestionToStartId(gameLog), answer._id]);
   };
 
-  const isSelected = game.gameLog.find(
+  const isSelected = gameLog.find(
     event => event.nameType === eventTypes.PlayerAnswer &&
     answer._id === event.answerId && event.playerId === Meteor.userId()) ? 'selected-answer' : '';
 
   const isRightAnswer = answer.points > 0;
   const calculateOpacity = () =>
-    !isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd ? 'wrong-answer' : '';
+    !isRightAnswer && game.getLastEvent(gameLog).nameType === eventTypes.QuestionEnd ? 'wrong-answer' : '';
 
   return (
     <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 buttons-col" key={answer.id}>
@@ -54,7 +55,7 @@ const Answer = ({ answer, index, game }) => {
             </h3>
           </div>
           <div className="col-md-1 col-xs-1 col-sm-1 col-lg-1 col-xg-1">
-            {isRightAnswer && game.getLastEvent().nameType === eventTypes.QuestionEnd
+            {isRightAnswer && game.getLastEvent(gameLog).nameType === eventTypes.QuestionEnd
               ? <i className="fa fa-check answer-icon right-answer-icon" />
               : ''}
           </div>
@@ -68,6 +69,7 @@ Answer.propTypes = {
   answer: PropTypes.instanceOf(Object).isRequired,
   game: PropTypes.instanceOf(Object).isRequired,
   index: PropTypes.number.isRequired,
+  gameLog: PropTypes.arrayOf(Object).isRequired,
 };
 
 export default Answers;

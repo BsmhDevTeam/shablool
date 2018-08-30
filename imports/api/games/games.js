@@ -16,6 +16,7 @@ import {
   size,
 } from 'underscore';
 import Quiz from '../quizes/quizes.js';
+import GameLog from '../gamelogs/gamelogs.js';
 
 const calculateTimeDelta = (t1, t2) => {
   const datesDelta = t1.getTime() - t2.getTime();
@@ -36,7 +37,7 @@ const avarage = (arr) => {
   return arr.length > 0 ? sum / arr.length : 0;
 };
 
-const generateCode = (n) => {
+export const generateCode = (n) => {
   const lowerBound = 10 ** (n - 1);
   const upperBound = 10 ** n;
   const randUpperBound = upperBound - lowerBound - 1;
@@ -179,6 +180,9 @@ export const ShowLeaders = Class.create({
         return eventTypes.ShowLeaders;
       },
     },
+    questionId: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default() {
@@ -229,17 +233,11 @@ const Game = Class.create({
   collection: new Mongo.Collection('games'),
   fields: {
     quiz: Quiz,
-    gameLog: {
-      type: [Object],
-      default() {
-        return [new GameInit()];
-      },
+    manager: {
+      type: String,
     },
     code: {
       type: String,
-      default() {
-        return generateCode(6).toString();
-      },
     },
     createdAt: {
       type: Date,
@@ -259,12 +257,12 @@ const Game = Class.create({
 
   helpers: {
     isManager() {
-      return Meteor.userId() === this.quiz.owner;
+      return Meteor.userId() === this.manager;
     },
-    getGamePage() {
+    getGamePage(gameLog) {
       // TODO: rewrite
-      const playerEvents = this.gameLog.filter(e => e.playerId === Meteor.userId());
-      const otherEvents = this.gameLog.filter(
+      const playerEvents = gameLog.filter(e => e.playerId === Meteor.userId());
+      const otherEvents = gameLog.filter(
         e => !(e.nameType === eventTypes.PlayerAnswer || e.nameType === eventTypes.PlayerReg),
       );
       return max(
@@ -272,16 +270,16 @@ const Game = Class.create({
         e => e.createdAt,
       );
     },
-    isUserRegistered() {
-      const isUserExist = this.getPlayersId().find(user => user === Meteor.userId());
+    isUserRegistered(gameLog) {
+      const isUserExist = this.getPlayersId(gameLog).find(user => user === Meteor.userId());
       return !!isUserExist;
     },
-    answersGroupCount() {
-      const lastQuestionId = this.lastQuestionToStartId(); // => qId
+    answersGroupCount(gameLog) {
+      const lastQuestionId = this.lastQuestionToStartId(gameLog); // => qId
       const getAnswerOrder = id =>
         this.quiz.questions.find(q => q._id === lastQuestionId).answers.find(a => a._id === id)
           .order; // answer._id => answer.order
-      const playersAnswerEvents = this.getLastQuestionAnswers() // => [PlayerAnswer, ...]
+      const playersAnswerEvents = this.getLastQuestionAnswers(gameLog) // => [PlayerAnswer, ...]
         .map(e => e.answerId) // => [answerId, ...]
         .map(getAnswerOrder) // => [answerOrder, ...]
         .concat([1, 2, 3, 4]); // => so there will always be 4 columns in the bar chart
@@ -296,24 +294,26 @@ const Game = Class.create({
       }));
       return answerOrderCount;
     },
-    getLastQuestionAnswerCount() {
-      return this.getLastQuestionAnswers().length;
+    getLastQuestionAnswerCount(gameLog) {
+      return this.getLastQuestionAnswers(gameLog).length;
     },
-    getLastQuestionAnswers() {
-      return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId());
+    getLastQuestionAnswers(gameLog) {
+      return this.getPlayersAnswersByQuestion(this.lastQuestionToStartId(gameLog), gameLog);
     },
-    getPlayersId() {
-      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).map(e => e.playerId);
+    getPlayersId(gameLog) {
+      return gameLog
+      .filter(e => e.nameType === eventTypes.PlayerReg)
+      .map(e => e.playerId);
     },
-    getPlayersCount() {
-      return this.gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
+    getPlayersCount(gameLog) {
+      return gameLog.filter(e => e.nameType === eventTypes.PlayerReg).length;
     },
-    scoreListById() {
-      const playersAnswers = this.gameLog
+    scoreListById(gameLog) {
+      const playersAnswers = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer) // => [PlayerAnswer]
         .map(({ playerId, answerId, questionId, createdAt }) => ({
           playerId,
-          timeDelta: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+          timeDelta: calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId, gameLog)),
           answerScore: this.getAnswerScore(questionId, answerId),
           questionTime: this.getQuestionTime(questionId),
         })) // => [{playerId, timeDelta: t, answerScore: a, questionTime: q}]
@@ -326,35 +326,35 @@ const Game = Class.create({
       ); // => {playerId: [score, score, score], ...}
       const finalScoreByUser = mapObject(scoresByUser, val => val.reduce((a, b) => a + b, 0));
       // => {playerId: finalScore, ...}
-      const players = this.getPlayersId();
+      const players = this.getPlayersId(gameLog);
       const scoreByUserId = players.map(pId => ({
         playerId: pId,
         userScore: finalScoreByUser[pId] || 0,
       })); // => [{playerId: name, userScore: score}, ...]
       return sortBy(scoreByUserId, 'userScore').reverse();
     },
-    scoreListByName() {
-      const scoreListById = this.scoreListById();
+    scoreListByName(gameLog) {
+      const scoreListById = this.scoreListById(gameLog);
       const scoreByUserName = scoreListById.map(o => ({
-        userName: Meteor.users.findOne(o.playerId).services.gitlab.username,
+        userName: Meteor.users.findOne(o.playerId).username,
         userScore: o.userScore,
       })); // => [{userName: name, userScore: score}, ...]
       return scoreByUserName;
     },
-    getLeaders() {
-      const scoreByUserNamesSorted = first(this.scoreListByName(), 5);
+    getLeaders(gameLog) {
+      const scoreByUserNamesSorted = first(this.scoreListByName(gameLog), 5);
       return scoreByUserNamesSorted; // => [{userName, score}, ...] - 5 elements
     },
-    getScoreByUserId(pId) {
-      const uIdAndScore = this.scoreListById().find(o => o.playerId === pId);
+    getScoreByUserId(pId, gameLog) {
+      const uIdAndScore = this.scoreListById(gameLog).find(o => o.playerId === pId);
       return uIdAndScore.userScore;
     },
-    getPlaceByUserId(pId) {
-      const place = this.scoreListById().findIndex(o => o.playerId === pId);
+    getPlaceByUserId(pId, gameLog) {
+      const place = this.scoreListById(gameLog).findIndex(o => o.playerId === pId);
       return place + 1;
     },
-    getQuestionStartTime(qId) {
-      const questionStartEvent = this.gameLog
+    getQuestionStartTime(qId, gameLog) {
+      const questionStartEvent = gameLog
         .filter(e => e.nameType === eventTypes.QuestionStart)
         .find(e => e.questionId === qId);
       const questionStartTime = questionStartEvent.createdAt;
@@ -371,68 +371,68 @@ const Game = Class.create({
       const time = question.time;
       return time;
     },
-    lastQuestionToStartId() {
-      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+    lastQuestionToStartId(gameLog) {
+      const questionLog = gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents.questionId;
       return qId;
     },
-    lastQuestionToStart() {
-      const lastQuestionId = this.lastQuestionToStartId();
+    lastQuestionToStart(gameLog) {
+      const lastQuestionId = this.lastQuestionToStartId(gameLog);
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
-    lastQuestionToEndId() {
-      const questionLog = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
+    lastQuestionToEndId(gameLog) {
+      const questionLog = gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
       const orderedQuestionsLog = sortBy(questionLog, 'createdAt');
       const lastQuestionEvents = orderedQuestionsLog[orderedQuestionsLog.length - 1];
       const qId = lastQuestionEvents ? lastQuestionEvents.questionId : undefined;
       return qId;
     },
-    lastQuestionToEnd() {
-      const lastQuestionId = this.lastQuestionToEndId();
+    lastQuestionToEnd(gameLog) {
+      const lastQuestionId = this.lastQuestionToEndId(gameLog);
       const lastQuestion = this.quiz.questions.find(q => q._id === lastQuestionId);
       return lastQuestion;
     },
     getUsernameByUserID(uId) {
       const username = Meteor.users
-        .find({ _id: uId }, { fields: { 'services.gitlab.username': 1 } })
-        .map(p => p.services.gitlab.username);
+        .find({ _id: uId }, { fields: { username: 1 } })
+        .map(p => p.username);
       return username;
     },
-    getPlayersName() {
-      const playersIds = this.getPlayersId();
+    getPlayersName(gameLog) {
+      const playersIds = this.getPlayersId(gameLog);
       const playersNames = Meteor.users
-        .find({ _id: { $in: playersIds } }, { fields: { 'services.gitlab.username': 1 } })
-        .map(p => p.services.gitlab.username);
+        .find({ _id: { $in: playersIds } }, { fields: { username: 1 } })
+        .map(p => p.username);
       return playersNames;
     },
-    getLastEvent() {
-      return last(this.gameLog);
+    getLastEvent(gameLog) {
+      return last(gameLog);
     },
-    getWinner() {
-      return first(this.getLeaders());
+    getWinner(gameLog) {
+      return first(this.getLeaders(gameLog));
     },
-    isCurrentQuestionEnded() {
-      const isEnded = this.lastQuestionToStartId() === this.lastQuestionToEndId();
+    isCurrentQuestionEnded(gameLog) {
+      const isEnded = this.lastQuestionToStartId(gameLog) === this.lastQuestionToEndId(gameLog);
       return isEnded;
     },
-    nextQuestionId() {
-      const lastQuestion = this.lastQuestionToEnd();
+    nextQuestionId(gameLog) {
+      const lastQuestion = this.lastQuestionToEnd(gameLog);
       const lastQuestionOrder = lastQuestion.order;
       const nextQuestion = this.quiz.questions.find(q => q.order === lastQuestionOrder + 1);
-      return this.isCurrentQuestionEnded() ? nextQuestion._id : null;
+      return this.isCurrentQuestionEnded(gameLog) ? nextQuestion._id : null;
     },
-    isLastQuestion() {
+    isLastQuestion(gameLog) {
       const lastQuestionOrder = max(this.quiz.questions, q => q.order).order;
-      return lastQuestionOrder === this.lastQuestionToEnd().order;
+      return lastQuestionOrder === this.lastQuestionToEnd(gameLog).order;
     },
-    getQuestionTimeLeft(questionId) {
-      const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+    getQuestionTimeLeft(questionId, gameLog) {
+      const questionStartEvents = gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       const questionStartEvent = questionStartEvents.filter(e => e.questionId === questionId);
       // Check if question already ended
-      const questionEndEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
+      const questionEndEvents = gameLog.filter(e => e.nameType === eventTypes.QuestionEnd);
       const questionEndEvent = questionEndEvents.find(e => e.questionId === questionId);
       const isQuestionEnded = !!questionEndEvent;
       // calculate time passed
@@ -449,8 +449,8 @@ const Game = Class.create({
       const order = this.quiz.questions.find(q => q._id === qId).order;
       return order;
     },
-    getPlayerQuestionAndScore(pId) {
-      const playerAnswerEvents = this.gameLog
+    getPlayerQuestionAndScore(pId, gameLog) {
+      const playerAnswerEvents = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
       const questionAndScore = playerAnswerEvents.map(e => ({
@@ -458,7 +458,7 @@ const Game = Class.create({
         score: calculateScore(
           calculateTimeDelta(
             e.createdAt,
-            this.gameLog
+            gameLog
               .filter(qse => qse.nameType === eventTypes.QuestionStart)
               .find(qse => qse.questionId === e.questionId).createdAt,
           ),
@@ -470,30 +470,30 @@ const Game = Class.create({
       })); // [{questionOrder: o, score: s}, ...]
       return questionAndScore;
     },
-    getPlayerQuestionAndTime(pId) {
-      const playerAnswerEvents = this.gameLog
+    getPlayerQuestionAndTime(pId, gameLog) {
+      const playerAnswerEvents = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.playerId === pId);
       const questionAndTime = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
         time:
           e.createdAt.getTime() / 1000 -
-          this.gameLog
+          gameLog
             .filter(qse => qse.nameType === eventTypes.QuestionStart)
             .find(qse => qse.questionId === e.questionId)
             .createdAt.getTime() / 1000,
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndTime;
     },
-    getAvarageScoreForQuestion(qId) {
-      const playerAnswerEvents = this.gameLog
+    getAvarageScoreForQuestion(qId, gameLog) {
+      const playerAnswerEvents = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       const scores = playerAnswerEvents.map(e =>
         calculateScore(
           calculateTimeDelta(
             e.createdAt,
-            this.gameLog
+            gameLog
               .filter(qse => qse.nameType === eventTypes.QuestionStart)
               .find(qse => qse.questionId === e.questionId).createdAt,
           ),
@@ -505,52 +505,54 @@ const Game = Class.create({
       );
       return avarage(scores);
     },
-    getAvarageQuestionAndScore() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+    getAvarageQuestionAndScore(gameLog) {
+      const playerAnswerEvents = gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
       const questionAndScore = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
-        score: this.getAvarageScoreForQuestion(e.questionId),
+        score: this.getAvarageScoreForQuestion(e.questionId, gameLog),
       }));
       return questionAndScore; // [{questionOrder: o, score: s}, ...]
     },
-    getAvarageTimeForQuestion(qId) {
-      const playerAnswerEvents = this.gameLog
+    getAvarageTimeForQuestion(qId, gameLog) {
+      const playerAnswerEvents = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
-      const questionStartTime = this.getQuestionStartTime(qId) / 1000;
+      const questionStartTime = this.getQuestionStartTime(qId, gameLog) / 1000;
       const times = playerAnswerEvents.map(e => e.createdAt.getTime() / 1000 - questionStartTime);
       return avarage(times);
     },
-    getAvarageQuestionAndTime() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+    getAvarageQuestionAndTime(gameLog) {
+      const playerAnswerEvents = gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
       const questionAndScore = playerAnswerEvents.map(e => ({
         questionOrder: this.getQuestionsOrder(e.questionId),
-        time: this.getAvarageTimeForQuestion(e.questionId),
+        time: this.getAvarageTimeForQuestion(e.questionId, gameLog),
       })); // [{questionOrder: o, time: t}, ...]
       return questionAndScore;
     },
-    getMaxQuizOrder() {
-      const questionStartEvents = this.gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
+    getMaxQuizOrder(gameLog) {
+      const questionStartEvents = gameLog.filter(e => e.nameType === eventTypes.QuestionStart);
       return questionStartEvents.length;
     },
-    getPlayerScoreAndAvarageScore(pId) {
-      const playerQuestionAndScore = this.getPlayerQuestionAndScore(pId);
+    getPlayerScoreAndAvarageScore(pId, gameLog) {
+      const playerQuestionAndScore = this.getPlayerQuestionAndScore(pId, gameLog);
       const playerAndAvarageScore = playerQuestionAndScore.map(o => ({
         questionOrder: o.questionOrder,
         playerScore: o.score,
         avarageScore: this.getAvarageScoreForQuestion(
           this.quiz.questions.find(q => q.order === o.questionOrder)._id,
+          gameLog,
         ),
       }));
       return playerAndAvarageScore;
     },
-    getPlayerTimeAndAvarageTime(pId) {
-      const playerQuestionAndTime = this.getPlayerQuestionAndTime(pId);
+    getPlayerTimeAndAvarageTime(pId, gameLog) {
+      const playerQuestionAndTime = this.getPlayerQuestionAndTime(pId, gameLog);
       const playerAndAvarageTime = playerQuestionAndTime.map(o => ({
         questionOrder: o.questionOrder,
         playerTime: o.time,
         avarageTime: this.getAvarageTimeForQuestion(
           this.quiz.questions.find(q => q.order === o.questionOrder)._id,
+          gameLog,
         ),
       }));
       return playerAndAvarageTime;
@@ -559,29 +561,30 @@ const Game = Class.create({
       const question = this.quiz.questions.find(q => q.order === order);
       return question ? question._id : undefined;
     },
-    getPlayersAnswersByQuestion(qId) {
-      const playersAnswerEvents = this.gameLog
+    getPlayersAnswersByQuestion(qId, gameLog) {
+      const playersAnswerEvents = gameLog
         .filter(e => e.nameType === eventTypes.PlayerAnswer)
         .filter(e => e.questionId === qId);
       return playersAnswerEvents;
     },
-    isAllPlayerAnsweredToQuestion(qId) {
-      return (size(this.getPlayersAnswersByQuestion(qId)) === this.getPlayersCount());
+    isAllPlayerAnsweredToQuestion(qId, gameLog) {
+      return (size(this.getPlayersAnswersByQuestion(qId, gameLog)) === this.getPlayersCount(gameLog));
     },
-    getDataForPivotTable() {
-      const playerAnswerEvents = this.gameLog.filter(e => e.nameType === eventTypes.PlayerAnswer);
+    getDataForPivotTable(gameLog) {
+      const playerAnswerEvents = gameLog
+      .filter(e => e.nameType === eventTypes.PlayerAnswer);
+
       const playerAnswers = this.isManager()
         ? playerAnswerEvents
         : playerAnswerEvents.filter(e => e.playerId === Meteor.userId());
-
       const data = playerAnswers.map(({ playerId, answerId, questionId, createdAt }) => ({
         משתמש: this.getUsernameByUserID(playerId),
         'מספר השאלה': this.quiz.questions.find(q => q._id === questionId).order,
         'זמן השאלה': this.quiz.questions.find(q => q._id === questionId).time,
         'מספר התשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).order,
-        'זמן התשובה': calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        'זמן התשובה': calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId, gameLog)),
         'נקודות תשובה': this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
-        נקודות: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId)),
+        נקודות: calculateScore(calculateTimeDelta(createdAt, this.getQuestionStartTime(questionId, gameLog)),
                this.quiz.questions.find(q => q._id === questionId).answers.find(a => a._id === answerId).points,
                this.quiz.questions.find(q => q._id === questionId).time),
       }));
@@ -597,5 +600,4 @@ export default Game;
 
 Factory.define('game', Game, {
   quiz: () => Factory.create('quiz', { owner: 'owner' }),
-  gameLog: () => [new GameInit()],
 });

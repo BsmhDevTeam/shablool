@@ -17,8 +17,9 @@ const QuizCard = ({ quiz, actions, history }) => {
   };
   const initGame = () => {
     const game = new Game({ quiz });
-    game.applyMethod('initGame', []);
-    history.push(`/game/${game.code}`);
+    game.applyMethod('initGame', [], (error, result) => (result ?
+      history.push(`/game/${result}`) :
+      console.log('error: ', error)));
   };
   const fromNow = () => {
     moment.locale('he');
@@ -31,8 +32,8 @@ const QuizCard = ({ quiz, actions, history }) => {
         <div className="row">
           <div className="corner-ribbon top-right white">
             {quiz.private
-             ? <i className="fa fa-lock lock-icon" aria-hidden="true" />
-             : <i className="fa fa-unlock unlock-icon" aria-hidden="true" />
+              ? <i className="fa fa-lock lock-icon" aria-hidden="true" />
+              : <i className="fa fa-unlock unlock-icon" aria-hidden="true" />
             }
           </div>
           <div className="col-md-3">
@@ -58,7 +59,7 @@ const QuizCard = ({ quiz, actions, history }) => {
             </p>
             <p>
               <span className="quiz-owner-span">
-                {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).services.gitlab.username}`}
+                {`נוצר ע"י ${Meteor.users.findOne(quiz.owner).username}`}
               </span>
             </p>
             <p>
@@ -93,7 +94,7 @@ const QuizCard = ({ quiz, actions, history }) => {
                 </div>
               </span>
               : <span>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <a
                     className="delete quiz-card-link"
                     onClick={forkQuiz}
@@ -102,11 +103,17 @@ const QuizCard = ({ quiz, actions, history }) => {
                     <span className="quiz-card-link-text quiz-card-link-text">העתק שאלון</span>
                   </a>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <Link to={`/ViewQuiz/${quiz._id}`} className="quiz-card-link">
                     <span className="glyphicon glyphicon-info-sign quiz-card-link-text-icon" />
                     <span className="quiz-card-link-text quiz-card-link-text">צפה בפרטים</span>
                   </Link>
+                </div>
+                <div className="col-md-4 quiz-card-start-button-area">
+                  <button className="btn btn-primary start-game-btn" onClick={initGame}>
+                    <span>התחל משחק! </span>
+                    <span className="glyphicon glyphicon-play" />
+                  </button>
                 </div>
               </span>}
           </div>

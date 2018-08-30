@@ -12,6 +12,7 @@ import LoginLayout from '/imports/ui/layouts/login.js';
 // Import pages
 import Home from '/imports/ui/pages/game/home';
 import Login from '/imports/ui/pages/login/login';
+import Register from '/imports/ui/pages/login/register';
 import LoginError from '/imports/ui/pages/login/login-error';
 import CreateQuiz from '/imports/ui/pages/manage/my-quizes/create-quiz';
 import EditQuiz from '/imports/ui/pages//manage/my-quizes/edit-quiz.js';
@@ -77,6 +78,14 @@ const router = () => (
           <ManageLayout><HistoryRouter code={props.match.params.code} /></ManageLayout>
         ) : (
           <Redirect to="/Login" />
+        ))}
+      />
+      <Route
+        path="/Register"
+        render={() => (!verifyLogin() ? (
+          <LoginLayout><Register /></LoginLayout>
+        ) : (
+          <Redirect to="/" />
         ))}
       />
       <Route

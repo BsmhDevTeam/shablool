@@ -8,7 +8,7 @@ import Instructions from './player/instructions';
 import AnswerSent from './player/answer-sent.js';
 import GameClose from './both/game-close';
 
-export default ({ game }) => {
+export default ({ game, gameLog }) => {
   const mapEventToPages = (event) => {
     switch (event) {
       case eventTypes.GameInit:
@@ -18,21 +18,21 @@ export default ({ game }) => {
       case eventTypes.GameStart:
         return <Instructions />;
       case eventTypes.QuestionStart:
-        return <Question game={game} />;
+        return <Question game={game} gameLog={gameLog} />;
       case eventTypes.PlayerAnswer:
         return <AnswerSent />;
       case eventTypes.QuestionEnd:
-        return <QuestionStatistics game={game} />;
+        return <QuestionStatistics game={game} gameLog={gameLog} />;
       case eventTypes.ShowLeaders:
-        return <Leaders game={game} />;
+        return <Leaders game={game} gameLog={gameLog} />;
       case eventTypes.GameEnd:
-        return <Winner game={game} />;
+        return <Winner game={game} gameLog={gameLog} />;
       case eventTypes.GameClose:
         return <GameClose />;
       default:
         return null;
     }
   };
-  const event = game.getGamePage().nameType;
+  const event = game.getGamePage(gameLog).nameType;
   return mapEventToPages(event);
 };

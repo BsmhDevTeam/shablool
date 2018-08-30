@@ -18,6 +18,7 @@ export const joinGameResults = {
   noGame: 'NO_GAME',
   regSucc: 'REG_SUCC',
   gameStarted: 'GAME_STARTED',
+  noUserId: 'NO_USER_ID',
 };
 
 export const startGameResults = {

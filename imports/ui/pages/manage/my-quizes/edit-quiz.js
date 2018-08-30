@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withRouter } from 'react-router-dom';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import React from 'react';
 import PropTypes from 'prop-types';
 import uuidV4 from 'uuid/v4';
@@ -290,7 +290,7 @@ EditQuizContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default withRouter(createContainer(({ id }) => {
+export default withRouter(withTracker(({ id }) => {
   const quizHandle = Meteor.subscribe('quizes.get', id);
   const loading = !quizHandle.ready();
   return {
