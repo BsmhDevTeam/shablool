@@ -103,7 +103,7 @@ publishComposite('games.get-by-code.without-points', function(code) {
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
+            { fields: { 'username': 1 } },
           );
         },
       },
@@ -135,7 +135,7 @@ publishComposite('games.get-by-code.by-question', function(code, questionId) {
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
+            { fields: { 'username': 1 } },
           );
         },
       },
@@ -172,7 +172,7 @@ publishComposite('games.get-by-code.by-question.without-points', function(code, 
         find(game) {
           return Meteor.users.find(
             { _id: { $in: [...game.getPlayersId(), game.quiz.owner] } },
-            { fields: { 'services.gitlab.username': 1 } },
+            { fields: { 'username': 1 } },
           );
         },
       },
