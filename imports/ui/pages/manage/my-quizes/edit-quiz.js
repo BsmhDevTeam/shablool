@@ -33,6 +33,7 @@ class EditQuiz extends React.Component {
       uploads: [],
       uploadsCounter: false,
       validate: false,
+      history: props.history,
     };
   }
 
@@ -230,7 +231,7 @@ class EditQuiz extends React.Component {
 
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && this.props.history.push('/Manage'));
+      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && this.state.history.push('/Manage'));
     };
 
     const uploadImages = (e) => {
@@ -297,4 +298,4 @@ export default withRouter(withTracker(({ id }) => {
     loading,
     id,
   };
-}, EditQuizContainer));
+})(EditQuizContainer));
