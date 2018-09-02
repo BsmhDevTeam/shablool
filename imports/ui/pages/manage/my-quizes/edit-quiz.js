@@ -238,8 +238,9 @@ class EditQuiz extends React.Component {
       if (!this.state.validate) this.setState({ validate: true });
       this.setState({ uploadsCounter: this.state.uploads.length });
       this.state.uploads.map(u => u.upload.start());
-      this.state.uploadsCounter === 0 ? saveQuiz() : null;
     };
+
+    this.state.uploadsCounter === 0 ? saveQuiz() : null;
 
     const actions = {
       changeQuizTitle,
