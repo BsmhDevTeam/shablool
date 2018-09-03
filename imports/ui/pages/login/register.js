@@ -9,7 +9,6 @@ class Register extends React.Component {
     this.state = {
       passwordConfirmError: false,
       userNameUniqueError: false,
-      history: props.history,
     };
   }
 
@@ -26,7 +25,7 @@ class Register extends React.Component {
     }, ((e) => {
       updateUsernameUniqueState(e);
     })) : null;
-    const goHome = () => (Meteor.userId() ? this.state.history.push('/') : null);
+    const goHome = () => (Meteor.userId() ? this.props.history.push('/') : null);
     const register = (e) => {
       e.preventDefault();
       const password = e.target.password.value;

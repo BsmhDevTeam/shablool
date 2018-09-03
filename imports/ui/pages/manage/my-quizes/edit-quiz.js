@@ -33,7 +33,6 @@ class EditQuiz extends React.Component {
       uploads: [],
       uploadsCounter: false,
       validate: false,
-      history: props.history,
     };
   }
 
@@ -231,7 +230,7 @@ class EditQuiz extends React.Component {
 
       const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
       const quiz$ = Quiz.findOne();
-      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && this.state.history.push('/Manage'));
+      quiz$.applyMethod('update', [{ ...quiz, questions }], (err, result) => result && this.props.history.push('/Manage'));
     };
 
     const uploadImages = (e) => {
@@ -276,7 +275,7 @@ EditQuiz.propTypes = {
   quiz: PropTypes.instanceOf(Object).isRequired,
 };
 
-const EditQuizContainer = ({ loading, id }) => {
+const EditQuizContainer = ({ loading, id, history }) => {
   if (loading) return <Loading />;
   const quiz = Quiz.findOne({
     $and: [
@@ -284,18 +283,19 @@ const EditQuizContainer = ({ loading, id }) => {
       { $or: [{ owner: Meteor.userId() }, { private: false }] },
     ],
   });
-  return <EditQuiz quiz={{ ...quiz }} />;
+  return <EditQuiz quiz={{ ...quiz }} history={history} />;
 };
 
 EditQuizContainer.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-export default withRouter(withTracker(({ id }) => {
+export default withRouter(withTracker(({ id, history }) => {
   const quizHandle = Meteor.subscribe('quizes.get', id);
   const loading = !quizHandle.ready();
   return {
     loading,
     id,
+    history,
   };
 })(EditQuizContainer));

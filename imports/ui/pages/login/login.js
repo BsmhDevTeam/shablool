@@ -8,7 +8,6 @@ class Login extends React.Component {
     this.state = {
       usernameError: false,
       passwordError: false,
-      history: props.history,
     };
   }
 
@@ -31,7 +30,7 @@ class Login extends React.Component {
                 (username, password, ((e) => {
                   e ? updateStateErrors(e) : null;
                 })) : null;
-    const goHome = () => Meteor.userId() ? this.state.history.push('/') : null;
+    const goHome = () => Meteor.userId() ? this.props.history.push('/') : null;
     const login = (e) => {
       e.preventDefault();
       const password = e.target.password.value;
@@ -59,7 +58,7 @@ class Login extends React.Component {
           <input type="submit" id="btn-login" className="btn btn-custom btn-lg btn-block" value="התחבר!" />
         </form>
         <div className="link-message">עדיין אין לך משתמש בשבלול?
-          <Link to={{ pathname: '/Register', props: { history: this.state.history } }}>הצטרף!</Link>
+          <Link to={{ pathname: '/Register', props: { history: this.props.history } }}>הצטרף!</Link>
         </div>
       </div>
     );

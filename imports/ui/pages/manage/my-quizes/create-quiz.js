@@ -27,7 +27,6 @@ class CreateQuiz extends React.Component {
       uploads: [],
       uploadsCounter: false,
       validate: false,
-      history: props.history,
     };
   }
 
