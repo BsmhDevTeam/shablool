@@ -6,6 +6,7 @@ import uuidV4 from 'uuid/v4';
 import Quiz, { Question, Answer } from '/imports/api/quizes/quizes.js';
 import QuizForm from '/imports/ui/components/quiz-form.js';
 import Image from '/imports/api/images/images';
+import Snackbar from '/imports/ui/components/snackbar';
 
 // Utilities
 const newQuestion = () => {
@@ -27,6 +28,7 @@ class CreateQuiz extends React.Component {
       uploads: [],
       uploadsCounter: false,
       validate: false,
+      quizIsNotNotification: false,
     };
   }
 
@@ -219,8 +221,20 @@ class CreateQuiz extends React.Component {
     const uploadImages = (e) => {
       e.preventDefault();
       if (!this.state.validate) this.setState({ validate: true });
-      this.setState({ uploadsCounter: this.state.uploads.length });
-      this.state.uploads.map(u => u.upload.start());
+      const quiz = this.state.quiz;
+      const questions = quiz.questions.map((q, i) => ({ ...q, order: i + 1 }));
+      const quiz$ = new Quiz({ ...quiz, questions, owner: Meteor.userId() }, { cast: true });
+      quiz$.validate((err) => {
+        const notifyUser = () => {
+          this.setState({ quizIsNotNotification: 'השאלון לא תקין' });
+          setTimeout(() => this.setState({ quizIsNotNotification: false }), 3000);
+        };
+        const uploadImagesAndSaveQuiz = () => {
+          this.setState({ uploadsCounter: this.state.uploads.length });
+          this.state.uploads.map(u => u.upload.start());
+        }
+        err ? notifyUser() : uploadImagesAndSaveQuiz();
+      })
     };
 
     this.state.uploadsCounter === 0 ? saveQuiz() : null;
@@ -245,6 +259,7 @@ class CreateQuiz extends React.Component {
       <div id="create-quiz">
         <h1>צור שאלון חדש</h1>
         <QuizForm quiz={this.state.quiz} validate={this.state.validate} actions={actions} />
+        {this.state.quizIsNotNotification ? <Snackbar message={this.state.quizIsNotNotification} /> : ''}
       </div>
     );
   }
