@@ -2,11 +2,11 @@
 
 An open-source [Kahoot](https://kahoot.com)-like project written with meteor and react.
 
-## Getting Started
+## Getting Started TODO
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+### Prerequisites TODO
 
 What things you need to install the software and how to install them
 
@@ -14,7 +14,7 @@ What things you need to install the software and how to install them
 Give examples
 ```
 
-### Installing
+### Installing TODO
 
 A step by step series of examples that tell you have to get a development env running
 
@@ -32,7 +32,7 @@ until finished
 
 End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+## Running the tests TODO
 
 Explain how to run the automated tests for this system
 
@@ -56,30 +56,30 @@ Give an example
 ```
 +---api
 |  +---games                                               
-|      |   games.js                                         # Definition of games collections
+|      |   games.js                              # Definition of games collections
 |      |   games.test.js
 |      |   
 |      \---server
-|              methods.js                                   # Writing to games collections
+|              methods.js                        # Writing to games collections
 |              methods.test.js                                              
-|              publication.js                               # Reading from games collections
-|              publication.test.js                          # Test of reading games collections
+|              publication.js                    # Reading from games collections
+|              publication.test.js               # Test of reading games collections
 |             
 |               
 +---startup
 |   +---both
-|   |       constants.js                                     # Constants in the app
-|   |       index.js                                         # Import modules used by both client and server through a single index entry point
+|   |       constants.js                         # Constants in the app
+|   |       index.js                             # Import modules used by both client and server through a single index entry point
 |   |       
 |   +---client
-|   |       index.js                                         # Import client startup through a single index entry point
-|   |       routes.js                                        # Routing in client side
+|   |       index.js                             # Import client startup through a single index entry point
+|   |       routes.js                            # Routing in client side
 |   |       
 |   \---server
-|           authentication.js                                # authentication by gitlab
-|           index.js                                         # Import server startup through a single index entry point
-|           register-api.js                                  # Containes all file's server and run them
-|           security.js                                      # Security configuration file
+|           authentication.js                    # authentication by gitlab
+|           index.js                             # Import server startup through a single index entry point
+|           register-api.js                      # Containes all file's server and run them
+|           security.js                          # Security configuration file
 |           
 \---ui
     +---components
@@ -93,35 +93,35 @@ Give an example
     |               pivot.he.min.js
     |               pivot.he.min.js.map
     |               
-    +---layouts                                              # Wrapper components for behaviour and visuals
+    +---layouts                                  # Wrapper components for behaviour and visuals
     |       game.js
     |       login.js
     |       manage.js
     |       
-    +---pages                                                # Entry points for rendering used by the router
+    +---pages                                    # Entry points for rendering used by the router
        +---game
           |   home.js
           |   owner-router.js
           |   player-router.js
           |   router.js
           |   
-          +---both                                         #  Game pages for owner and player
+          +---both                               #  Game pages for owner and player
           |       game-close.js
           |       leaders.js
           |       question-statistics.js
           |       question.js
           |       winner.js
           |       
-          +---owner                                        # Game pages for owner
+          +---owner                              # Game pages for owner
           |       lobby.js
           |       
-          \---player                                       # Game pages for player  
+          \---player                             # Game pages for player  
                   answer-sent.js
                   instructions.js
 
 ```
 
-## Deployment
+## Deployment TODO
 
 Add additional notes about how to deploy this on a live system
 
@@ -131,25 +131,25 @@ Add additional notes about how to deploy this on a live system
 * [React](https://reactjs.org/) -  JavaScript library for building user interfaces
 * [Astronomy](http://jagi.github.io/meteor-astronomy/) - Model Layer for Meteor collections
 
-## Contributing
+## Contributing TODO
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
+## Versioning TODO
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
-## Authors
+## Authors TODO
 
 * **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
-## License
+## License TODO
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Acknowledgments
+## Acknowledgments TODO
 
 * Hat tip to anyone who's code was used
 * Inspiration
